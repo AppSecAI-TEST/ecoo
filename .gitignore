@@ -3,5 +3,8 @@
 *.iml
 target
 generated
-*.log
 /reports/ecoo/ecoo/bin/
+business-api/src/main/java/ecoo/upload/
+business-api/src/test/
+db/src/test/
+logs/
