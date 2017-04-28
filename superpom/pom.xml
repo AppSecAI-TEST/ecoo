@@ -1,0 +1,738 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.spring.platform</groupId>
+        <artifactId>platform-bom</artifactId>
+        <version>2.0.8.RELEASE</version>
+    </parent>
+
+    <groupId>ecoo</groupId>
+    <artifactId>ecoo-super-pom</artifactId>
+    <version>RELEASE.1.0</version>
+    <packaging>pom</packaging>
+
+    <name>ECOO - Super POM</name>
+
+    <description>
+        The "Super POM" file used to centrally manage common dependencies and more
+        importantly the version of those dependencies. This pom further allows to
+        define common build and reporting plug-ins.
+    </description>
+
+    <organization>
+        <name>JR Software Solutions Pty Ltd</name>
+        <url>http://www.s-squared.co.za</url>
+    </organization>
+    <developers>
+        <developer>
+            <id>justin</id>
+            <name>Justin Rundle</name>
+            <email>justin@s-squared.co.za</email>
+            <organization>S2</organization>
+            <organizationUrl>http://www.s-squared.co.za</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+2</timezone>
+        </developer>
+    </developers>
+
+    <properties>
+        <!--<database.driver>net.sourceforge.jtds.jdbc.Driver</database.driver>-->
+        <!--<datasbase.url>jdbc:jtds:sqlserver://localhost:1435/master;</datasbase.url>-->
+        <!--<database.admin.user>sa</database.admin.user>-->
+        <!--<database.admin.pass>sa</database.admin.pass>-->
+
+        <!-- ORM -->
+        <!--<hibernate.core.version>3.3.2.GA</hibernate.core.version>-->
+        <!--<ejb3.persistence.version>3.3.2.Beta1</ejb3.persistence.version>-->
+        <!--<hibernate.annotations.version>3.4.0.GA</hibernate.annotations.version>-->
+        <!--<hibernate.entitymanager.version>3.4.0.GA</hibernate.entitymanager.version>-->
+        <!--<jboss.envers.version>1.2.1.GA-hibernate-3.3</jboss.envers.version>-->
+        <!--<hibernate.jtidy.version>r8-21122004</hibernate.jtidy.version>-->
+        <hazelcast.version>3.5.4</hazelcast.version>
+
+
+        <!-- JAXB -->
+        <jaxb.version>2.1</jaxb.version>
+        <jaxb.impl.version>2.1.5</jaxb.impl.version>
+        <javax.xml.bind.impl.version>2.0.3</javax.xml.bind.impl.version>
+
+        <!-- UI -->
+        <jsf.version>2.1.6</jsf.version>
+        <icefaces.version>3.3.0</icefaces.version>
+
+        <!-- EJB -->
+        <javax.ejb.version>3.0</javax.ejb.version>
+        <javax.persistence.version>1.0</javax.persistence.version>
+        <javax.javaee-api.version>6.0</javax.javaee-api.version>
+        <javax.servlet-api.version>2.5</javax.servlet-api.version>
+        <javax.servlet-jstl.version>1.1.2</javax.servlet-jstl.version>
+
+        <!-- Commons
+        <commons.beanutils.version>1.7.0</commons.beanutils.version>
+        <commons.codec.version>1.3</commons.codec.version>
+        <commons.validator.version>1.3.0</commons.validator.version>
+        <commons.validator.version>1.4.0</commons.validator.version>
+        <commons.io.version>2.4</commons.io.version>        -->
+
+        <!-- Javax -->
+        <javax.transaction.version>1.1</javax.transaction.version>
+
+        <!-- Testing & Logging-->
+        <!-- <checkstyle.configLocation>xxx</checkstyle.configLocation>-->
+        <code.coverage.line.rate>0</code.coverage.line.rate>
+        <jacocoArgLine></jacocoArgLine>
+
+        <junit.version>4.10</junit.version>
+        <easymock.version>3.2</easymock.version>
+        <mockito.version>1.8.4</mockito.version>
+        <asm.version>3.3.1</asm.version>
+        <cglib.version>2.2.2</cglib.version>
+        <cucumber.version>1.1.5</cucumber.version>
+
+        <!-- Other
+        <aspectj.version>1.6.1</aspectj.version> -->
+        <java.compiler>1.8</java.compiler>
+        <jtds.jdbc.version>1.3.1</jtds.jdbc.version>
+        <opencsv.version>2.1</opencsv.version>
+
+        <!-- Web Services -->
+        <axis.version>1.4</axis.version>
+        <axis.jaxrpc.version>1.4</axis.jaxrpc.version>
+        <commons.discovery.version>0.4</commons.discovery.version>
+        <wsdl4j.version>1.6.2</wsdl4j.version>
+        <xerces.impl.version>2.6.2</xerces.impl.version>
+        <swagger-springmvc.version>0.8.8</swagger-springmvc.version>
+
+        <!-- Maven Plugin Versions -->
+        <maven.plugin.checkstyle.version>2.4</maven.plugin.checkstyle.version>
+        <maven.plugin.changes.version>2.0</maven.plugin.changes.version>
+        <maven.plugin.taglist.version>2.3</maven.plugin.taglist.version>
+        <maven.plugin.javadoc.version>2.5</maven.plugin.javadoc.version>
+        <maven.plugin.jxr.version>2.3</maven.plugin.jxr.version>
+        <maven.plugin.pmd.version>2.4</maven.plugin.pmd.version>
+        <maven.plugin.compiler.version>2.3.2</maven.plugin.compiler.version>
+        <maven.plugin.clean.version>2.5</maven.plugin.clean.version>
+        <maven.plugin.site.version>2.0.1</maven.plugin.site.version>
+        <maven.plugin.changes.version>2.0</maven.plugin.changes.version>
+        <maven.plugin.cobertura.version>2.5.1</maven.plugin.cobertura.version>
+        <maven.plugin.jxr.version>2.1</maven.plugin.jxr.version>
+        <maven.plugin.surefire.version>2.4.2</maven.plugin.surefire.version>
+        <maven.plugin.scm.version>1.2</maven.plugin.scm.version>
+        <maven.plugin.release.version>2.0-beta-7</maven.plugin.release.version>
+        <maven.plugin.war.version>2.1.1</maven.plugin.war.version>
+        <maven.plugin.ear.version>2.7</maven.plugin.ear.version>
+        <maven.plugin.jaxb2.version>0.8.0</maven.plugin.jaxb2.version>
+        <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
+        <maven.ejb.plugin.version>2.3</maven.ejb.plugin.version>
+        <maven.plugin.helper.version>1.1</maven.plugin.helper.version>
+        <maven.axistools.maven.plugin.version>1.4</maven.axistools.maven.plugin.version>
+        <maven.split.config.plugin.version>1.0.4</maven.split.config.plugin.version>
+        <maven.sql.maven.plugin.version>1.4</maven.sql.maven.plugin.version>
+        <maven.spring.boot.plugin.version>1.3.0.RELEASE</maven.spring.boot.plugin.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <camunda.version>7.6.0</camunda.version>
+        <camunda.boot.version>1.3.0</camunda.boot.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>maven3</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <maven.plugin.checkstyle.version>2.11</maven.plugin.checkstyle.version>
+                <code.coverage.line.ratio>0.10</code.coverage.line.ratio>
+                <maven.plugin.jacoco.version>0.6.4.201312101107</maven.plugin.jacoco.version>
+                <maven.plugin.cobertura.version>2.6</maven.plugin.cobertura.version>
+                <maven.plugin.surefire.version>2.16</maven.plugin.surefire.version>
+                <maven.axis.tools.version>1.4</maven.axis.tools.version>
+                <maven.plugin.jaxb2.version>0.8.3</maven.plugin.jaxb2.version>
+                <maven.plugin.helper.version>1.8</maven.plugin.helper.version>
+                <maven.plugin.changes.version>2.0</maven.plugin.changes.version>
+                <maven.plugin.taglist.version>2.3</maven.plugin.taglist.version>
+                <maven.plugin.jxr.version>2.1</maven.plugin.jxr.version>
+                <maven.plugin.pmd.version>2.4</maven.plugin.pmd.version>
+                <maven.plugin.surefire.version>2.16</maven.plugin.surefire.version>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <version>${maven.plugin.cobertura.version}</version>
+                        <configuration>
+                            <check/>
+                            <skip>true</skip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>clean</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${maven.plugin.jacoco.version}</version>
+                        <executions>
+                            <execution>
+                                <id>default-prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-report</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <propertyName>jacocoArgLine</propertyName>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${code.coverage.line.ratio}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            <excludes>
+                                <exclude>*Test</exclude>
+                                <exclude>**/hibernate/mapping/**/*</exclude>
+                                <exclude>**/generated/**/*</exclude>
+                                <exclude>**/schema/**/*.class</exclude>
+                                <exclude>**/xsd/*.class</exclude>
+                                <exclude>**/**DTO.*</exclude>
+                                <exclude>**/**DTOId.*</exclude>
+                                <exclude>**/**/bootstrap/*</exclude>
+                                <exclude>**/za/co/aforbes/**/bindings/*</exclude>
+                                <exclude>**/za/co/aforbes/**/hibernate/mapping/*</exclude>
+                                <exclude>**/*$*.*</exclude>
+                                <exclude>**/za/co/aforbes/**/*$*.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <version>${maven.plugin.surefire.version}</version>
+                            <configuration>
+                                <argLine>${jacocoArgLine}</argLine>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>3.2.1</version>
+            </dependency>
+
+            <dependency>
+                <!-- Import dependency management from camunda -->
+                <groupId>org.camunda.bpm</groupId>
+                <artifactId>camunda-bom</artifactId>
+                <version>${camunda.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>fpc-release</id>-->
+            <!--<url>http://afjhb1b2bapq1:3000/nexus/content/repositories/releases</url>-->
+            <!--<uniqueVersion>false</uniqueVersion>-->
+            <!--<layout>default</layout>-->
+        <!--</repository>-->
+        <!--<snapshotRepository>-->
+            <!--<id>fpc-snapshot</id>-->
+            <!--<url>http://afjhb1b2bapq1:3000/nexus/content/repositories/snapshots</url>-->
+            <!--<uniqueVersion>false</uniqueVersion>-->
+            <!--<layout>default</layout>-->
+        <!--</snapshotRepository>-->
+    <!--</distributionManagement>-->
+
+    <!--FIXME: need to fix-->
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>fpc-repo</id>-->
+            <!--<url>http://afjhb1b2bapq1:3000/nexus/content/groups/public</url>-->
+            <!--<name>FPC Nexus Repository</name>-->
+            <!--<releases>-->
+                <!--<enabled>true</enabled>-->
+                <!--<updatePolicy>always</updatePolicy>-->
+                <!--<checksumPolicy>ignore</checksumPolicy>-->
+            <!--</releases>-->
+            <!--<snapshots>-->
+                <!--<enabled>false</enabled>-->
+                <!--<updatePolicy>always</updatePolicy>-->
+                <!--<checksumPolicy>ignore</checksumPolicy>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
+    <!--</repositories>-->
+
+    <!--<pluginRepositories>-->
+        <!--<pluginRepository>-->
+            <!--<id>fpc-repo</id>-->
+            <!--<name>FPC Nexus Plugin Repository</name>-->
+            <!--<url>http://afjhb1b2bapq1:3000/nexus/content/groups/public</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>false</enabled>-->
+                <!--<updatePolicy>always</updatePolicy>-->
+                <!--<checksumPolicy>ignore</checksumPolicy>-->
+            <!--</snapshots>-->
+        <!--</pluginRepository>-->
+    <!--</pluginRepositories>-->
+
+
+    <!-- ================= Build Configurations ================= -->
+    <build>
+        <defaultGoal>install</defaultGoal>
+
+        <!--<extensions>-->
+        <!--<extension>-->
+        <!--<groupId>org.apache.maven.wagon</groupId>-->
+        <!--<artifactId>wagon-webdav</artifactId>-->
+        <!--<version>1.0-beta-2</version>-->
+        <!--</extension>-->
+        <!--</extensions>-->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <!--<version>${maven.plugin.compiler.version}</version>-->
+                <configuration>
+                    <compilerVersion>${java.compiler}</compilerVersion>
+                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <source>${java.compiler}</source>
+                    <target>${java.compiler}</target>
+                    <debug>true</debug>
+                    <showDeprecation>false</showDeprecation>
+                    <showWarnings>false</showWarnings>
+                    <optimize>false</optimize>
+                </configuration>
+            </plugin>
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.plugin.checkstyle.version}</version>
+                <configuration>
+                    <configLocation>${checkstyle.configLocation}</configLocation>
+                    <excludes>**/generated/**/*</excludes>
+                    <failsOnError>false</failsOnError>
+                    <consoleOutput>true</consoleOutput>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${maven.plugin.cobertura.version}</version>
+                <configuration>
+                    <instrumentation>
+                        <excludes>
+                            <exclude>za/co/aforbes/fpc/ui/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/**/svc/test/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/tools/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/**/tools/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/**/svc/scheduled/job/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/svc/system/job/impl/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/**/*$*.*</exclude>
+                        </excludes>
+                    </instrumentation>
+                    <check>
+                        <totalLineRate>${code.coverage.line.rate}</totalLineRate>
+                        <haltOnFailure>true</haltOnFailure>
+                    </check>
+                    <formats>
+                        <format>html</format>
+                        <format>xml</format>
+                    </formats>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>clean</id>
+                        <goals>
+                            <goal>clean</goal>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!--
+                The Source Plugin creates a jar archive of the source files
+                of the current project. The jar file is, by default, created in
+                the project's target directory.
+                -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven.source.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>package</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+            The Site Plugin is used to generate a site for the project. The
+            generated site also includes the project's reports that were
+            configured in the POM.
+
+            This is the site for version 3 of the maven-site-plugin. It
+            requires at least Maven 2.2.1 to run. If you are looking for version
+            2 you can find it here.
+            -->
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-site-plugin</artifactId>-->
+            <!--<version>2.0-beta-5</version>-->
+            <!--<configuration>-->
+            <!--<locales>en</locales>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.plugin.surefire.version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                    <excludes>
+                        <!-- Exclude inner classes -->
+                        <exclude>**/*$*.*</exclude>
+                    </excludes>
+                    <!--<forkCount>0</forkCount>-->
+                    <!--<forkedProcessTimeoutInSeconds>30</forkedProcessTimeoutInSeconds>-->
+                    <!--<redirectTestOutputToFile>true</redirectTestOutputToFile>-->
+                    <!--<reuseForks>true</reuseForks>-->
+                </configuration>
+            </plugin>
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-scm-plugin</artifactId>-->
+            <!--<version>${maven.plugin.scm.version}</version>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-release-plugin</artifactId>-->
+            <!--<version>2.0</version>-->
+            <!--</plugin>-->
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<version>3.0</version>-->
+                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                <!--&lt;!&ndash;<source>1.8</source>&ndash;&gt;-->
+                <!--&lt;!&ndash;<target>1.8</target>&ndash;&gt;-->
+                <!--&lt;!&ndash;<compilerArgument>-Xlint:all</compilerArgument>&ndash;&gt;-->
+                <!--&lt;!&ndash;<showWarnings>true</showWarnings>&ndash;&gt;-->
+                <!--&lt;!&ndash;<showDeprecation>true</showDeprecation>&ndash;&gt;-->
+                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+                <!--</plugin>-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven.plugin.release.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>${maven.plugin.scm.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.plugin.surefire.version}</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                        <excludes>
+                            <!-- Exclude inner classes -->
+                            <exclude>**/*$*.*</exclude>
+                        </excludes>
+                        <!--<forkCount>0</forkCount>-->
+                        <!--<forkedProcessTimeoutInSeconds>30</forkedProcessTimeoutInSeconds>-->
+                        <!--<redirectTestOutputToFile>true</redirectTestOutputToFile>-->
+                        <!--<reuseForks>true</reuseForks>-->
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven.plugin.war.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-ear-plugin</artifactId>
+                    <version>${maven.plugin.ear.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <!-- ================= Reporting Configurations ================= -->
+    <reporting>
+        <plugins>
+            <!--
+            This plugin is used to inform your users of the changes that have occured between
+            different releases of your project. The plugin can extract these changes, either
+            from a changes.xml file or from the JIRA issue management system, and present them
+            as a report. You also have the option of creating a release announcement and even
+            sending this via email to your users.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <version>${maven.plugin.changes.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>${maven.plugin.checkstyle.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <version>${maven.plugin.cobertura.version}</version>
+                <configuration>
+                    <!-- Ignore classes which will have generated in the package. -->
+                    <instrumentation>
+                        <excludes>
+                            <exclude>za/co/aforbes/fpc/ui/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/**/svc/test/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/tools/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/**/tools/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/**/svc/scheduled/job/**/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/svc/system/job/impl/*.*</exclude>
+                            <exclude>za/co/aforbes/fpc/**/*$*.*</exclude>
+                        </excludes>
+                    </instrumentation>
+
+                    <formats>
+                        <format>html</format>
+                        <format>xml</format>
+                    </formats>
+                    <check>
+                        <totalLineRate>${code.coverage.line.rate}</totalLineRate>
+                        <haltOnFailure>false</haltOnFailure>
+                    </check>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+                <version>${maven.plugin.taglist.version}</version>
+                <configuration>
+                    <emptyComments>true</emptyComments>
+                    <tags>
+                        <tag>TODO</tag>
+                        <tag>FIXME</tag>
+                        <tag>HACK</tag>
+                        <tag>NOTE</tag>
+                    </tags>
+                </configuration>
+            </plugin>
+
+            <!--
+            Taken out as this is breaking Jenkins due to out of memory. Related to
+            Hibernate reverse engineering.
+            <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-javadoc-plugin</artifactId>
+                 <version>${maven.plugin.javadoc.version}</version>
+             </plugin>-->
+
+            <!--
+            The JXR Plugin produces a cross-reference of the project's sources. The generated
+            reports make it easier for the user to reference or find specific lines of code.
+            It is also handy when used with the PMD Plugin for referencing errors found in the code.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>${maven.plugin.jxr.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>${maven.plugin.pmd.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/package-info.java</exclude>
+                    </excludes>
+                    <linkXRef>true</linkXRef>
+                    <targetJdk>${java.compiler}</targetJdk>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>${maven.plugin.pmd.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/package-info.java</exclude>
+                    </excludes>
+                    <linkXRef>true</linkXRef>
+                    <targetJdk>${java.compiler}</targetJdk>
+                </configuration>
+            </plugin>
+
+            <!--
+            The Surefire Report Plugin parses the generated TEST-*.xml files under
+            ${basedir}/target/surefire-reports and renders them to DOXIA which creates the web
+            interface version of the test results.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven.plugin.surefire.version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                    <excludes>
+                        <!-- Exclude inner classes -->
+                        <exclude>**/*$*.*</exclude>
+                    </excludes>
+                    <!--<forkCount>0</forkCount>-->
+                    <!--<forkedProcessTimeoutInSeconds>30</forkedProcessTimeoutInSeconds>-->
+                    <!--<redirectTestOutputToFile>true</redirectTestOutputToFile>-->
+                    <!--<reuseForks>true</reuseForks>-->
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+
+    <!-- ================= Common Configurations ================= -->
+    <dependencies>
+
+
+        <!-- ================= Testing Dependencies ================= -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.objenesis</groupId>
+                    <artifactId>objenesis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.objenesis</groupId>
+                    <artifactId>objenesis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>1.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>${cglib.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>${asm.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -1,0 +1,23 @@
+server:
+  port: 7777
+  contextPath: /
+spring:
+  main:
+    banner-mode: console
+endpoints:
+  health:
+      sensitive: false
+  jmx:
+     enabled: false
+camunda:
+  bpm:
+    process-engine-name:
+      default
+    deployment-resource-pattern:
+      classpath*:/camunda/*.bpmn
+    webapp:
+      index-redirect-enabled: false
+    database:
+      #schema-update: false
+      schema-update: drop-create
+      type: mssql

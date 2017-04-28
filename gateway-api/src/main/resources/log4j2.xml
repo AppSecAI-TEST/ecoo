@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration>
+    <!--
+    The default logging configuration for the ECOO projects:
+    ECOO.log.level
+    ECOO.log.level.hibernate
+    -->
+    <Properties>
+        <Property name="sys:ECOO.log.level">TRACE</Property>
+        <Property name="sys:ECOO.log.level.hibernate">ERROR</Property>
+    </Properties>
+
+    <Appenders>
+        <!--
+         Generally not a good idea having 2 different logging systems writing to the same log,
+         and writing the same information 3 times is a little much :)
+         https://developer.jboss.org/thread/241453?start=0&tstart=0
+        -->
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="LOG4J2_[%-5p] [%x%X] [%d{ISO8601}] [%c] %m%n"/>
+        </Console>
+
+        <RollingFile name="LOG_FILE" fileName="../logs/ecoo-gateway-api.log"
+                     filePattern="logs/ecoo_log4j2-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="[%-5p] [%x%X] [%d{ISO8601}] [%c] %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+
+        <File name="JSON_LOG_FILE" fileName="../logs/ecoo_log4j2-${date:yyyy-MM-dd}.json.log">
+            <JSONLayout complete="false" compact="true" eventEol="true" properties="true"/>
+        </File>
+
+        <!-- Dev note:
+         Look at: https://logging.apache.org/log4j/2.x/manual/async.html
+         We are now using the async logger with lmax disruptor, not the async appender
+          -->
+        <!--
+        So don't do this:
+        <Async name="ASYNC">
+            <AppenderRef ref="CONSOLE" level="${sys:console_log_level}"/>
+            <AppenderRef ref="LOG_FILE"/>
+            <AppenderRef ref="JSON_LOG_FILE"/>
+        </Async>
+        -->
+    </Appenders>
+    <Loggers>
+        <!--
+        ================================================================================================================
+        ECOO Loggers
+        ================================================================================================================
+        -->
+        <Logger name="ECOO" level="${sys:ECOO.log.level}"/>
+
+        <!--
+        ================================================================================================================
+        Hibernate Loggers
+        ================================================================================================================
+        -->
+        <!-- The logger to show all hibernate logs -->
+        <Logger name="org.hibernate" level="ERROR"/>
+        <Logger name="org.hibernate.SQL" level="${sys:ECOO.log.level.hibernate}"/>
+        <Logger name="org.hibernate.type" level="${sys:ECOO.log.level.hibernate}"/>
+        <Logger name="org.hibernate.jdbc" level="${sys:ECOO.log.level.hibernate}"/>
+
+        <!--
+        ================================================================================================================
+        Spring Loggers
+        ================================================================================================================
+        -->
+        <Logger name="org.springframework" level="WARN"/>
+
+        <!--
+        ================================================================================================================
+        Misc Loggers
+        ================================================================================================================
+        -->
+        <!--<Logger name="javax.enterprise.resource.webcontainer" level="FATAL"/>-->
+        <!--<Logger name="javax.enterprise.resource.webcontainer.jsf.config" level="FATAL"/>-->
+
+        <Root level="info" includeLocation="false">
+            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="LOG_FILE"/>
+            <AppenderRef ref="JSON_LOG_FILE"/>
+        </Root>
+    </Loggers>
+</Configuration>

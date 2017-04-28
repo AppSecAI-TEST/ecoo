@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="ecoo">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=localhost;Initial Catalog=ecoo</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>71a0f77a-83df-4aca-8e5e-fe1dec18ef76</DataSourceID>
+</RptDataSource>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <sql-query name="FIND_CHAMBER_ADMIN_BY_USER">
+        <return class="ecoo.data.ChamberAdmin"/>
+        <![CDATA[
+            select distinct c.* from dbo.chamber_admin c with(nolock)
+            where c.user_id = :userId
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_CHAMBER_USER_BY_CHAMBER_AND_USER">
+        <return class="ecoo.data.ChamberUser"/>
+        <![CDATA[
+            select distinct c.* from dbo.chamber_user c with(nolock)
+            where c.chamber_id = :chamberId
+            and c.user_id = :userId
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_COMPANY_BY_REGISTRATION_NUMBER">
+        <return class="ecoo.data.Company"/>
+        <![CDATA[
+            select distinct c.* from dbo.company c with(nolock)
+            where c.registration_no = :registrationNo
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_DOCUMENTS_BY_COMPANY">
+        <return class="ecoo.data.CompanyDocument"/>
+        <![CDATA[
+            select distinct cd.* from dbo.company_doc cd with(nolock)
+            where cd.company_id = :companyId
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_USERS_BY_ROLE">
+        <return class="ecoo.data.User"/>
+        <![CDATA[
+            select distinct uc.* from dbo.user_role ur with(nolock)
+            inner join dbo.user_acc uc with(nolock) on uc.id = ur.user_id
+            where ur.role = :role
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_USER_SIGNATURES_BY_USER">
+        <return class="ecoo.data.UserSignature"/>
+        <![CDATA[
+            select * from dbo.user_signature with(nolock)
+            where user_id = :userId
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_MOST_RECENT_SYSTEM_JOB_BY_CLASSNAME">
+        <return class="ecoo.data.SystemJob"/>
+        <![CDATA[
+            select s.* from system_job s with(nolock)
+                inner join (
+                    select class_name,max(start_time) start_time
+                    from system_job with(nolock)
+                    group by class_name
+                ) subquery
+                on subquery.class_name = s.class_name
+                and subquery.start_time = s.start_time
+            order by s.class_name
+	  	]]>
+    </sql-query>
+
+</hibernate-mapping>

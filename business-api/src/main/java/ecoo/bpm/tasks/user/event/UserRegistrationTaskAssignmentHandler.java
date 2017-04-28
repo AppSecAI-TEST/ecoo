@@ -1,0 +1,30 @@
+package ecoo.bpm.tasks.user.event;
+
+import ecoo.bpm.constants.TaskVariables;
+import ecoo.bpm.entity.RegisterUserAccountRequest;
+import org.camunda.bpm.engine.delegate.DelegateTask;
+import org.camunda.bpm.engine.delegate.TaskListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author Justin Rundle
+ * @since April 2017
+ */
+@SuppressWarnings("unused")
+@Component
+public class UserRegistrationTaskAssignmentHandler implements TaskListener {
+
+    private final Logger log = LoggerFactory.getLogger(UserRegistrationTaskAssignmentHandler.class);
+
+    @Override
+    public void notify(DelegateTask delegateTask) {
+        final RegisterUserAccountRequest request = (RegisterUserAccountRequest) delegateTask.
+                getVariable(TaskVariables.REQUEST.variableName());
+
+        delegateTask.addCandidateGroup(request.getChamber().getPrimaryId().toString());
+        log.info("Task assigned to candidate group associated to chambers <{}>."
+                + request.getChamber().getName());
+    }
+}

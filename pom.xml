@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ecoo</groupId>
+    <artifactId>ecoo-pom</artifactId>
+    <version>RELEASE.1.0</version>
+    <packaging>pom</packaging>
+    <name>ECOO - POM</name>
+
+    <modules>
+        <!--<module>bpm</module>-->
+        <module>business-api</module>
+        <module>common</module>
+        <module>db</module>
+        <module>gateway-api</module>
+        <module>log-api</module>
+        <!--<module>maven-plugin/maven-split-config-plugin</module>-->
+        <module>ssrs-api</module>
+        <module>superpom</module>
+    </modules>
+</project>
