@@ -18,6 +18,6 @@ camunda:
     webapp:
       index-redirect-enabled: false
     database:
-      #schema-update: false
-      schema-update: drop-create
+      schema-update: false
+      #schema-update: drop-create
       type: mssql

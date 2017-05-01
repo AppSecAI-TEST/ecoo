@@ -42,5 +42,7 @@ public class MarkCompanyAsPendingApprovalTask implements JavaDelegate {
 
         log.info("Attempting to save company... {}", company.toString());
         companyService.save(company);
+
+        request.getUser().setCompany(company);
     }
 }

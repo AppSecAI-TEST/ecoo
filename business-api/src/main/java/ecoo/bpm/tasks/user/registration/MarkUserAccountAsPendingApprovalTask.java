@@ -56,7 +56,7 @@ public class MarkUserAccountAsPendingApprovalTask implements JavaDelegate {
         user.setLastLoginTime(null);
 
         final String plainTextPassword = request.getPlainTextPassword();
-        userService.setPassword(user, plainTextPassword);
+        userService.setPassword(user, plainTextPassword, false);
         delegateExecution.setVariable(UserRegistrationVariables.PLAIN_TEXT_PASSWORD.id(), plainTextPassword);
 
         user.setStatus(UserStatus.PendingApproval.id());

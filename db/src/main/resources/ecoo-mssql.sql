@@ -370,7 +370,6 @@ INSERT INTO "country" ("id", "descr") VALUES
 ('NU', 'NIUE'),
 ('NZ', 'NEW ZEALAND'),
 ('OM', 'OMAN'),
-('OS', 'Off shore'),
 ('PA', 'PANAMA'),
 ('PE', 'PERU'),
 ('PF', 'FRENCH POLYNESIA'),
@@ -799,6 +798,10 @@ CONSTRAINT [pk_user_acc] PRIMARY KEY CLUSTERED
 ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[user_acc]  WITH CHECK ADD CONSTRAINT [fk_user_acc_company] FOREIGN KEY(company_id) REFERENCES [dbo].company(id);
+ALTER TABLE [dbo].[user_acc] ADD  CONSTRAINT ix_user_001 UNIQUE NONCLUSTERED (username ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+GO
+
 CREATE TABLE "user_acc_log" (
   "rev" int NOT NULL,
   "revType" tinyint NOT NULL,
@@ -929,10 +932,10 @@ INSERT INTO "user_status" ("id", "descr") VALUES
 
 SET IDENTITY_INSERT "user_acc" ON ;
 INSERT INTO "user_acc" ("id", "title", "first_name", "last_name", "display_name", "primary_email_address", "mobile_no", "prefer_comm_type", "username", "password", "personal_ref_type", "personal_ref_value", "account_non_expired", "account_non_locked", "credentials_non_expired", "enabled", "reserved", "password_expired", "activation_serial_no", "last_login_time", "status", "company_id") VALUES
-(-99  ,NULL  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'no-reply@ecoo.co.za'  ,NULL  ,NULL  ,'anonymous'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL  ,NULL ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,0),
-(-98  ,NULL  ,'SYSTEM'  ,'ACCOUNT'  ,'SYSTEM ACCOUNT'  ,NULL  ,NULL  ,NULL  ,'sysaccount'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,0),
-(-97  ,NULL  ,'BATCH PROCESSOR'  ,'ACCOUNT'  ,'BATCH PROCESSOR ACCOUNT'  ,NULL  ,NULL  ,NULL  ,'batch'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,0),
-(1  ,NULL  ,'SYSTEM'  ,'ADMINISTRATION'  ,'SYSTEM ADMINISTRATION'  ,'system@s-squared.co.za'  ,NULL  ,NULL  ,'admin'  ,'21232f297a57a5a743894a0e4a801fc3'  ,'OTH'  ,'admin' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,0);
+(-99  ,NULL  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'no-reply@ecoo.co.za'  ,NULL  ,NULL  ,'anonymous'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL  ,NULL ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  , NULL),
+(-98  ,NULL  ,'SYSTEM'  ,'ACCOUNT'  ,'SYSTEM ACCOUNT'  ,NULL  ,NULL  ,NULL  ,'sysaccount'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
+(-97  ,NULL  ,'BATCH PROCESSOR'  ,'ACCOUNT'  ,'BATCH PROCESSOR ACCOUNT'  ,NULL  ,NULL  ,NULL  ,'batch'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
+(1  ,NULL  ,'SYSTEM'  ,'ADMINISTRATION'  ,'SYSTEM ADMINISTRATION'  ,'system@s-squared.co.za'  ,NULL  ,NULL  ,'admin'  ,'21232f297a57a5a743894a0e4a801fc3'  ,'OTH'  ,'admin' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL);
 SET IDENTITY_INSERT "user_acc" OFF;
 
 CREATE TABLE "user_signature" (

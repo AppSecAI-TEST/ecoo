@@ -2,6 +2,7 @@ package ecoo.bpm.tasks.user.event;
 
 import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.entity.RegisterUserAccountRequest;
+import ecoo.data.ChamberGroupIdentityFactory;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
 import org.slf4j.Logger;
@@ -23,8 +24,9 @@ public class UserRegistrationTaskAssignmentHandler implements TaskListener {
         final RegisterUserAccountRequest request = (RegisterUserAccountRequest) delegateTask.
                 getVariable(TaskVariables.REQUEST.variableName());
 
-        delegateTask.addCandidateGroup(request.getChamber().getPrimaryId().toString());
-        log.info("Task assigned to candidate group associated to chambers <{}>."
-                + request.getChamber().getName());
+        final String chamberGroupIdentity = ChamberGroupIdentityFactory.build(request.getChamber().getPrimaryId());
+        delegateTask.addCandidateGroup(chamberGroupIdentity);
+        log.info("Task assigned to candidate group associated to chambers {} <{}>."
+                , request.getChamber().getName(), chamberGroupIdentity);
     }
 }

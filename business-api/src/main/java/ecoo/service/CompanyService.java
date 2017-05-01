@@ -8,5 +8,5 @@ import ecoo.data.Company;
  */
 public interface CompanyService extends CrudService<Integer, Company>, AuditedModelAware<Company> {
 
-
+    Company findByRegistrationNo(String registrationNo);
 }

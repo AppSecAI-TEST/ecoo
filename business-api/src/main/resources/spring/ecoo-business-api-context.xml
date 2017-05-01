@@ -12,6 +12,7 @@
     <import resource="classpath:spring/ecoo-business-api-ssrs-context.xml"/>
     <import resource="classpath:spring/ecoo-business-api-es-context.xml"/>
 
+    <context:component-scan base-package="ecoo.bpm"/>
     <context:component-scan base-package="ecoo.command"/>
     <context:component-scan base-package="ecoo.validator"/>
     <context:component-scan base-package="ecoo.service"/>

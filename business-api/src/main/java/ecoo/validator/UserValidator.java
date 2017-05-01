@@ -25,7 +25,12 @@ public class UserValidator {
 
     public void validate(User user) {
         Assert.notNull(user, "user cannot be null.");
+        assertCommunicationPreferences(user);
+        assertUniqueUsername(user);
+        assertUniquePersonalReference(user);
+    }
 
+    private void assertCommunicationPreferences(User user) {
         if (StringUtils.isBlank(user.getPrimaryEmailAddress()) && StringUtils.isBlank(user.getMobileNumber())) {
             throw new DataIntegrityViolationException("System cannot complete request. Neither a primary " +
                     "email address nor the mobile number defined. Please ensure the user has at least one contact captured.");
@@ -40,12 +45,23 @@ public class UserValidator {
             throw new DataIntegrityViolationException("System cannot complete request. The preferred communication type is set to EMAIL " +
                     "and no primary email address was captured.");
         }
+    }
 
-        final User otherUser = userDao.findByPersonalReference(user.getPersonalReferenceType()
-                , user.getPersonalReferenceValue());
+    private void assertUniqueUsername(User user) {
+        User otherUser = userDao.findByUsername(user.getUsername());
         if ((otherUser != null && user.getPrimaryId() == null) || (otherUser != null && !otherUser.getPrimaryId().equals(user.getPrimaryId()))) {
             throw new DataIntegrityViolationException(String.format("System cannot complete request. Another user with the " +
-                    "personal reference type %s and value %s already exists.", user.getPersonalReferenceType(), user.getPersonalReferenceValue()));
+                    "username %s already exists.", user.getUsername()));
+        }
+    }
+
+    private void assertUniquePersonalReference(User user) {
+        if (StringUtils.isNotBlank(user.getPersonalReferenceValue())) {
+            User otherUser = userDao.findByPersonalReference(user.getPersonalReferenceType(), user.getPersonalReferenceValue());
+            if ((otherUser != null && user.getPrimaryId() == null) || (otherUser != null && !otherUser.getPrimaryId().equals(user.getPrimaryId()))) {
+                throw new DataIntegrityViolationException(String.format("System cannot complete request. Another user with the " +
+                        "personal reference type %s and value %s already exists.", user.getPersonalReferenceType(), user.getPersonalReferenceValue()));
+            }
         }
     }
 }

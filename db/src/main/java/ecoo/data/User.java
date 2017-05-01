@@ -110,10 +110,10 @@ public class User extends BaseModel<Integer> implements UserDetails, Credentials
     @Audited
     private Date lastLoginTime;
 
-//    @ManyToOne
-//    @JoinColumn(name = "branch_id")
-//    @Audited
-//    private Branch branch;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    @Audited
+    private Company company;
 
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "user_id")
@@ -127,10 +127,8 @@ public class User extends BaseModel<Integer> implements UserDetails, Credentials
     @Audited
     private String status;
 
-//    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
-//    @JoinColumn(name = "user_id")
-//    @Cascade({CascadeType.ALL})
-//    private Set<ChamberAdmin> chamberAdmins;
+    @Transient
+    private Set<String> groupIdentities = new HashSet<>();
 
     /**
      * Default constructor.
@@ -438,6 +436,14 @@ public class User extends BaseModel<Integer> implements UserDetails, Credentials
         this.activationSerialNumber = activationSerialNumber;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     /**
      * Returns the user roles linked to this account.
      *
@@ -507,16 +513,18 @@ public class User extends BaseModel<Integer> implements UserDetails, Credentials
         this.status = status;
     }
 
-//    public Set<ChamberAdmin> getChamberAdmins() {
-//        if (chamberAdmins == null) {
-//            chamberAdmins = new HashSet<>();
-//        }
-//        return chamberAdmins;
-//    }
-//
-//    public void setChamberAdmins(Set<ChamberAdmin> chamberAdmins) {
-//        this.chamberAdmins = chamberAdmins;
-//    }
+    public Set<String> getGroupIdentities() {
+        return Collections.unmodifiableSet(groupIdentities);
+    }
+
+    public void setGroupIdentities(Set<String> groupIdentities) {
+        this.groupIdentities = groupIdentities;
+    }
+
+    @JsonIgnore
+    public void addGroupIdentity(String groupIdentity) {
+        this.groupIdentities.add(groupIdentity);
+    }
 
     @Override
     public String toString() {
@@ -540,9 +548,11 @@ public class User extends BaseModel<Integer> implements UserDetails, Credentials
                 ", reserved=" + reserved +
                 ", passwordExpired=" + passwordExpired +
                 ", activationSerialNumber='" + activationSerialNumber + '\'' +
+                ", company=" + company +
                 ", lastLoginTime=" + lastLoginTime +
                 ", userRoles=" + userRoles +
                 ", authorities=" + authorities +
+                ", groupIdentities=" + groupIdentities +
                 ", status='" + status + '\'' +
                 '}';
     }

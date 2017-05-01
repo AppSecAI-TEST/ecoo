@@ -5,7 +5,6 @@ import ecoo.bpm.common.TaskDefinition;
 import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.constants.UserRegistrationVariables;
 import ecoo.bpm.entity.*;
-import ecoo.data.ChamberAdmin;
 import ecoo.data.Feature;
 import ecoo.data.User;
 import ecoo.service.FeatureService;
@@ -18,7 +17,6 @@ import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.IdentityLink;
 import org.camunda.bpm.engine.task.Task;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +88,27 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
             tasks.add(request);
         }
         return tasks;
+    }
+
+    @Override
+    public List<WorkflowRequest> findAssignedToTasks(String username) {
+        Assert.hasText(username, "System cannot complete request. username cannot be null.");
+
+        final Collection<Task> tasks = new ArrayList<>();
+        tasks.addAll(taskService.createTaskQuery().taskAssignee(username)
+                .active().list());
+
+        final List<String> candidateGroups = candidateGroups(username);
+        if (!candidateGroups.isEmpty()) {
+            tasks.addAll(taskService.createTaskQuery().taskCandidateGroupIn(candidateGroups)
+                    .active().list());
+        }
+
+        final List<WorkflowRequest> workflowRequests = new ArrayList<>();
+        for (Task task : tasks) {
+            workflowRequests.add(buildWorkflowRequest(task));
+        }
+        return workflowRequests;
     }
 
     /**
@@ -197,7 +216,6 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
     @Override
     public RegisterUserAccountResponse register(RegisterUserAccountRequest request) {
         Assert.notNull(request, "The request cannot be null.");
-        Assert.notNull(request.getRequestingUser(), "The requesting user is required.");
         Assert.hasText(request.getSource(), "The source is required.");
 
         final User requestingUser = request.getRequestingUser();
@@ -268,22 +286,6 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
                     .count();
         }
         return count;
-    }
-
-    @Override
-    public List<WorkflowRequest> findAssignedToTasks(String username) {
-        Assert.notNull(username, "System cannot complete request. username cannot be null.");
-        final List<WorkflowRequest> tasks = new ArrayList<>();
-        for (Task task : taskService.createTaskQuery().taskAssignee(username)
-                .active().list()) {
-            final WorkflowRequest request = (WorkflowRequest) taskService.getVariable(task.getId()
-                    , TaskVariables.REQUEST.variableName());
-            if (request.getProcessInstanceId() == null) {
-                request.setProcessInstanceId(task.getProcessInstanceId());
-            }
-            tasks.add(request);
-        }
-        return tasks;
     }
 
     @Override
@@ -414,12 +416,7 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList()));
 
-            final DateTime now = DateTime.now();
-//            for (ChamberAdmin chamberAdmin : user.getChamberAdmins()) {
-//                if (chamberAdmin.isActive(now)) {
-//                    candidateGroups.add(chamberAdmin.getChamberId().toString());
-//                }
-//            }
+            candidateGroups.addAll(user.getGroupIdentities());
         }
         return candidateGroups;
     }

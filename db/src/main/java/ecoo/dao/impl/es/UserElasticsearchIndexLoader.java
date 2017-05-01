@@ -1,6 +1,9 @@
 package ecoo.dao.impl.es;
 
+import ecoo.dao.ChamberAdminDao;
 import ecoo.dao.UserDao;
+import ecoo.data.ChamberAdmin;
+import ecoo.data.ChamberGroupIdentityFactory;
 import ecoo.data.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +35,18 @@ public class UserElasticsearchIndexLoader {
 
     private final UserDao userDao;
 
+    private final ChamberAdminDao chamberAdminDao;
+
     private final UserElasticsearchRepository userElasticsearchRepository;
 
     @Autowired
-    public UserElasticsearchIndexLoader(final UserDao userDao
-            , @Qualifier("userElasticsearchRepository") final UserElasticsearchRepository userElasticsearchRepository) {
+    public UserElasticsearchIndexLoader(UserDao userDao, ChamberAdminDao chamberAdminDao
+            , @Qualifier("userElasticsearchRepository") UserElasticsearchRepository userElasticsearchRepository) {
         Assert.notNull(userDao);
+        Assert.notNull(chamberAdminDao);
         Assert.notNull(userElasticsearchRepository);
         this.userDao = userDao;
+        this.chamberAdminDao = chamberAdminDao;
         this.userElasticsearchRepository = userElasticsearchRepository;
         this.threadPool = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
     }
@@ -89,27 +96,19 @@ public class UserElasticsearchIndexLoader {
         return ids;
     }
 
-    public User load(final Integer id) {
-        LOG.trace("load(" + id + ")");
-        try {
-            final User entity = userDao.findByPrimaryId(id);
-            if (entity == null) return null;
-            return userElasticsearchRepository.save(entity);
-
-        } catch (final Exception e) {
-            LOG.error("Error loading: " + id);
-            LOG.error(e.getMessage(), e);
-            return null;
-        }
-    }
-
     public List<User> load(final List<Integer> ids) {
         LOG.info("Group load {} entities", ids.size());
         List<User> data = new ArrayList<>(ids.size());
         for (Integer id : ids) {
             try {
                 final User entity = userDao.findByPrimaryId(id);
-                if (entity != null) data.add(entity);
+                if (entity != null) {
+                    for (ChamberAdmin chamberAdmin : chamberAdminDao.findByUser(id)) {
+                        final String chamberGroupIdentity = ChamberGroupIdentityFactory.build(chamberAdmin.getChamberId());
+                        entity.addGroupIdentity(chamberGroupIdentity);
+                    }
+                    data.add(entity);
+                }
             } catch (final Exception e) {
                 LOG.error("Error loading: " + id);
                 LOG.error(e.getMessage(), e);

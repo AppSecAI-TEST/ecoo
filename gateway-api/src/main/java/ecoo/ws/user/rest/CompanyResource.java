@@ -1,9 +1,11 @@
 package ecoo.ws.user.rest;
 
-import ecoo.data.audit.Revision;
 import ecoo.data.Company;
+import ecoo.data.audit.Revision;
 import ecoo.service.CompanyService;
+import ecoo.ws.common.json.ValidationResponse;
 import ecoo.ws.common.rest.BaseResource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,24 @@ public class CompanyResource extends BaseResource {
     public CompanyResource(CompanyService companyService) {
         this.companyService = companyService;
     }
+
+
+    @RequestMapping(value = "/validate/registrationNo", method = RequestMethod.GET)
+    public ResponseEntity<ValidationResponse> validateRegistrationNumber(@RequestParam("id") Integer id
+            , @RequestParam("registrationNo") String registrationNo) {
+        registrationNo = StringUtils.trimToNull(registrationNo);
+        if (StringUtils.isNotBlank(registrationNo)) {
+            final Company company = companyService.findByRegistrationNo(registrationNo);
+            if (company != null && !company.getPrimaryId().equals(id)) {
+                return ResponseEntity.ok(new ValidationResponse(false, "Value is not unique"));
+            } else {
+                return ResponseEntity.ok(new ValidationResponse(true));
+            }
+        } else {
+            return ResponseEntity.ok(new ValidationResponse(true));
+        }
+    }
+
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Company> findById(@PathVariable Integer id) {
