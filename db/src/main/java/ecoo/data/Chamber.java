@@ -2,6 +2,7 @@ package ecoo.data;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.hibernate.envers.Audited;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -56,9 +57,17 @@ public class Chamber extends BaseModel<Integer> implements Serializable {
     @Audited
     private String phoneNo;
 
+    @Column(name = "fax_no")
+    @Audited
+    private String faxNo;
+
     @Column(name = "email")
     @Audited
     private String email;
+
+    @Column(name = "website")
+    @Audited
+    private String website;
 
 
     /**
@@ -145,6 +154,14 @@ public class Chamber extends BaseModel<Integer> implements Serializable {
         this.phoneNo = phoneNo;
     }
 
+    public String getFaxNo() {
+        return faxNo;
+    }
+
+    public void setFaxNo(String faxNo) {
+        this.faxNo = faxNo;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -153,9 +170,59 @@ public class Chamber extends BaseModel<Integer> implements Serializable {
         this.email = email;
     }
 
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
     @SuppressWarnings("Duplicates")
     @JsonGetter
     public String getDescription() {
-        return "";
+        final StringBuilder buffer = new StringBuilder();
+
+        if (!StringUtils.isEmpty(getBuilding())) {
+            buffer.append(", ").append(getBuilding());
+        }
+        if (!StringUtils.isEmpty(getStreet())) {
+            buffer.append(", ").append(getStreet());
+        }
+
+        if (!StringUtils.isEmpty(getCity())) {
+            buffer.append(", ").append(getCity());
+        }
+
+        if (getProvince() != null) {
+            buffer.append(", ").append(getProvince().getDescription());
+        }
+
+        if (!StringUtils.isEmpty(getPostcode())) {
+            buffer.append(", ").append(getPostcode());
+        }
+
+        if (!StringUtils.isEmpty(getCountryId())) {
+            buffer.append(", ").append(getCountryId());
+        }
+        return buffer.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Chamber{" +
+                "primaryId=" + primaryId +
+                ", name='" + name + '\'' +
+                ", building='" + building + '\'' +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", postcode='" + postcode + '\'' +
+                ", province=" + province +
+                ", countryId='" + countryId + '\'' +
+                ", phoneNo='" + phoneNo + '\'' +
+                ", faxNo='" + faxNo + '\'' +
+                ", email='" + email + '\'' +
+                ", website='" + website + '\'' +
+                '}';
     }
 }

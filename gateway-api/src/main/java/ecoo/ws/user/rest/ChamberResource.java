@@ -1,7 +1,7 @@
 package ecoo.ws.user.rest;
 
-import ecoo.data.audit.Revision;
 import ecoo.data.Chamber;
+import ecoo.data.audit.Revision;
 import ecoo.service.ChamberService;
 import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,11 @@ public class ChamberResource extends BaseResource {
     @Autowired
     public ChamberResource(ChamberService chamberService) {
         this.chamberService = chamberService;
+    }
+
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Chamber>> findAssociatedChambersByLoggedInUser() {
+        return ResponseEntity.ok(chamberService.findAssociatedChambersByUser(currentUser()));
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)

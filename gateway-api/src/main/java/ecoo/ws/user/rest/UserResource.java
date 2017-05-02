@@ -63,6 +63,21 @@ public class UserResource extends BaseResource {
         return ResponseEntity.ok(userService.findByRole(role));
     }
 
+    @RequestMapping(value = "/validate/username", method = RequestMethod.GET)
+    public ResponseEntity<ValidationResponse> validateUsername(@RequestParam("id") Integer id, @RequestParam("username") String username) {
+        username = StringUtils.trimToNull(username);
+        if (StringUtils.isNotBlank(username)) {
+            final User user = (User) userService.loadUserByUsername(username);
+            if (user != null && !user.getPrimaryId().equals(id)) {
+                return ResponseEntity.ok(new ValidationResponse(false, "Value is not unique"));
+            } else {
+                return ResponseEntity.ok(new ValidationResponse(true));
+            }
+        } else {
+            return ResponseEntity.ok(new ValidationResponse(true));
+        }
+    }
+
     @RequestMapping(value = "/validate/primaryEmailAddress", method = RequestMethod.GET)
     public ResponseEntity<ValidationResponse> validatePrimaryEmailAddress(@RequestParam("id") Integer id
             , @RequestParam("primaryEmailAddress") String primaryEmailAddress) {
@@ -156,6 +171,7 @@ public class UserResource extends BaseResource {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<User> save(@RequestBody User user) {
+        userValidator.validate(user);
         return ResponseEntity.ok(userService.save(user));
     }
 

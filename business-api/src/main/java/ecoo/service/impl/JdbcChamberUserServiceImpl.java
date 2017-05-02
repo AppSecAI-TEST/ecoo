@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
  * @author Justin Rundle
  * @since April 2017
@@ -46,5 +49,26 @@ public class JdbcChamberUserServiceImpl extends JdbcAuditTemplate<Integer, Chamb
         chamberUser.setEndDate(DateTime.parse("99991231", DateTimeFormat.forPattern("yyyyMMdd")).toDate());
 
         return save(chamberUser);
+    }
+
+    @Override
+    public Collection<ChamberUser> findByUser(Integer userId) {
+        Assert.notNull(userId, "The variable userId cannot be null.");
+        return chamberUserDao.findByUser(userId);
+    }
+
+    @Override
+    public Collection<ChamberUser> findByUserAndEffectiveDate(Integer userId, DateTime effectiveDate) {
+        Assert.notNull(userId, "The variable userId cannot be null.");
+        Assert.notNull(effectiveDate, "The variable effectiveDate cannot be null.");
+        final Collection<ChamberUser> chamberUsers = new HashSet<>();
+        for (ChamberUser chamberUser : chamberUserDao.findByUser(userId)) {
+            final DateTime startDate = DateTime.now().withMillis(chamberUser.getStartDate().getTime());
+            final DateTime endDate = DateTime.now().withMillis(chamberUser.getEndDate().getTime());
+            if (effectiveDate.isEqual(startDate) || (effectiveDate.isAfter(startDate) && effectiveDate.isBefore(endDate))) {
+                chamberUsers.add(chamberUser);
+            }
+        }
+        return chamberUsers;
     }
 }

@@ -35,4 +35,12 @@ public class ChamberUserDaoImpl extends BaseAuditLogDaoImpl<Integer, ChamberUser
         if (data.isEmpty()) return null;
         return data.iterator().next();
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ChamberUser> findByUser(Integer userId) {
+        Assert.notNull(userId, "The variable userId cannot be null.");
+        return (List<ChamberUser>) getHibernateTemplate().findByNamedQueryAndNamedParam(
+                "FIND_CHAMBER_USER_BY_USER", "userId", userId);
+    }
 }

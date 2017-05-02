@@ -526,6 +526,17 @@ public class User extends BaseModel<Integer> implements UserDetails, Credentials
         this.groupIdentities.add(groupIdentity);
     }
 
+    @JsonIgnore
+    public boolean isInRole(Role role) {
+        if (role == null) return false;
+        for (UserRole userRole : getUserRoles()) {
+            if (userRole.getRole().equalsIgnoreCase(role.name())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "User{" +

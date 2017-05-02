@@ -520,8 +520,10 @@ CREATE TABLE "chamber" (
   postcode varchar(10) NOT NULL,
   province_id int NOT NULL,
   country_id varchar(2) NOT NULL,
-  phone_no varchar(100) NOT NULL,
-  email varchar(100) NOT NULL,
+  phone_no varchar(20) NOT NULL,
+  fax_no varchar(20) NULL,
+  email varchar(255) NOT NULL,
+  website varchar(255) NULL,
 CONSTRAINT [pk_chamber] PRIMARY KEY CLUSTERED 
 ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
@@ -530,7 +532,7 @@ ALTER TABLE "chamber" ADD CONSTRAINT "fk_chamber_province" FOREIGN KEY ("provinc
 ALTER TABLE "chamber" ADD CONSTRAINT "fk_chamber_country" FOREIGN KEY ("country_id") REFERENCES "country" ("id");
 GO
 
-INSERT INTO "chamber" VALUES ('CHAMBER OF RANDBURG','building','street','city','postcode','4','ZA','0119690000','randburg@hotmail.com');
+INSERT INTO "chamber" VALUES ('CHAMBER OF RANDBURG','UNIT G8 ATRIUM TERRACES','272 OAK AVENUE','RANDBURG','2194','4','ZA','086 101 9218','086 212 4407','ADMIN@RCCI.CO.ZA','http://rcci.co.za');
 GO
 
 CREATE TABLE "chamber_log" (
@@ -544,8 +546,10 @@ CREATE TABLE "chamber_log" (
   postcode varchar(10) NULL,
   province_id int NULL,
   country_id varchar(2) NULL,
-  phone_no varchar(100) NULL,
-  email varchar(100) NULL,
+  phone_no varchar(20) NULL,
+  fax_no varchar(20) NULL,
+  email varchar(255) NULL,
+  website varchar(255) NULL,
 CONSTRAINT pk_chamber_log PRIMARY KEY CLUSTERED 
 ([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
@@ -934,8 +938,11 @@ SET IDENTITY_INSERT "user_acc" ON ;
 INSERT INTO "user_acc" ("id", "title", "first_name", "last_name", "display_name", "primary_email_address", "mobile_no", "prefer_comm_type", "username", "password", "personal_ref_type", "personal_ref_value", "account_non_expired", "account_non_locked", "credentials_non_expired", "enabled", "reserved", "password_expired", "activation_serial_no", "last_login_time", "status", "company_id") VALUES
 (-99  ,NULL  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'no-reply@ecoo.co.za'  ,NULL  ,NULL  ,'anonymous'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL  ,NULL ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  , NULL),
 (-98  ,NULL  ,'SYSTEM'  ,'ACCOUNT'  ,'SYSTEM ACCOUNT'  ,NULL  ,NULL  ,NULL  ,'sysaccount'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
-(-97  ,NULL  ,'BATCH PROCESSOR'  ,'ACCOUNT'  ,'BATCH PROCESSOR ACCOUNT'  ,NULL  ,NULL  ,NULL  ,'batch'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
-(1  ,NULL  ,'SYSTEM'  ,'ADMINISTRATION'  ,'SYSTEM ADMINISTRATION'  ,'system@s-squared.co.za'  ,NULL  ,NULL  ,'admin'  ,'21232f297a57a5a743894a0e4a801fc3'  ,'OTH'  ,'admin' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL);
+(-97  ,NULL  ,'BATCH PROCESSOR'  ,'ACCOUNT'  ,'BATCH PROCESSOR ACCOUNT'  ,NULL  ,NULL  ,'E'  ,'batch'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
+(1  ,NULL  ,'SYSTEM'  ,'ADMINISTRATION'  ,'SYSTEM ADMINISTRATION'  ,'system@s-squared.co.za'  ,NULL  ,'E'  ,'admin'  ,'21232f297a57a5a743894a0e4a801fc3'  ,'OTH'  ,'admin' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL),
+(2  ,NULL  ,'LINDA'  ,'HOLTES'  ,'LINDA HOLTES'  ,'linda@uasalesonline.com'  ,NULL  ,'E'  ,'linda@uasalesonline.com'  ,'fe01ce2a7fbac8fafaed7c982a04e229'  ,NULL ,NULL ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL),
+(3  ,NULL  ,'LINDA'  ,'BLACKBEARD'  ,'LINDA LOUISE BLACKBEARD'  ,'support@s-squared.co.za'  ,NULL  ,'E'  ,'admin@rcci.co.za'  ,'fe01ce2a7fbac8fafaed7c982a04e229'  ,'RSA'  ,'5305160111082' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL),
+(4  ,NULL  ,'JACQUELINE'  ,'CHANDA'  ,'JACQUELINE SIMAPUKA CHANDA'  ,'support@s-squared.co.za'  ,NULL  ,'E'  ,'manager@rcci.co.za'  ,'fe01ce2a7fbac8fafaed7c982a04e229'  ,'OTH'  ,'ZN017569' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL);
 SET IDENTITY_INSERT "user_acc" OFF;
 
 CREATE TABLE "user_signature" (
@@ -1034,7 +1041,6 @@ ALTER TABLE "chamber_user" ADD CONSTRAINT "fk_chamber_user_chamber" FOREIGN KEY 
 ALTER TABLE "chamber_user" ADD CONSTRAINT "fk_chamber_user_user" FOREIGN KEY (user_id) REFERENCES user_acc ("id");
 GO
 
-
 CREATE TABLE chamber_user_log (
   "rev" int NOT NULL,
   "revType" tinyint NOT NULL,
@@ -1066,7 +1072,10 @@ ALTER TABLE chamber_admin ADD CONSTRAINT "fk_chamber_admin_chamber" FOREIGN KEY 
 ALTER TABLE chamber_admin ADD CONSTRAINT "fk_chamber_admin_user" FOREIGN KEY (user_id) REFERENCES user_acc ("id");
 GO
 
-INSERT INTO chamber_admin VALUES(1,1,GETDATE(),'9999/12/31');
+INSERT INTO chamber_admin VALUES(1,1 /*SYS ADMIN*/,GETDATE(),'9999/12/31');
+INSERT INTO chamber_admin VALUES(1,2 /*LINDA HOLTES*/,GETDATE(),'9999/12/31');
+INSERT INTO chamber_admin VALUES(1,3 /*LINDA BLACKBEARD*/,GETDATE(),'9999/12/31');
+INSERT INTO chamber_admin VALUES(1,4 /*JACQUELINE*/,GETDATE(),'9999/12/31');
 GO
 
 CREATE TABLE chamber_admin_log (

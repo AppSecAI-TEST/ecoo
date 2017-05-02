@@ -11,6 +11,14 @@
 	  	]]>
     </sql-query>
 
+    <sql-query name="FIND_CHAMBER_USER_BY_USER">
+        <return class="ecoo.data.ChamberUser"/>
+        <![CDATA[
+            select distinct c.* from dbo.chamber_user c with(nolock)
+            where c.user_id = :userId
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_CHAMBER_USER_BY_CHAMBER_AND_USER">
         <return class="ecoo.data.ChamberUser"/>
         <![CDATA[

@@ -33,7 +33,13 @@ public class UserValidator {
     private void assertCommunicationPreferences(User user) {
         if (StringUtils.isBlank(user.getPrimaryEmailAddress()) && StringUtils.isBlank(user.getMobileNumber())) {
             throw new DataIntegrityViolationException("System cannot complete request. Neither a primary " +
-                    "email address nor the mobile number defined. Please ensure the user has at least one contact captured.");
+                    "email address nor the mobile number captured. Please ensure the user has at least one contact captured.");
+        }
+
+        if (StringUtils.isBlank(user.getPreferredCommunicationType())
+                && (StringUtils.isNotBlank(user.getPrimaryEmailAddress()) || StringUtils.isNotBlank(user.getMobileNumber()))) {
+            throw new DataIntegrityViolationException("System cannot complete request. Either and/or both a primary " +
+                    "email address or the mobile number captured. Please ensure the user has a preferred communication type captured.");
         }
 
         if (user.isCommunicationPreferenceType(CommunicationPreferenceType.SMS) && StringUtils.isBlank(user.getMobileNumber())) {
