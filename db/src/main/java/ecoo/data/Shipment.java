@@ -47,7 +47,7 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
 
     @Column(name = "buyer_order_date")
     @Audited
-    private Date buyOrderDate;
+    private Date buyerOrderDate;
 
     @Column(name = "letter_credit_no")
     @Audited
@@ -172,12 +172,12 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.buyerReference = buyerReference;
     }
 
-    public Date getBuyOrderDate() {
-        return buyOrderDate;
+    public Date getBuyerOrderDate() {
+        return buyerOrderDate;
     }
 
-    public void setBuyOrderDate(Date buyOrderDate) {
-        this.buyOrderDate = buyOrderDate;
+    public void setBuyerOrderDate(Date buyerOrderDate) {
+        this.buyerOrderDate = buyerOrderDate;
     }
 
     public String getLetterOfCreditNumber() {
