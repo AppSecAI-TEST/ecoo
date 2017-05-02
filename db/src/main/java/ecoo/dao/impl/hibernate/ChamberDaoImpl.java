@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public class ChamberDaoImpl extends BaseAuditLogDaoImpl<Integer, Chamber> implements ChamberDao {
 
     @Autowired
-    public ChamberDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public ChamberDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, Chamber.class);
     }
 }

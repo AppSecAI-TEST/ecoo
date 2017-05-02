@@ -19,7 +19,7 @@ public class UploadTypeDaoImpl extends BaseHibernateDaoImpl<String, UploadType> 
      * Constructs a new {@link UploadTypeDaoImpl} data access object.
      */
     @Autowired
-    public UploadTypeDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public UploadTypeDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, UploadType.class);
     }
 }

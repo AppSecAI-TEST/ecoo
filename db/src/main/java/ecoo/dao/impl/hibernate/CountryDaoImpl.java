@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public class CountryDaoImpl extends BaseHibernateDaoImpl<String, Country> implements CountryDao {
 
     @Autowired
-    public CountryDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public CountryDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, Country.class);
     }
 }

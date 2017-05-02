@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public class UserRoleDaoImplImpl extends BaseHibernateDaoImpl<Integer, UserRole> implements UserRoleDao {
 
     @Autowired
-    public UserRoleDaoImplImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public UserRoleDaoImplImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, UserRole.class);
     }
 }

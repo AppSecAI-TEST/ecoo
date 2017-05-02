@@ -21,7 +21,7 @@ public class SystemJobDaoImplImpl extends BaseHibernateDaoImpl<Integer, SystemJo
     private static final String FIND_MOST_RECENT_SYSTEM_JOB_BY_CLASSNAME = "FIND_MOST_RECENT_SYSTEM_JOB_BY_CLASSNAME";
 
     @Autowired
-    public SystemJobDaoImplImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public SystemJobDaoImplImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, SystemJob.class);
     }
 

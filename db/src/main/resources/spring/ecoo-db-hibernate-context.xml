@@ -12,15 +12,15 @@
     Hibernate configurations
     ===================================================================================================================
     -->
-    <bean id="spivTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-        <property name="sessionFactory" ref="spivSessionFactory"/>
+    <bean id="ecooTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="ecooSessionFactory"/>
         <property name="defaultTimeout" value="60"/>
     </bean>
 
-    <tx:annotation-driven transaction-manager="spivTransactionManager"/>
+    <tx:annotation-driven transaction-manager="ecooTransactionManager"/>
 
-    <bean id="spivSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-        <property name="dataSource" ref="spivDataSource"/>
+    <bean id="ecooSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="ecooDataSource"/>
         <property name="packagesToScan" value="ecoo.**.*"/>
 
         <property name="mappingResources">
@@ -45,7 +45,7 @@
     </bean>
 
     <!-- Defaults, overridden in sub projects.  -->
-    <bean id="spivDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+    <bean id="ecooDataSource" class="org.apache.commons.dbcp.BasicDataSource"
           destroy-method="close">
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver"/>
         <property name="url" value="jdbc:jtds:sqlserver://localhost:1433/ecoo"/>

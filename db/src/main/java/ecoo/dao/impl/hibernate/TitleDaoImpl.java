@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public class TitleDaoImpl extends BaseHibernateDaoImpl<String, Title> implements TitleDao {
 
     @Autowired
-    public TitleDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public TitleDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, Title.class);
     }
 }

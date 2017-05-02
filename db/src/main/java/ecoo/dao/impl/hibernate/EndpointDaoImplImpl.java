@@ -22,7 +22,7 @@ import java.util.Date;
 public class EndpointDaoImplImpl extends BaseHibernateDaoImpl<Integer, Endpoint> implements EndpointDao {
 
     @Autowired
-    public EndpointDaoImplImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public EndpointDaoImplImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, Endpoint.class);
     }
 

@@ -19,7 +19,7 @@ public class UploadStatusDaoImpl extends BaseHibernateDaoImpl<Integer, UploadSta
      * Constructs a new {@link UploadStatusDaoImpl} data access object.
      */
     @Autowired
-    public UploadStatusDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public UploadStatusDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, UploadStatus.class);
     }
 }

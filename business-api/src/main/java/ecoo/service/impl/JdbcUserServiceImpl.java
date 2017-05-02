@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -52,8 +53,9 @@ public class JdbcUserServiceImpl extends JdbcElasticsearchAuditTemplate<Integer,
 
     @Autowired
     public JdbcUserServiceImpl(UserDao userDao, @Qualifier("userElasticsearchRepository") UserElasticsearchRepository userElasticsearchRepository
-            , UserValidator userValidator) {
-        super(userDao, userElasticsearchRepository);
+            , UserValidator userValidator
+            , ElasticsearchTemplate elasticsearchTemplate) {
+        super(userDao, userElasticsearchRepository, elasticsearchTemplate, User.class);
         this.userDao = userDao;
         this.userValidator = userValidator;
         this.userElasticsearchRepository = userElasticsearchRepository;

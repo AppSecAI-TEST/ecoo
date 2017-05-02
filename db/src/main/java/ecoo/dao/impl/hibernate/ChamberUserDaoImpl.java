@@ -19,7 +19,7 @@ import java.util.List;
 public class ChamberUserDaoImpl extends BaseAuditLogDaoImpl<Integer, ChamberUser> implements ChamberUserDao {
 
     @Autowired
-    public ChamberUserDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public ChamberUserDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, ChamberUser.class);
     }
 

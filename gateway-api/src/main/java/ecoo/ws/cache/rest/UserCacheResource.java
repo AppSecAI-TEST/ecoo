@@ -2,6 +2,7 @@ package ecoo.ws.cache.rest;
 
 import ecoo.dao.impl.es.UserElasticsearchIndexLoader;
 import ecoo.dao.impl.es.UserElasticsearchRepository;
+import ecoo.service.UserService;
 import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,11 +24,21 @@ public class UserCacheResource extends BaseResource {
 
     private UserElasticsearchIndexLoader userElasticsearchIndexLoader;
 
+    private UserService userService;
+
     @Autowired
     public UserCacheResource(@Qualifier("userElasticsearchRepository") UserElasticsearchRepository userElasticsearchRepository
-            , UserElasticsearchIndexLoader userElasticsearchIndexLoader) {
+            , UserElasticsearchIndexLoader userElasticsearchIndexLoader
+            , UserService userService) {
         this.userElasticsearchRepository = userElasticsearchRepository;
         this.userElasticsearchIndexLoader = userElasticsearchIndexLoader;
+        this.userService = userService;
+    }
+
+    @RequestMapping(value = "/recreate", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> recreate() {
+        userService.recreateIndex();
+        return ResponseEntity.ok(true);
     }
 
     @RequestMapping(value = "/forceRefresh", method = RequestMethod.GET)

@@ -18,7 +18,7 @@ public class MetricTypeDaoImpl extends BaseHibernateDaoImpl<String, MetricType> 
      * Constructs a new Data Access Object with the model bound to this Dao.
      */
     @Autowired
-    public MetricTypeDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public MetricTypeDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, MetricType.class);
     }
 }

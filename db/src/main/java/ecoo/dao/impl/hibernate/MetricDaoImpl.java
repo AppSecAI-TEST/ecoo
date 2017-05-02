@@ -23,7 +23,7 @@ public class MetricDaoImpl extends BaseAuditLogDaoImpl<Integer, Metric> implemen
      * Constructs a new Data Access Object with the model bound to this Dao.
      */
     @Autowired
-    public MetricDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public MetricDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, Metric.class);
     }
 

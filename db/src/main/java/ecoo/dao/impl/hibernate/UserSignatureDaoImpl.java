@@ -18,7 +18,7 @@ import java.util.List;
 public class UserSignatureDaoImpl extends BaseAuditLogDaoImpl<Integer, UserSignature> implements UserSignatureDao {
 
     @Autowired
-    public UserSignatureDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public UserSignatureDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, UserSignature.class);
     }
 

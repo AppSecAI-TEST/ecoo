@@ -19,7 +19,7 @@ import java.util.List;
 public class CompanyDocumentDaoImpl extends BaseAuditLogDaoImpl<Integer, CompanyDocument> implements CompanyDocumentDao {
 
     @Autowired
-    public CompanyDocumentDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public CompanyDocumentDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, CompanyDocument.class);
     }
 

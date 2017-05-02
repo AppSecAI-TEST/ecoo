@@ -3,6 +3,7 @@ package ecoo.service.impl;
 import ecoo.dao.BaseDao;
 import ecoo.service.CrudService;
 import org.elasticsearch.common.collect.Lists;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +22,17 @@ public abstract class ElasticsearchTemplateService<P extends Serializable, M ext
 
     private ElasticsearchRepository<M, P> repository;
 
-    public ElasticsearchTemplateService(BaseDao<P, M> dao, ElasticsearchRepository<M, P> repository) {
+    private ElasticsearchTemplate elasticsearchTemplate;
+
+    private Class<M> indexClass;
+
+    public ElasticsearchTemplateService(BaseDao<P, M> dao, ElasticsearchRepository<M, P> repository
+            , ElasticsearchTemplate elasticsearchTemplate
+            , Class<M> indexClass) {
         this.dao = dao;
         this.repository = repository;
+        this.elasticsearchTemplate = elasticsearchTemplate;
+        this.indexClass = indexClass;
     }
 
     /**
@@ -131,5 +140,15 @@ public abstract class ElasticsearchTemplateService<P extends Serializable, M ext
      * @param entity The entity to save.
      */
     protected void beforeDelete(M entity) {
+    }
+
+    /**
+     * Method to recreate the ES index.
+     */
+    public void recreateIndex() {
+        if (elasticsearchTemplate.indexExists(indexClass)) {
+            elasticsearchTemplate.deleteIndex(indexClass);
+        }
+        elasticsearchTemplate.createIndex(indexClass);
     }
 }

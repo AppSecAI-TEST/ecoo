@@ -20,7 +20,7 @@ import java.util.List;
 public class FeatureDaoImpl extends BaseAuditLogDaoImpl<Integer, Feature> implements FeatureDao {
 
     @Autowired
-    public FeatureDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public FeatureDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, Feature.class);
     }
 

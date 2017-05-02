@@ -3,11 +3,12 @@ package ecoo.service.impl;
 import ecoo.dao.AuditLogDao;
 import ecoo.dao.UserDao;
 import ecoo.data.BaseModel;
-import ecoo.data.audit.Revision;
 import ecoo.data.KnownUser;
 import ecoo.data.User;
+import ecoo.data.audit.Revision;
 import ecoo.service.AuditedModelAware;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +41,9 @@ public abstract class JdbcElasticsearchAuditTemplate<P extends Serializable, M e
      * @param dao The object used to save/load the models.
      * @throws IllegalArgumentException If the dao is null.
      */
-    public JdbcElasticsearchAuditTemplate(D dao, R repository) {
-        super(dao, repository);
+    public JdbcElasticsearchAuditTemplate(D dao, R repository, ElasticsearchTemplate elasticsearchTemplate
+            , Class<M> indexClass) {
+        super(dao, repository, elasticsearchTemplate, indexClass);
         this.dao = dao;
     }
 

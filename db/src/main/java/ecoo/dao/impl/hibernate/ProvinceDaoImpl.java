@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public class ProvinceDaoImpl extends BaseHibernateDaoImpl<Integer, Province> implements ProvinceDao {
 
     @Autowired
-    public ProvinceDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public ProvinceDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, Province.class);
     }
 }

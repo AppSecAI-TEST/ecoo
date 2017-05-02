@@ -1356,9 +1356,22 @@ GO
 -- =====================================================================================
 -- SHIPMENT
 -- =====================================================================================
+CREATE TABLE [dbo].shipment_status(
+	[id] [varchar](3) NOT NULL,
+	[descr] [varchar](50) NOT NULL,
+CONSTRAINT pk_shipment_status PRIMARY KEY CLUSTERED 
+([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+INSERT INTO shipment_status ("id", "descr") VALUES
+('PCA', 'Pending Chamber Approval'),
+('A', 'Approved'),
+('D', 'Declined');
+GO
+
 CREATE TABLE [ecoo].[dbo].[shipment](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
-	[tenant_id] [int] NOT NULL, -- TODO: add fk
+	[chamber_id] [smallint] NOT NULL,
 	[export_ref] [varchar](50) NOT NULL,
 	[export_inv_no] [varchar](50) NULL,
 	[export_inv_date] [datetime] NULL,
@@ -1377,13 +1390,36 @@ CREATE TABLE [ecoo].[dbo].[shipment](
 	[buyer_line4] [varchar](50) NULL,
 	[place_of_issue] [varchar](100) NOT NULL,
 	[date_of_issue] [datetime] NOT NULL,
+	[status] [varchar](3) NOT NULL,
 CONSTRAINT [pk_shipment] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
+
+ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_chamber" FOREIGN KEY (chamber_id) REFERENCES chamber ("id");  
 
 CREATE TABLE [dbo].[shipment_log](
 	[rev] int NOT NULL,
 	[revType] tinyint NOT NULL,
 	[id] [int] NOT NULL,
+	[chamber_id] [smallint] NULL,
+	[export_ref] [varchar](50) NULL,
+	[export_inv_no] [varchar](50) NULL,
+	[export_inv_date] [datetime] NULL,
+	[buy_ref] [varchar](50) NULL,
+	[buy_order_date] [datetime] NULL,
+	[letter_credit_no] [varchar](50) NULL,
+	[consigee_name] [varchar](200) NULL,
+	[consigee_line1] [varchar](50) NULL,
+	[consigee_line2] [varchar](50) NULL,
+	[consigee_line3] [varchar](50) NULL,
+	[consigee_line4] [varchar](50) NULL,
+	[buyer_name] [varchar](200) NULL,
+	[buyer_line1] [varchar](50) NULL,
+	[buyer_line2] [varchar](50) NULL,
+	[buyer_line3] [varchar](50) NULL,
+	[buyer_line4] [varchar](50) NULL,
+	[place_of_issue] [varchar](100) NULL,
+	[date_of_issue] [datetime] NULL,
+	[status] [varchar](3) NULL,
 CONSTRAINT [pk_shipment_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 

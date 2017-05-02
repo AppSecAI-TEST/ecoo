@@ -29,8 +29,8 @@ public class UserDaoImpl extends BaseAuditLogDaoImpl<Integer, User> implements U
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory
-            , @Qualifier("spivDataSource") DataSource dataSource) {
+    public UserDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory
+            , @Qualifier("ecooDataSource") DataSource dataSource) {
         super(sessionFactory, User.class);
         Assert.notNull(dataSource);
         this.jdbcTemplate = new JdbcTemplate(dataSource);

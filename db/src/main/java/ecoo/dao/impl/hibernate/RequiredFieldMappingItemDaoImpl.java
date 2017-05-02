@@ -21,7 +21,7 @@ public class RequiredFieldMappingItemDaoImpl extends BaseHibernateDaoImpl<Intege
      * Constructs a new {@link RequiredFieldMappingItemDaoImpl} data access object.
      */
     @Autowired
-    public RequiredFieldMappingItemDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public RequiredFieldMappingItemDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, RequiredFieldMappingItem.class);
     }
 

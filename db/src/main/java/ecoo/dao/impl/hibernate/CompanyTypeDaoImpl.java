@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public class CompanyTypeDaoImpl extends BaseAuditLogDaoImpl<String, CompanyType> implements CompanyTypeDao {
 
     @Autowired
-    public CompanyTypeDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public CompanyTypeDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, CompanyType.class);
     }
 }

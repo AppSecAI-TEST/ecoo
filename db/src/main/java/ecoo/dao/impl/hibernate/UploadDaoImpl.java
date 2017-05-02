@@ -82,8 +82,8 @@ public class UploadDaoImpl extends BaseHibernateDaoImpl<Integer, Upload> impleme
      * Constructs a new {@link UploadDaoImpl} data access object.
      */
     @Autowired
-    public UploadDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory
-            , @Qualifier("spivDataSource") DataSource dataSource) {
+    public UploadDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory
+            , @Qualifier("ecooDataSource") DataSource dataSource) {
         super(sessionFactory, Upload.class);
 
         Assert.notNull(dataSource);

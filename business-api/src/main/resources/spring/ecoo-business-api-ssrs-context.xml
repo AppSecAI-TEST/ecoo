@@ -4,10 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
               http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-    <!--<bean id="reportingService" class="ecoo.service.impl.ssrs.MicrosoftSQLServerReportingServiceImpl">-->
-        <!--<constructor-arg name="wsdlLocation" value="http://localhost:9999/ReportServer/reportExecution2005.asmx?wsdl"/>-->
-        <!--<constructor-arg name="username" value="spiv_ssrs"/>-->
-        <!--<constructor-arg name="password" value="ra4hU4@chaB$"/>-->
-    <!--</bean>-->
-
+    <bean id="reportingService" class="ecoo.service.impl.ssrs.MicrosoftSQLServerReportingServiceImpl">
+        <constructor-arg name="wsdlLocation" value="http://localhost:9999/ReportServer/reportExecution2005.asmx?wsdl"/>
+        <constructor-arg name="username" value="spiv_ssrs"/>
+        <constructor-arg name="password" value="ra4hU4@chaB$"/>
+    </bean>
 </beans>

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public class DocumentTypeDaoImpl extends BaseAuditLogDaoImpl<String, DocumentType> implements DocumentTypeDao {
 
     @Autowired
-    public DocumentTypeDaoImpl(@Qualifier("spivSessionFactory") SessionFactory sessionFactory) {
+    public DocumentTypeDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, DocumentType.class);
     }
 }
