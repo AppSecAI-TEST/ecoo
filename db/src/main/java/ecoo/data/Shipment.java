@@ -53,25 +53,25 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Audited
     private String letterOfCreditNumber;
 
-    @Column(name = "consigee_name")
+    @Column(name = "consignee_name")
     @Audited
-    private String consigeeName;
+    private String consigneeName;
 
-    @Column(name = "consigee_line1")
+    @Column(name = "consignee_line1")
     @Audited
-    private String consigeeLine1;
+    private String consigneeLine1;
 
-    @Column(name = "consigee_line2")
+    @Column(name = "consignee_line2")
     @Audited
-    private String consigeeLine2;
+    private String consigneeLine2;
 
-    @Column(name = "consigee_line3")
+    @Column(name = "consignee_line3")
     @Audited
-    private String consigeeLine3;
+    private String consigneeLine3;
 
-    @Column(name = "consigee_line4")
+    @Column(name = "consignee_line4")
     @Audited
-    private String consigeeLine4;
+    private String consigneeLine4;
 
     @Column(name = "buyer_name")
     @Audited
@@ -188,44 +188,44 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.letterOfCreditNumber = letterOfCreditNumber;
     }
 
-    public String getConsigeeName() {
-        return consigeeName;
+    public String getConsigneeName() {
+        return consigneeName;
     }
 
-    public void setConsigeeName(String consigeeName) {
-        this.consigeeName = consigeeName;
+    public void setConsigneeName(String consigneeName) {
+        this.consigneeName = consigneeName;
     }
 
-    public String getConsigeeLine1() {
-        return consigeeLine1;
+    public String getConsigneeLine1() {
+        return consigneeLine1;
     }
 
-    public void setConsigeeLine1(String consigeeLine1) {
-        this.consigeeLine1 = consigeeLine1;
+    public void setConsigneeLine1(String consigneeLine1) {
+        this.consigneeLine1 = consigneeLine1;
     }
 
-    public String getConsigeeLine2() {
-        return consigeeLine2;
+    public String getConsigneeLine2() {
+        return consigneeLine2;
     }
 
-    public void setConsigeeLine2(String consigeeLine2) {
-        this.consigeeLine2 = consigeeLine2;
+    public void setConsigneeLine2(String consigneeLine2) {
+        this.consigneeLine2 = consigneeLine2;
     }
 
-    public String getConsigeeLine3() {
-        return consigeeLine3;
+    public String getConsigneeLine3() {
+        return consigneeLine3;
     }
 
-    public void setConsigeeLine3(String consigeeLine3) {
-        this.consigeeLine3 = consigeeLine3;
+    public void setConsigneeLine3(String consigneeLine3) {
+        this.consigneeLine3 = consigneeLine3;
     }
 
-    public String getConsigeeLine4() {
-        return consigeeLine4;
+    public String getConsigneeLine4() {
+        return consigneeLine4;
     }
 
-    public void setConsigeeLine4(String consigeeLine4) {
-        this.consigeeLine4 = consigeeLine4;
+    public void setConsigneeLine4(String consigneeLine4) {
+        this.consigneeLine4 = consigneeLine4;
     }
 
     public String getBuyerName() {

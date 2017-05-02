@@ -69,12 +69,12 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
             final String escapedQuery = escape(q);
             queryBuilder.must(queryStringQuery("*" + escapedQuery + "*")
                     // TODO: Need to define other columns.
-                    .field("comment")
+                    .field("status")
                     .analyzeWildcard(true));
         } else {
             queryBuilder.must(queryStringQuery("*")
                     // TODO: Need to define other columns.
-                    .field("comment")
+                    .field("status")
                     .analyzeWildcard(true));
         }
 
