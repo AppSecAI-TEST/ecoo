@@ -8,3 +8,4 @@ business-api/src/main/java/ecoo/upload/
 business-api/src/test/
 db/src/test/
 logs/
+db/data

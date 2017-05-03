@@ -18,6 +18,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
@@ -69,12 +70,12 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
             final String escapedQuery = escape(q);
             queryBuilder.must(queryStringQuery("*" + escapedQuery + "*")
                     // TODO: Need to define other columns.
-                    .field("status")
+                    .field("exporterReference")
                     .analyzeWildcard(true));
         } else {
             queryBuilder.must(queryStringQuery("*")
                     // TODO: Need to define other columns.
-                    .field("status")
+                    .field("exporterReference")
                     .analyzeWildcard(true));
         }
 
@@ -91,7 +92,9 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
         if (status.equalsIgnoreCase("PENDING_ONLY")) {
             final List<Shipment> shipments = new ArrayList<>();
             for (Shipment shipment : results) {
-                if (shipment.isInStatus(ShipmentStatus.PendingChamberApproval)) {
+                if (shipment.isInStatus(ShipmentStatus.NewAndPendingDocumentSubmission
+                        , ShipmentStatus.SubmittedAndPendingChamberApproval
+                        , ShipmentStatus.ApprovedAndPendingPayment)) {
                     shipments.add(shipment);
                 }
             }
@@ -122,5 +125,18 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
             pageRequest = new PageRequest(start, pageSize, Sort.Direction.DESC, property);
         }
         return pageRequest;
+    }
+
+    /**
+     * Method called before save is called.
+     *
+     * @param entity The entity to save.
+     */
+    @Override
+    protected void beforeSave(Shipment entity) {
+        if (entity.isNew()) {
+            entity.setDateSubmitted(new Date());
+            entity.setStatus(ShipmentStatus.NewAndPendingDocumentSubmission.id());
+        }
     }
 }

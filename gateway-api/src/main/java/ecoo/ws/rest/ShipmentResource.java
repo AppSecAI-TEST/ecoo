@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Justin Rundle
@@ -59,8 +59,8 @@ public class ShipmentResource extends BaseResource {
             , @PathVariable Integer column
             , @PathVariable String direction
             , @PathVariable Integer totalRecords) {
-        final List<Shipment> data = shipmentService.query(q, status, start, pageSize, column, direction)
-                .stream().collect(Collectors.toList());
+        final List<Shipment> data = new ArrayList<>(shipmentService
+                .query(q, status, start, pageSize, column, direction));
         return ResponseEntity.ok(new QueryPageRquestResponse(totalRecords, totalRecords, data));
     }
 

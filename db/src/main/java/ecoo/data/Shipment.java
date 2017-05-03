@@ -101,14 +101,23 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Audited
     private Date dateOfIssue;
 
+    @Column(name = "date_submitted")
+    @Audited
+    private Date dateSubmitted;
+
     @Column(name = "status")
     @Audited
     private String status;
 
     @JsonIgnore
-    public boolean isInStatus(ShipmentStatus status) {
+    public boolean isInStatus(ShipmentStatus... status) {
         Assert.notNull(status);
-        return status.id().equalsIgnoreCase(this.status);
+        for (ShipmentStatus s : status) {
+            if (s.id().equalsIgnoreCase(this.status)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -284,11 +293,47 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.dateOfIssue = dateOfIssue;
     }
 
+    public Date getDateSubmitted() {
+        return dateSubmitted;
+    }
+
+    public void setDateSubmitted(Date dateSubmitted) {
+        this.dateSubmitted = dateSubmitted;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Shipment{" +
+                "primaryId=" + primaryId +
+                ", chamberId=" + chamberId +
+                ", exporterReference='" + exporterReference + '\'' +
+                ", exportInvoiceNumber='" + exportInvoiceNumber + '\'' +
+                ", exportInvoiceDate=" + exportInvoiceDate +
+                ", buyerReference='" + buyerReference + '\'' +
+                ", buyerOrderDate=" + buyerOrderDate +
+                ", letterOfCreditNumber='" + letterOfCreditNumber + '\'' +
+                ", consigneeName='" + consigneeName + '\'' +
+                ", consigneeLine1='" + consigneeLine1 + '\'' +
+                ", consigneeLine2='" + consigneeLine2 + '\'' +
+                ", consigneeLine3='" + consigneeLine3 + '\'' +
+                ", consigneeLine4='" + consigneeLine4 + '\'' +
+                ", buyerName='" + buyerName + '\'' +
+                ", buyerLine1='" + buyerLine1 + '\'' +
+                ", buyerLine2='" + buyerLine2 + '\'' +
+                ", buyerLine3='" + buyerLine3 + '\'' +
+                ", buyerLine4='" + buyerLine4 + '\'' +
+                ", placeOfIssue='" + placeOfIssue + '\'' +
+                ", dateOfIssue=" + dateOfIssue +
+                ", dateSubmitted=" + dateSubmitted +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

@@ -1367,15 +1367,18 @@ GO
 -- =====================================================================================
 CREATE TABLE [dbo].shipment_status(
 	[id] [varchar](3) NOT NULL,
-	[descr] [varchar](50) NOT NULL,
-CONSTRAINT pk_shipment_status PRIMARY KEY CLUSTERED 
+	[descr] [varchar](100) NOT NULL,
+CONSTRAINT pk_shipment_status
+PRIMARY KEY CLUSTERED 
 ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 INSERT INTO shipment_status ("id", "descr") VALUES
-('PCA', 'Pending Chamber Approval'),
-('A', 'Approved'),
-('D', 'Declined');
+('N', 'New & Pending Document Submission'),
+('SPA', 'Submitted & Pending Chamber Approval'),
+('APP', 'Approved & Pending Payment'),
+('D', 'Declined'),
+('C', 'Cancelled');
 GO
 
 CREATE TABLE [ecoo].[dbo].[shipment](
@@ -1399,11 +1402,13 @@ CREATE TABLE [ecoo].[dbo].[shipment](
 	[buyer_line4] [varchar](50) NULL,
 	[place_of_issue] [varchar](100) NOT NULL,
 	[date_of_issue] [datetime] NOT NULL,
-	[status] [varchar](3) NOT NULL,
+	[date_submitted] [datetime] NOT NULL,
+	[status] [varchar](3) NOT NULL
 CONSTRAINT [pk_shipment] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_chamber" FOREIGN KEY (chamber_id) REFERENCES chamber ("id");  
+ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_status" FOREIGN KEY ([status]) REFERENCES [shipment_status] ("id");
 
 CREATE TABLE [dbo].[shipment_log](
 	[rev] int NOT NULL,
@@ -1428,24 +1433,49 @@ CREATE TABLE [dbo].[shipment_log](
 	[buyer_line4] [varchar](50) NULL,
 	[place_of_issue] [varchar](100) NULL,
 	[date_of_issue] [datetime] NULL,
-	[status] [varchar](3) NULL,
+	[date_submitted] [datetime] NULL,
+	[status] [varchar](3) NULL
 CONSTRAINT [pk_shipment_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
-SET ANSI_PADDING OFF
-GO
-
 ALTER TABLE [dbo].[shipment_log]  WITH NOCHECK ADD  CONSTRAINT [fk_shipment_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])
-GO
-
 ALTER TABLE [dbo].[shipment_log] CHECK CONSTRAINT [fk_shipment_log_revision]
+
+ALTER TABLE [dbo].[shipment_log]  WITH NOCHECK ADD  CONSTRAINT [fk_shipment_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
+ALTER TABLE [dbo].[shipment_log] CHECK CONSTRAINT [fk_shipment_log_rev_type]
+GO
 GO
 
 
 ----------------------------------------------------------------------------------------------------------------
 -- CERTIFICATE OF ORIGIN
 ----------------------------------------------------------------------------------------------------------------
+CREATE TABLE [ecoo].[dbo].[doc_coo](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[shipment_id] [int] NOT NULL,
+	[status] [varchar](3) NOT NULL
+CONSTRAINT [pk_doc_coo] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
 
+ALTER TABLE doc_coo ADD CONSTRAINT "fk_doc_coo_shipment" FOREIGN KEY ([shipment_id]) REFERENCES [shipment] ("id");
+ALTER TABLE doc_coo ADD CONSTRAINT "fk_doc_coo_shipment_status" FOREIGN KEY ([status]) REFERENCES [shipment_status] ("id");
+GO  
+ 
+
+CREATE TABLE [dbo].[doc_coo_log](
+	[rev] int NOT NULL,
+	[revType] tinyint NOT NULL,
+	[id] [int] NOT NULL,
+	[status] [varchar](3) NULL
+CONSTRAINT [pk_doc_coo_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[doc_coo_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_coo_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])
+ALTER TABLE [dbo].[doc_coo_log] CHECK CONSTRAINT [fk_doc_coo_log_revision]
+
+ALTER TABLE [dbo].[doc_coo_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_coo_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
+ALTER TABLE [dbo].[doc_coo_log] CHECK CONSTRAINT [fk_doc_coo_log_rev_type]
+GO
 
 ----------------------------------------------------------------------------------------------------------------
 -- POPULATE AUDIT TABLES
