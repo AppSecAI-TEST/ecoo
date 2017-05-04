@@ -1374,7 +1374,7 @@ PRIMARY KEY CLUSTERED
 GO
 
 INSERT INTO shipment_status ("id", "descr") VALUES
-('N', 'New & Pending Document Submission'),
+('N', 'New & Pending Submission'),
 ('SPA', 'Submitted & Pending Chamber Approval'),
 ('APP', 'Approved & Pending Payment'),
 ('D', 'Declined'),

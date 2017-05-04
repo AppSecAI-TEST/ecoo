@@ -5,7 +5,7 @@ package ecoo.data;
  * @since May 2017
  */
 public enum ShipmentStatus {
-    NewAndPendingDocumentSubmission("N"), SubmittedAndPendingChamberApproval("SPA"), ApprovedAndPendingPayment("APP"), Declined("D"), Cancelled("C");
+    NewAndPendingSubmission("N"), SubmittedAndPendingChamberApproval("SPA"), ApprovedAndPendingPayment("APP"), Declined("D"), Cancelled("C");
 
     private String id;
 

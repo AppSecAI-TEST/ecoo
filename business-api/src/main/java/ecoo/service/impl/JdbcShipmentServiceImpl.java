@@ -92,7 +92,7 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
         if (status.equalsIgnoreCase("PENDING_ONLY")) {
             final List<Shipment> shipments = new ArrayList<>();
             for (Shipment shipment : results) {
-                if (shipment.isInStatus(ShipmentStatus.NewAndPendingDocumentSubmission
+                if (shipment.isInStatus(ShipmentStatus.NewAndPendingSubmission
                         , ShipmentStatus.SubmittedAndPendingChamberApproval
                         , ShipmentStatus.ApprovedAndPendingPayment)) {
                     shipments.add(shipment);
@@ -136,7 +136,7 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
     protected void beforeSave(Shipment entity) {
         if (entity.isNew()) {
             entity.setDateSubmitted(new Date());
-            entity.setStatus(ShipmentStatus.NewAndPendingDocumentSubmission.id());
+            entity.setStatus(ShipmentStatus.NewAndPendingSubmission.id());
         }
     }
 }
