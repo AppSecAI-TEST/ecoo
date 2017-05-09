@@ -1,5 +1,6 @@
 package ecoo.service.impl;
 
+import ecoo.bpm.BusinessRuleViolationException;
 import ecoo.dao.ShipmentDao;
 import ecoo.dao.impl.es.ShipmentElasticsearchRepository;
 import ecoo.data.Shipment;
@@ -16,6 +17,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +50,52 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
 
         this.indexName = Shipment.class.getAnnotation(Document.class).indexName();
         this.indexType = Shipment.class.getAnnotation(Document.class).type();
+    }
+
+    /**
+     * The method used to cancel a shipment.
+     *
+     * @param shipment The shipment to cancel.
+     */
+    @Transactional
+    @Override
+    public Shipment cancel(Shipment shipment) {
+        Assert.notNull(shipment, "The variable shipment cannot be null.");
+
+        final ShipmentStatus shipmentStatus = ShipmentStatus.valueOfById(shipment.getStatus());
+        switch (shipmentStatus) {
+            case NewAndPendingSubmission:
+                shipment.setStatus(ShipmentStatus.Cancelled.id());
+                return save(shipment);
+            case SubmittedAndPendingChamberApproval:
+                // TODO: Need to call workflow to cancel process instance.
+                shipment.setStatus(ShipmentStatus.Cancelled.id());
+                return save(shipment);
+            default:
+                throw new BusinessRuleViolationException(String.format("System cannot cancel shipment %s. " +
+                        "Shipment is in status %s and cannot be cancelled.", shipment.getPrimaryId(), shipmentStatus.name()));
+        }
+    }
+
+    /**
+     * The method used to re-open a shipment.
+     *
+     * @param shipment The shipment to re-open.
+     */
+    @Transactional
+    @Override
+    public Shipment reopen(Shipment shipment) {
+        Assert.notNull(shipment, "The variable shipment cannot be null.");
+
+        final ShipmentStatus shipmentStatus = ShipmentStatus.valueOfById(shipment.getStatus());
+        switch (shipmentStatus) {
+            case Cancelled:
+                shipment.setStatus(ShipmentStatus.NewAndPendingSubmission.id());
+                return save(shipment);
+            default:
+                throw new BusinessRuleViolationException(String.format("System cannot re-open shipment %s. " +
+                        "Shipment is in status %s and cannot be re-open.", shipment.getPrimaryId(), shipmentStatus.name()));
+        }
     }
 
     /**

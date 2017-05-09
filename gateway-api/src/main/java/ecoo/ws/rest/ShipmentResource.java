@@ -1,6 +1,8 @@
 package ecoo.ws.rest;
 
+import ecoo.bpm.entity.ShipmentRequest;
 import ecoo.data.Shipment;
+import ecoo.data.ShipmentStatus;
 import ecoo.data.audit.Revision;
 import ecoo.log.aspect.ProfileExecution;
 import ecoo.service.ShipmentService;
@@ -8,6 +10,7 @@ import ecoo.ws.common.json.QueryPageRquestResponse;
 import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -27,6 +30,26 @@ public class ShipmentResource extends BaseResource {
     @Autowired
     public ShipmentResource(ShipmentService shipmentService) {
         this.shipmentService = shipmentService;
+    }
+
+    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    public ResponseEntity<Shipment> submit(@RequestBody ShipmentRequest request) {
+        Assert.notNull(request, "The variable shipment cannot be null.");
+        // TODO: Needs more work
+        request.getShipment().setStatus(ShipmentStatus.SubmittedAndPendingChamberApproval.id());
+        return ResponseEntity.ok(shipmentService.save(request.getShipment()));
+    }
+
+    @RequestMapping(value = "/reopen", method = RequestMethod.POST)
+    public ResponseEntity<Shipment> reopen(@RequestBody Shipment shipment) {
+        Assert.notNull(shipment, "The variable shipment cannot be null.");
+        return ResponseEntity.ok(shipmentService.reopen(shipment));
+    }
+
+    @RequestMapping(value = "/cancel", method = RequestMethod.POST)
+    public ResponseEntity<Shipment> cancel(@RequestBody Shipment shipment) {
+        Assert.notNull(shipment, "The variable shipment cannot be null.");
+        return ResponseEntity.ok(shipmentService.cancel(shipment));
     }
 
     @RequestMapping(value = "/size"

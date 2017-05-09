@@ -57,41 +57,57 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Audited
     private String consigneeName;
 
-    @Column(name = "consignee_line1")
+    @Column(name = "consignee_building")
     @Audited
-    private String consigneeLine1;
+    private String consigneeBuilding;
 
-    @Column(name = "consignee_line2")
+    @Column(name = "consignee_street")
     @Audited
-    private String consigneeLine2;
+    private String consigneeStreet;
 
-    @Column(name = "consignee_line3")
+    @Column(name = "consignee_city")
     @Audited
-    private String consigneeLine3;
+    private String consigneeCity;
 
-    @Column(name = "consignee_line4")
+    @Column(name = "consignee_postcode")
     @Audited
-    private String consigneeLine4;
+    private String consigneePostcode;
+
+    @Column(name = "consignee_province")
+    @Audited
+    private String consigneeProvince;
+
+    @Column(name = "consignee_country")
+    @Audited
+    private String consigneeCountry;
 
     @Column(name = "buyer_name")
     @Audited
     private String buyerName;
 
-    @Column(name = "buyer_line1")
+    @Column(name = "buyer_building")
     @Audited
-    private String buyerLine1;
+    private String buyerBuilding;
 
-    @Column(name = "buyer_line2")
+    @Column(name = "buyer_street")
     @Audited
-    private String buyerLine2;
+    private String buyerStreet;
 
-    @Column(name = "buyer_line3")
+    @Column(name = "buyer_city")
     @Audited
-    private String buyerLine3;
+    private String buyerCity;
 
-    @Column(name = "buyer_line4")
+    @Column(name = "buyer_postcode")
     @Audited
-    private String buyerLine4;
+    private String buyerPostcode;
+
+    @Column(name = "buyer_province")
+    @Audited
+    private String buyerProvince;
+
+    @Column(name = "buyer_country")
+    @Audited
+    private String buyerCountry;
 
     @Column(name = "place_of_issue")
     @Audited
@@ -108,6 +124,14 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Column(name = "status")
     @Audited
     private String status;
+
+    @Column(name = "owner")
+    @Audited
+    private Integer ownerId;
+
+    @Column(name = "process_instance_id")
+    @Audited
+    private String processInstanceId;
 
     @JsonIgnore
     public boolean isInStatus(ShipmentStatus... status) {
@@ -205,36 +229,52 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.consigneeName = consigneeName;
     }
 
-    public String getConsigneeLine1() {
-        return consigneeLine1;
+    public String getConsigneeBuilding() {
+        return consigneeBuilding;
     }
 
-    public void setConsigneeLine1(String consigneeLine1) {
-        this.consigneeLine1 = consigneeLine1;
+    public void setConsigneeBuilding(String consigneeBuilding) {
+        this.consigneeBuilding = consigneeBuilding;
     }
 
-    public String getConsigneeLine2() {
-        return consigneeLine2;
+    public String getConsigneeStreet() {
+        return consigneeStreet;
     }
 
-    public void setConsigneeLine2(String consigneeLine2) {
-        this.consigneeLine2 = consigneeLine2;
+    public void setConsigneeStreet(String consigneeStreet) {
+        this.consigneeStreet = consigneeStreet;
     }
 
-    public String getConsigneeLine3() {
-        return consigneeLine3;
+    public String getConsigneeCity() {
+        return consigneeCity;
     }
 
-    public void setConsigneeLine3(String consigneeLine3) {
-        this.consigneeLine3 = consigneeLine3;
+    public void setConsigneeCity(String consigneeCity) {
+        this.consigneeCity = consigneeCity;
     }
 
-    public String getConsigneeLine4() {
-        return consigneeLine4;
+    public String getConsigneePostcode() {
+        return consigneePostcode;
     }
 
-    public void setConsigneeLine4(String consigneeLine4) {
-        this.consigneeLine4 = consigneeLine4;
+    public void setConsigneePostcode(String consigneePostcode) {
+        this.consigneePostcode = consigneePostcode;
+    }
+
+    public String getConsigneeProvince() {
+        return consigneeProvince;
+    }
+
+    public void setConsigneeProvince(String consigneeProvince) {
+        this.consigneeProvince = consigneeProvince;
+    }
+
+    public String getConsigneeCountry() {
+        return consigneeCountry;
+    }
+
+    public void setConsigneeCountry(String consigneeCountry) {
+        this.consigneeCountry = consigneeCountry;
     }
 
     public String getBuyerName() {
@@ -245,36 +285,52 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.buyerName = buyerName;
     }
 
-    public String getBuyerLine1() {
-        return buyerLine1;
+    public String getBuyerBuilding() {
+        return buyerBuilding;
     }
 
-    public void setBuyerLine1(String buyerLine1) {
-        this.buyerLine1 = buyerLine1;
+    public void setBuyerBuilding(String buyerBuilding) {
+        this.buyerBuilding = buyerBuilding;
     }
 
-    public String getBuyerLine2() {
-        return buyerLine2;
+    public String getBuyerStreet() {
+        return buyerStreet;
     }
 
-    public void setBuyerLine2(String buyerLine2) {
-        this.buyerLine2 = buyerLine2;
+    public void setBuyerStreet(String buyerStreet) {
+        this.buyerStreet = buyerStreet;
     }
 
-    public String getBuyerLine3() {
-        return buyerLine3;
+    public String getBuyerCity() {
+        return buyerCity;
     }
 
-    public void setBuyerLine3(String buyerLine3) {
-        this.buyerLine3 = buyerLine3;
+    public void setBuyerCity(String buyerCity) {
+        this.buyerCity = buyerCity;
     }
 
-    public String getBuyerLine4() {
-        return buyerLine4;
+    public String getBuyerPostcode() {
+        return buyerPostcode;
     }
 
-    public void setBuyerLine4(String buyerLine4) {
-        this.buyerLine4 = buyerLine4;
+    public void setBuyerPostcode(String buyerPostcode) {
+        this.buyerPostcode = buyerPostcode;
+    }
+
+    public String getBuyerProvince() {
+        return buyerProvince;
+    }
+
+    public void setBuyerProvince(String buyerProvince) {
+        this.buyerProvince = buyerProvince;
+    }
+
+    public String getBuyerCountry() {
+        return buyerCountry;
+    }
+
+    public void setBuyerCountry(String buyerCountry) {
+        this.buyerCountry = buyerCountry;
     }
 
     public String getPlaceOfIssue() {
@@ -309,6 +365,22 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.status = status;
     }
 
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
+
+    public Integer getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
+    }
+
     @Override
     public String toString() {
         return "Shipment{" +
@@ -321,19 +393,25 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
                 ", buyerOrderDate=" + buyerOrderDate +
                 ", letterOfCreditNumber='" + letterOfCreditNumber + '\'' +
                 ", consigneeName='" + consigneeName + '\'' +
-                ", consigneeLine1='" + consigneeLine1 + '\'' +
-                ", consigneeLine2='" + consigneeLine2 + '\'' +
-                ", consigneeLine3='" + consigneeLine3 + '\'' +
-                ", consigneeLine4='" + consigneeLine4 + '\'' +
+                ", consigneeBuilding='" + consigneeBuilding + '\'' +
+                ", consigneeStreet='" + consigneeStreet + '\'' +
+                ", consigneeCity='" + consigneeCity + '\'' +
+                ", consigneePostcode='" + consigneePostcode + '\'' +
+                ", consigneeProvince='" + consigneeProvince + '\'' +
+                ", consigneeCountry='" + consigneeCountry + '\'' +
                 ", buyerName='" + buyerName + '\'' +
-                ", buyerLine1='" + buyerLine1 + '\'' +
-                ", buyerLine2='" + buyerLine2 + '\'' +
-                ", buyerLine3='" + buyerLine3 + '\'' +
-                ", buyerLine4='" + buyerLine4 + '\'' +
+                ", buyerBuilding='" + buyerBuilding + '\'' +
+                ", buyerStreet='" + buyerStreet + '\'' +
+                ", buyerCity='" + buyerCity + '\'' +
+                ", buyerPostcode='" + buyerPostcode + '\'' +
+                ", buyerProvince='" + buyerProvince + '\'' +
+                ", buyerCountry='" + buyerCountry + '\'' +
                 ", placeOfIssue='" + placeOfIssue + '\'' +
                 ", dateOfIssue=" + dateOfIssue +
                 ", dateSubmitted=" + dateSubmitted +
                 ", status='" + status + '\'' +
+                ", ownerId=" + ownerId +
+                ", processInstanceId='" + processInstanceId + '\'' +
                 '}';
     }
 }

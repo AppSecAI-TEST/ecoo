@@ -19,7 +19,8 @@ import java.util.List;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = RegisterUserAccountRequest.class, name = "RegisterUserAccountRequest"),
-        @JsonSubTypes.Type(value = PasswordResetRequest.class, name = "PasswordResetRequest")
+        @JsonSubTypes.Type(value = PasswordResetRequest.class, name = "PasswordResetRequest"),
+        @JsonSubTypes.Type(value = ShipmentRequest.class, name = "ShipmentRequest")
 })
 public abstract class WorkflowRequest implements Serializable {
 

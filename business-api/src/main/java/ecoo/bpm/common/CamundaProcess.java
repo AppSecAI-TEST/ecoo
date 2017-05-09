@@ -17,9 +17,9 @@ public enum CamundaProcess {
     PasswordReset("PasswordReset", "fa-unlock-alt"),
 
     /**
-     * A new COO request.
+     * A new shipment request.
      */
-    CertificateOfOrigin("CertificateOfOrigin", "fa-file-text-o");
+    ShipmentRequest("ShipmentRequest", "fa-file-text-o");
 
     private String id;
 
