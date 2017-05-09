@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author Justin Rundle
  * @since May 2017
  */
-public class ShipmentRequest extends WorkflowRequest implements Serializable {
+public class NewShipmentRequest extends WorkflowRequest implements Serializable {
 
     private static final long serialVersionUID = -5636726554980365222L;
 
@@ -19,7 +19,7 @@ public class ShipmentRequest extends WorkflowRequest implements Serializable {
     @JsonGetter
     @Override
     public CamundaProcess getType() {
-        return CamundaProcess.ShipmentRequest;
+        return CamundaProcess.NewShipmentRequest;
     }
 
     public Shipment getShipment() {
@@ -32,7 +32,7 @@ public class ShipmentRequest extends WorkflowRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "ShipmentRequest{" +
+        return "NewShipmentRequest{" +
                 "shipment=" + shipment +
                 '}';
     }

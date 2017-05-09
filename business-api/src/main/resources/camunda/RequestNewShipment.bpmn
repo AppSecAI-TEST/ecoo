@@ -1,40 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
-  <bpmn:process id="RequestNewShipment" name="Request New Shipment" isExecutable="true">
-    <bpmn:extensionElements>
-      <camunda:executionListener class="" event="start" />
-    </bpmn:extensionElements>
+  <bpmn:process id="NewShipmentRequest" name="New Shipment Request" isExecutable="true">
     <bpmn:startEvent id="ReceiveShipmentRequest" name="Receive Shipment Request">
       <bpmn:extensionElements>
         <camunda:executionListener delegateExpression="${log4jProcessInstanceIdHandler}" event="start" />
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_0p7kr5c</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_0p7kr5c" sourceRef="ReceiveShipmentRequest" targetRef="CompletedShipmentRequest" />
+    <bpmn:sequenceFlow id="SequenceFlow_0p7kr5c" sourceRef="ReceiveShipmentRequest" targetRef="ValidateShipmentRequestTask" />
     <bpmn:endEvent id="CompletedShipmentRequest" name="Completed Shipment Request">
-      <bpmn:incoming>SequenceFlow_0p7kr5c</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1bbtd1i</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_13dy52o</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0o9zj08" sourceRef="ValidateShipmentRequestTask" targetRef="MarkShipmentAsPendingApprovalTask" />
+    <bpmn:serviceTask id="ValidateShipmentRequestTask" name="Validate Shipment Request" camunda:delegateExpression="${validateShipmentRequestTask}">
+      <bpmn:incoming>SequenceFlow_0p7kr5c</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0o9zj08</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0gupra1" sourceRef="MarkShipmentAsPendingApprovalTask" targetRef="ApproveShipmentRequest" />
+    <bpmn:serviceTask id="MarkShipmentAsPendingApprovalTask" name="Mark Shipment As Pending Approval" camunda:delegateExpression="${markShipmentAsPendingApprovalTask}">
+      <bpmn:incoming>SequenceFlow_0o9zj08</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0gupra1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="RejectShipmentRequestTask" name="Reject Shipment Request" camunda:delegateExpression="${rejectShipmentRequestTask}">
+      <bpmn:incoming>Rejected</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13dy52o</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ApproveShipmentRequestTask" name="Approve Shipment Request" camunda:delegateExpression="${approveShipmentRequestTask}">
+      <bpmn:incoming>Approved</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1bbtd1i</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0rmrr5b" name="Shipment Approved?">
+      <bpmn:incoming>SequenceFlow_19d4k5u</bpmn:incoming>
+      <bpmn:outgoing>Rejected</bpmn:outgoing>
+      <bpmn:outgoing>Approved</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Rejected" name="Rejected" sourceRef="ExclusiveGateway_0rmrr5b" targetRef="RejectShipmentRequestTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!approved}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Approved" name="Approved" sourceRef="ExclusiveGateway_0rmrr5b" targetRef="ApproveShipmentRequestTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1bbtd1i" sourceRef="ApproveShipmentRequestTask" targetRef="CompletedShipmentRequest" />
+    <bpmn:sequenceFlow id="SequenceFlow_13dy52o" sourceRef="RejectShipmentRequestTask" targetRef="CompletedShipmentRequest" />
+    <bpmn:sequenceFlow id="SequenceFlow_19d4k5u" sourceRef="ApproveShipmentRequest" targetRef="ExclusiveGateway_0rmrr5b" />
+    <bpmn:userTask id="ApproveShipmentRequest" name="Approve Shipment Request">
+      <bpmn:extensionElements>
+        <camunda:taskListener delegateExpression="${newShipmentRequestTaskAssignmentHandler}" event="create" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0gupra1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19d4k5u</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="RequestNewShipment">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="NewShipmentRequest">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="ReceiveShipmentRequest">
-        <dc:Bounds x="-30" y="102" width="36" height="36" />
+        <dc:Bounds x="-385" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-57" y="138" width="90" height="20" />
+          <dc:Bounds x="-412" y="138" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0p7kr5c_di" bpmnElement="SequenceFlow_0p7kr5c">
-        <di:waypoint xsi:type="dc:Point" x="6" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="412" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="-349" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="-272" y="120" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="164" y="95" width="90" height="20" />
+          <dc:Bounds x="-355.5" y="95" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_0ahpj89_di" bpmnElement="CompletedShipmentRequest">
-        <dc:Bounds x="412" y="102" width="36" height="36" />
+        <dc:Bounds x="602" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="385" y="148" width="90" height="20" />
+          <dc:Bounds x="575" y="148" width="90" height="20" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0o9zj08_di" bpmnElement="SequenceFlow_0o9zj08">
+        <di:waypoint xsi:type="dc:Point" x="-172" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="-97" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-179.5" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0hq7g39_di" bpmnElement="ValidateShipmentRequestTask">
+        <dc:Bounds x="-272" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0gupra1_di" bpmnElement="SequenceFlow_0gupra1">
+        <di:waypoint xsi:type="dc:Point" x="3" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="81" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-3" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1q4ui72_di" bpmnElement="MarkShipmentAsPendingApprovalTask">
+        <dc:Bounds x="-97" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_01v81eq_di" bpmnElement="RejectShipmentRequestTask">
+        <dc:Bounds x="315" y="-64" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_19jaj2d_di" bpmnElement="ApproveShipmentRequestTask">
+        <dc:Bounds x="315" y="225" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0rmrr5b_di" bpmnElement="ExclusiveGateway_0rmrr5b" isMarkerVisible="true">
+        <dc:Bounds x="340" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="385" y="110" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_188l55f_di" bpmnElement="Rejected">
+        <di:waypoint xsi:type="dc:Point" x="365" y="95" />
+        <di:waypoint xsi:type="dc:Point" x="365" y="16" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="345" y="51.76984126984127" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0s4f7hq_di" bpmnElement="Approved">
+        <di:waypoint xsi:type="dc:Point" x="365" y="145" />
+        <di:waypoint xsi:type="dc:Point" x="365" y="225" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="348" y="174" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1bbtd1i_di" bpmnElement="SequenceFlow_1bbtd1i">
+        <di:waypoint xsi:type="dc:Point" x="415" y="265" />
+        <di:waypoint xsi:type="dc:Point" x="509" y="265" />
+        <di:waypoint xsi:type="dc:Point" x="509" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="602" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="479" y="182.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13dy52o_di" bpmnElement="SequenceFlow_13dy52o">
+        <di:waypoint xsi:type="dc:Point" x="415" y="-24" />
+        <di:waypoint xsi:type="dc:Point" x="509" y="-24" />
+        <di:waypoint xsi:type="dc:Point" x="509" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="602" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="479" y="38" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_19d4k5u_di" bpmnElement="SequenceFlow_19d4k5u">
+        <di:waypoint xsi:type="dc:Point" x="181" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="340" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="215.5" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_08cyt5u_di" bpmnElement="ApproveShipmentRequest">
+        <dc:Bounds x="81" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

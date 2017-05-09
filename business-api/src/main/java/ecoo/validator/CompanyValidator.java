@@ -2,7 +2,6 @@ package ecoo.validator;
 
 import ecoo.dao.CompanyDao;
 import ecoo.data.Company;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
@@ -24,10 +23,7 @@ public class CompanyValidator {
 
     public void validate(Company company) {
         Assert.notNull(company, "System cannot complete request. The variable company cannot be null.");
-
-        if (StringUtils.isBlank(company.getRegistrationNo())) {
-            Assert.notNull(company, "System cannot complete request. The company registration number is required.");
-        }
+        Assert.hasText(company.getRegistrationNo(), "System cannot complete request. The company registration number is required.");
 
         final Company otherCompany = companyDao.findByRegistrationNo(company.getRegistrationNo());
         if ((otherCompany != null && company.getPrimaryId() == null)

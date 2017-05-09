@@ -1,5 +1,7 @@
 package ecoo.bpm.entity;
 
+import ecoo.data.Company;
+
 /**
  * @author Justin Rundle
  * @since April 2017
@@ -27,6 +29,23 @@ public class WorkflowRequestDescriptionBuilder {
                         , registerUserAccountRequest.getUser().getDisplayName()
                         , registerUserAccountRequest.getCompany().getName()
                         , registerUserAccountRequest.getChamber().getName());
+            case NewShipmentRequest:
+                final NewShipmentRequest newShipmentRequest = (NewShipmentRequest) workflowRequest;
+
+                final Company company = newShipmentRequest.getRequestingUser().getCompany();
+                if (company == null) {
+                    return String.format("%s is requesting approval for shipment %s with exporter reference %s."
+                            , newShipmentRequest.getRequestingUser().getDisplayName()
+                            , newShipmentRequest.getShipment().getPrimaryId()
+                            , newShipmentRequest.getShipment().getExporterReference());
+                } else {
+                    return String.format("%s from %s is requesting approval for shipment %s with exporter reference %s."
+                            , newShipmentRequest.getRequestingUser().getDisplayName()
+                            , company.getName()
+                            , newShipmentRequest.getShipment().getPrimaryId()
+                            , newShipmentRequest.getShipment().getExporterReference());
+                }
+
             default:
                 throw new UnsupportedOperationException(String.format("Process type %s not supported.", workflowRequest.getType()));
         }

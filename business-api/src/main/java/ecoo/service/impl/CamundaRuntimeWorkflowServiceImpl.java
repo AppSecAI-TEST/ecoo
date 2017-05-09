@@ -6,8 +6,11 @@ import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.constants.UserRegistrationVariables;
 import ecoo.bpm.entity.*;
 import ecoo.data.Feature;
+import ecoo.data.Shipment;
+import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
 import ecoo.service.FeatureService;
+import ecoo.service.ShipmentService;
 import ecoo.service.UserService;
 import ecoo.service.WorkflowService;
 import ecoo.util.FileUtils;
@@ -47,15 +50,48 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
 
     private UserService userService;
 
+    private ShipmentService shipmentService;
+
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public CamundaRuntimeWorkflowServiceImpl(RuntimeService runtimeService, FeatureService featureService, TaskService taskService
-            , UserService userService) {
+            , UserService userService
+            , ShipmentService shipmentService) {
         this.runtimeService = runtimeService;
         this.featureService = featureService;
         this.taskService = taskService;
         this.userService = userService;
+        this.shipmentService = shipmentService;
+    }
+
+    /**
+     * Method to request a new shipment.
+     *
+     * @param request The new shipment request.
+     * @return The new shipment response.
+     */
+    @Override
+    public NewShipmentResponse requestNewShipment(NewShipmentRequest request) {
+        Assert.notNull(request, "The request cannot be null.");
+
+        final User requestingUser = request.getRequestingUser();
+        Assert.notNull(requestingUser, "The requestingUser cannot be null.");
+
+        final String businessKey = "NSR-" + request.getShipment().getPrimaryId();
+        LOG.info("businessKey: {}", businessKey);
+
+        request.setBusinessKey(businessKey);
+        request.setDateCreated(new Date());
+
+        final Map<String, Object> variables = new HashMap<>();
+        variables.put(TaskVariables.REQUEST.variableName(), request);
+
+        final ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(CamundaProcess.NewShipmentRequest.id()
+                , businessKey, variables);
+        LOG.info("Request new shipment process started: " + processInstance.getProcessInstanceId());
+
+        return new NewShipmentResponse(request.getShipment(), processInstance.getProcessInstanceId());
     }
 
     /**
@@ -331,24 +367,28 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
 
         final Task task = taskService.createTaskQuery().processInstanceId(request.getProcessInstanceId()).active()
                 .singleResult();
-        Assert.notNull(task, String.format("System cannot complete request. No active task found for " +
-                "processInstanceId %s.", request.getProcessInstanceId()));
+        if (task == null) {
+            return null;
+        } else {
+            Assert.notNull(task, String.format("System cannot complete request. No active task found for " +
+                    "processInstanceId %s.", request.getProcessInstanceId()));
 
-        final User requestingUser = userService.findById(request.getRequestingUserId());
-        Assert.notNull(requestingUser, String.format("System cannot complete request. No user found for id %s."
-                , request.getRequestingUserId()));
+            final User requestingUser = userService.findById(request.getRequestingUserId());
+            Assert.notNull(requestingUser, String.format("System cannot complete request. No user found for id %s."
+                    , request.getRequestingUserId()));
 
-        final WorkflowRequest workflowRequest = (WorkflowRequest) runtimeService.getVariable(request.getProcessInstanceId()
-                , TaskVariables.REQUEST.variableName());
-        if (!Objects.equals(workflowRequest.getRequestingUser(), requestingUser)) {
-            throw new IllegalArgumentException("System cannot cancel task as the requesting user is not the owner of the task.");
+            final WorkflowRequest workflowRequest = (WorkflowRequest) runtimeService.getVariable(request.getProcessInstanceId()
+                    , TaskVariables.REQUEST.variableName());
+            if (!Objects.equals(workflowRequest.getRequestingUser(), requestingUser)) {
+                throw new IllegalArgumentException("System cannot cancel task as the requesting user is not the owner of the task.");
+            }
+
+            final String message = String.format("Process %s requested to be cancelled by %s.", request.getProcessInstanceId()
+                    , requestingUser.getDisplayName());
+            cancelTaskAndUpdate(request.getProcessInstanceId(), workflowRequest, message);
+
+            return new CancelTaskResponse(message, workflowRequest);
         }
-
-        final String message = String.format("Process %s requested to be cancelled by %s.", request.getProcessInstanceId()
-                , requestingUser.getDisplayName());
-        cancelTaskAndUpdate(request.getProcessInstanceId(), workflowRequest, message);
-
-        return new CancelTaskResponse(message, workflowRequest);
     }
 
     @Transactional
@@ -358,6 +398,12 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
                 final RegisterUserAccountRequest registerUserAccountRequest = (RegisterUserAccountRequest) workflowRequest;
                 final User user = registerUserAccountRequest.getUser();
                 userService.delete(user);
+                break;
+            case NewShipmentRequest:
+                final NewShipmentRequest newShipmentRequest = (NewShipmentRequest) workflowRequest;
+                final Shipment shipment = newShipmentRequest.getShipment();
+                shipment.setStatus(ShipmentStatus.Cancelled.id());
+                shipmentService.save(shipment);
                 break;
             default:
                 throw new UnsupportedOperationException(String.format("Workflow request type %s not supported."

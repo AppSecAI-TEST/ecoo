@@ -19,7 +19,7 @@ public enum CamundaProcess {
     /**
      * A new shipment request.
      */
-    ShipmentRequest("RequestNewShipment", "fa-dropbox");
+    NewShipmentRequest("NewShipmentRequest", "fa-dropbox");
 
     private String id;
 

@@ -53,31 +53,6 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
     }
 
     /**
-     * The method used to cancel a shipment.
-     *
-     * @param shipment The shipment to cancel.
-     */
-    @Transactional
-    @Override
-    public Shipment cancel(Shipment shipment) {
-        Assert.notNull(shipment, "The variable shipment cannot be null.");
-
-        final ShipmentStatus shipmentStatus = ShipmentStatus.valueOfById(shipment.getStatus());
-        switch (shipmentStatus) {
-            case NewAndPendingSubmission:
-                shipment.setStatus(ShipmentStatus.Cancelled.id());
-                return save(shipment);
-            case SubmittedAndPendingChamberApproval:
-                // TODO: Need to call workflow to cancel process instance.
-                shipment.setStatus(ShipmentStatus.Cancelled.id());
-                return save(shipment);
-            default:
-                throw new BusinessRuleViolationException(String.format("System cannot cancel shipment %s. " +
-                        "Shipment is in status %s and cannot be cancelled.", shipment.getPrimaryId(), shipmentStatus.name()));
-        }
-    }
-
-    /**
      * The method used to re-open a shipment.
      *
      * @param shipment The shipment to re-open.

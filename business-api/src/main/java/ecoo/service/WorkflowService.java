@@ -13,6 +13,14 @@ import java.util.List;
 public interface WorkflowService {
 
     /**
+     * Method to request a new shipment.
+     *
+     * @param request The new shipment request.
+     * @return The new shipment response.
+     */
+    NewShipmentResponse requestNewShipment(NewShipmentRequest request);
+
+    /**
      * Method to request a password reset.
      *
      * @param request The reset password request.

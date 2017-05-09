@@ -1,13 +1,19 @@
 package ecoo.ws.rest;
 
-import ecoo.bpm.entity.ShipmentRequest;
+import ecoo.bpm.BusinessRuleViolationException;
+import ecoo.bpm.entity.CancelTaskRequest;
+import ecoo.bpm.entity.NewShipmentRequest;
+import ecoo.bpm.entity.NewShipmentResponse;
 import ecoo.data.Shipment;
 import ecoo.data.ShipmentStatus;
 import ecoo.data.audit.Revision;
 import ecoo.log.aspect.ProfileExecution;
 import ecoo.service.ShipmentService;
+import ecoo.service.WorkflowService;
+import ecoo.validator.ShipmentValidator;
 import ecoo.ws.common.json.QueryPageRquestResponse;
 import ecoo.ws.common.rest.BaseResource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
@@ -27,17 +33,22 @@ public class ShipmentResource extends BaseResource {
 
     private ShipmentService shipmentService;
 
+    private WorkflowService workflowService;
+
+    private ShipmentValidator shipmentValidator;
+
     @Autowired
-    public ShipmentResource(ShipmentService shipmentService) {
+    public ShipmentResource(ShipmentService shipmentService, WorkflowService workflowService, ShipmentValidator shipmentValidator) {
         this.shipmentService = shipmentService;
+        this.workflowService = workflowService;
+        this.shipmentValidator = shipmentValidator;
     }
 
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
-    public ResponseEntity<Shipment> submit(@RequestBody ShipmentRequest request) {
+    public ResponseEntity<NewShipmentResponse> submit(@RequestBody NewShipmentRequest request) {
         Assert.notNull(request, "The variable shipment cannot be null.");
-        // TODO: Needs more work
-        request.getShipment().setStatus(ShipmentStatus.SubmittedAndPendingChamberApproval.id());
-        return ResponseEntity.ok(shipmentService.save(request.getShipment()));
+        shipmentValidator.validate(request.getShipment());
+        return ResponseEntity.ok(workflowService.requestNewShipment(request));
     }
 
     @RequestMapping(value = "/reopen", method = RequestMethod.POST)
@@ -49,7 +60,31 @@ public class ShipmentResource extends BaseResource {
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
     public ResponseEntity<Shipment> cancel(@RequestBody Shipment shipment) {
         Assert.notNull(shipment, "The variable shipment cannot be null.");
-        return ResponseEntity.ok(shipmentService.cancel(shipment));
+
+        final ShipmentStatus shipmentStatus = ShipmentStatus.valueOfById(shipment.getStatus());
+        switch (shipmentStatus) {
+            case NewAndPendingSubmission:
+                shipment.setStatus(ShipmentStatus.Cancelled.id());
+                return save(shipment);
+
+            case SubmittedAndPendingChamberApproval:
+                final String processInstanceId = shipment.getProcessInstanceId();
+                if (StringUtils.isBlank(processInstanceId)) {
+                    shipment.setStatus(ShipmentStatus.Cancelled.id());
+                    return ResponseEntity.ok(shipmentService.save(shipment));
+
+                } else {
+                    final CancelTaskRequest cancelTaskRequest = new CancelTaskRequest();
+                    cancelTaskRequest.setProcessInstanceId(processInstanceId);
+                    cancelTaskRequest.setRequestingUserId(currentUser().getPrimaryId());
+                    workflowService.cancelTask(cancelTaskRequest);
+
+                    return ResponseEntity.ok(shipmentService.findById(shipment.getPrimaryId()));
+                }
+            default:
+                throw new BusinessRuleViolationException(String.format("System cannot cancel shipment %s. " +
+                        "Shipment is in status %s and cannot be cancelled.", shipment.getPrimaryId(), shipmentStatus.name()));
+        }
     }
 
     @RequestMapping(value = "/size"
