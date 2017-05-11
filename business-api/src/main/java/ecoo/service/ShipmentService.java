@@ -1,6 +1,7 @@
 package ecoo.service;
 
 import ecoo.data.Shipment;
+import ecoo.data.User;
 
 import java.util.List;
 
@@ -11,17 +12,35 @@ import java.util.List;
 public interface ShipmentService extends CrudService<Integer, Shipment>, AuditedModelAware<Shipment> {
 
     /**
+     * Returns the shipment for the given process instance id.
+     *
+     * @param processInstanceId The BPM process instance id.
+     * @return The shipment or null.
+     */
+    Shipment findByProcessInstanceId(String processInstanceId);
+
+    /**
+     * Returns the count of the shipments associated to the given user.
+     *
+     * @param requestingUser The user asking to see the shipments.
+     * @return The count.
+     */
+    Long countShipmentsAssociatedToUser(User requestingUser);
+
+    /**
      * Returns a list of shipments.
      *
-     * @param q         The query value.
-     * @param status    The status to evaluate.
-     * @param start     The start row index.
-     * @param pageSize  The page size.
-     * @param column    The sort column index.
-     * @param direction The direction to sort ASC or DESC.
+     * @param q              The query value.
+     * @param status         The status to evaluate.
+     * @param start          The start row index.
+     * @param pageSize       The page size.
+     * @param column         The sort column index.
+     * @param direction      The direction to sort ASC or DESC.
+     * @param requestingUser The user asking to see the shipments.
      * @return A list.
      */
-    List<Shipment> query(String q, String status, Integer start, Integer pageSize, Integer column, String direction);
+    List<Shipment> queryShipmentsAssociatedToUser(String q, String status, Integer start, Integer pageSize, Integer column, String direction
+            , User requestingUser);
 
     /**
      * Method to recreate the ES index.

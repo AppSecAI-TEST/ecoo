@@ -184,7 +184,7 @@ public class Chamber extends BaseModel<Integer> implements Serializable {
         final StringBuilder buffer = new StringBuilder();
 
         if (!StringUtils.isEmpty(getBuilding())) {
-            buffer.append(", ").append(getBuilding());
+            buffer.append(getBuilding());
         }
         if (!StringUtils.isEmpty(getStreet())) {
             buffer.append(", ").append(getStreet());

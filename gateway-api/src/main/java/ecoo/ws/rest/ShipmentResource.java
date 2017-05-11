@@ -2,6 +2,7 @@ package ecoo.ws.rest;
 
 import ecoo.bpm.BusinessRuleViolationException;
 import ecoo.bpm.entity.CancelTaskRequest;
+import ecoo.bpm.entity.CancelTaskResponse;
 import ecoo.bpm.entity.NewShipmentRequest;
 import ecoo.bpm.entity.NewShipmentResponse;
 import ecoo.data.Shipment;
@@ -19,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -42,6 +41,11 @@ public class ShipmentResource extends BaseResource {
         this.shipmentService = shipmentService;
         this.workflowService = workflowService;
         this.shipmentValidator = shipmentValidator;
+    }
+
+    @RequestMapping(value = "/processInstanceId/{processInstanceId}", method = RequestMethod.GET)
+    public ResponseEntity<Shipment> findByProcessInstanceId(@PathVariable String processInstanceId) {
+        return ResponseEntity.ok(shipmentService.findByProcessInstanceId(processInstanceId));
     }
 
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
@@ -77,9 +81,14 @@ public class ShipmentResource extends BaseResource {
                     final CancelTaskRequest cancelTaskRequest = new CancelTaskRequest();
                     cancelTaskRequest.setProcessInstanceId(processInstanceId);
                     cancelTaskRequest.setRequestingUserId(currentUser().getPrimaryId());
-                    workflowService.cancelTask(cancelTaskRequest);
 
-                    return ResponseEntity.ok(shipmentService.findById(shipment.getPrimaryId()));
+                    final CancelTaskResponse cancelTaskResponse = workflowService.cancelTask(cancelTaskRequest);
+                    if (cancelTaskResponse == null) {
+                        shipment.setStatus(ShipmentStatus.Cancelled.id());
+                        return ResponseEntity.ok(shipmentService.save(shipment));
+                    } else {
+                        return ResponseEntity.ok(shipmentService.findById(shipment.getPrimaryId()));
+                    }
                 }
             default:
                 throw new BusinessRuleViolationException(String.format("System cannot cancel shipment %s. " +
@@ -87,44 +96,40 @@ public class ShipmentResource extends BaseResource {
         }
     }
 
+    @ProfileExecution
     @RequestMapping(value = "/size"
             , method = RequestMethod.GET)
-    public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(shipmentService.count());
+    public ResponseEntity<Long> countShipmentsAssociatedToUser() {
+        return ResponseEntity.ok(shipmentService.countShipmentsAssociatedToUser(currentUser()));
     }
 
     @ProfileExecution
     @RequestMapping(value = "/q/status/{status}/start/{start}/pageSize/{pageSize}/column/{column}" +
             "/direction/{direction}/totalRecords/{totalRecords}"
             , method = RequestMethod.GET)
-    public ResponseEntity<QueryPageRquestResponse> query(@PathVariable String status
+    public ResponseEntity<QueryPageRquestResponse> queryShipmentsAssociatedToUser(@PathVariable String status
             , @PathVariable Integer start
             , @PathVariable Integer pageSize
             , @PathVariable Integer column
             , @PathVariable String direction
             , @PathVariable Integer totalRecords) {
-        return query(null, status, start, pageSize, column, direction, totalRecords);
+        return queryShipmentsAssociatedToUser(null, status, start, pageSize, column, direction, totalRecords);
     }
 
     @ProfileExecution
     @RequestMapping(value = "/q/{q}/status/{status}/start/{start}/pageSize/{pageSize}/column/{column}" +
             "/direction/{direction}/totalRecords/{totalRecords}"
             , method = RequestMethod.GET)
-    public ResponseEntity<QueryPageRquestResponse> query(@PathVariable String q
+    public ResponseEntity<QueryPageRquestResponse> queryShipmentsAssociatedToUser(@PathVariable String q
             , @PathVariable String status
             , @PathVariable Integer start
             , @PathVariable Integer pageSize
             , @PathVariable Integer column
             , @PathVariable String direction
             , @PathVariable Integer totalRecords) {
-        final List<Shipment> data = new ArrayList<>(shipmentService
-                .query(q, status, start, pageSize, column, direction));
+        final List<Shipment> data = shipmentService.queryShipmentsAssociatedToUser(q, status
+                , start, pageSize, column, direction, currentUser());
         return ResponseEntity.ok(new QueryPageRquestResponse(totalRecords, totalRecords, data));
-    }
-
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<Collection<Shipment>> findAll() {
-        return ResponseEntity.ok(shipmentService.findAll());
     }
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)

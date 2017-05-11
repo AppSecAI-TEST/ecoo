@@ -5,6 +5,7 @@ import ecoo.dao.ShipmentDao;
 import ecoo.dao.impl.es.ShipmentElasticsearchRepository;
 import ecoo.data.Shipment;
 import ecoo.data.ShipmentStatus;
+import ecoo.data.User;
 import ecoo.service.ShipmentService;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.collect.Lists;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * @author Justin Rundle
@@ -53,6 +54,19 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
     }
 
     /**
+     * Returns the shipment for the given process instance id.
+     *
+     * @param processInstanceId The BPM process instance id.
+     * @return The shipment or null.
+     */
+    @Override
+    public Shipment findByProcessInstanceId(String processInstanceId) {
+        final List<Shipment> shipments = shipmentElasticsearchRepository.findShipmentsByProcessInstanceId(processInstanceId);
+        if (shipments == null || shipments.isEmpty()) return null;
+        return shipments.iterator().next();
+    }
+
+    /**
      * The method used to re-open a shipment.
      *
      * @param shipment The shipment to re-open.
@@ -74,6 +88,28 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
     }
 
     /**
+     * Returns the count of the shipments associated to the given user.
+     *
+     * @param requestingUser The user asking to see the shipments.
+     * @return The count.
+     */
+    @Override
+    public Long countShipmentsAssociatedToUser(User requestingUser) {
+        Assert.notNull(requestingUser, "The variable requestingUser cannot be null.");
+
+        final BoolQueryBuilder queryBuilder = boolQuery();
+        queryBuilder.must(matchQuery("ownerId", requestingUser.getPrimaryId()));
+
+        final NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withIndices(indexName)
+                .withTypes(indexType)
+                .withQuery(queryBuilder)
+                .withPageable(new PageRequest(0, Integer.MAX_VALUE))
+                .build();
+        return (long) queryForIds(searchQuery).size();
+    }
+
+    /**
      * Returns a list of shipments.
      *
      * @param q         The query value.
@@ -85,8 +121,8 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
      * @return A list.
      */
     @Override
-    public List<Shipment> query(String q, String status, Integer start, Integer pageSize, Integer column, String
-            direction) {
+    public List<Shipment> queryShipmentsAssociatedToUser(String q, String status, Integer start, Integer pageSize, Integer column
+            , String direction, User requestingUser) {
         final PageRequest pageRequest = buildPageRequest(start, pageSize, column, direction);
 
         final BoolQueryBuilder queryBuilder = boolQuery();
@@ -102,6 +138,14 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
                     .field("exporterReference")
                     .analyzeWildcard(true));
         }
+
+//        if(!requestingUser.isInRole(Role.ROLE_SYSADMIN)) {
+//            
+//       }
+
+        final BoolQueryBuilder ownerIdQueryBuilder = boolQuery();
+        ownerIdQueryBuilder.must(matchQuery("ownerId", requestingUser.getPrimaryId()));
+        queryBuilder.must(ownerIdQueryBuilder);
 
         final Iterable<Shipment> results = shipmentElasticsearchRepository.search(new NativeSearchQueryBuilder()
                 .withIndices(indexName)

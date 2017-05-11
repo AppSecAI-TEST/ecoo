@@ -4,6 +4,7 @@ import ecoo.dao.BaseDao;
 import ecoo.service.CrudService;
 import org.elasticsearch.common.collect.Lists;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import org.springframework.util.Assert;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Justin Rundle
@@ -150,5 +152,10 @@ public abstract class ElasticsearchTemplateService<P extends Serializable, M ext
             elasticsearchTemplate.deleteIndex(indexClass);
         }
         elasticsearchTemplate.createIndex(indexClass);
+    }
+
+    protected final List<String> queryForIds(SearchQuery searchQuery) {
+        Assert.notNull(searchQuery, "The variable searchQuery cannot be null.");
+        return elasticsearchTemplate.queryForIds(searchQuery);
     }
 }

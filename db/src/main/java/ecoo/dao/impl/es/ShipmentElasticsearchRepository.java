@@ -13,5 +13,7 @@ import java.util.List;
 @Repository(value = "shipmentElasticsearchRepository")
 public interface ShipmentElasticsearchRepository extends ElasticsearchRepository<Shipment, Integer> {
 
+    List<Shipment> findShipmentsByProcessInstanceId(String processInstanceId);
+
     List<Shipment> findShipmentsByStatus(String status);
 }
