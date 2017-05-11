@@ -1456,6 +1456,18 @@ ALTER TABLE [dbo].[shipment_log] CHECK CONSTRAINT [fk_shipment_log_revision]
 ALTER TABLE [dbo].[shipment_log]  WITH NOCHECK ADD  CONSTRAINT [fk_shipment_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
 ALTER TABLE [dbo].[shipment_log] CHECK CONSTRAINT [fk_shipment_log_rev_type]
 GO
+
+CREATE TABLE [ecoo].[dbo].[shipment_comment](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[shipment_id] [int] NOT NULL,
+	[user_id] [int] NOT NULL,
+	[text] [varchar](max) NOT NULL,
+	[date_created] [datetime] NOT NULL,
+CONSTRAINT [pk_shipment_comment] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [shipment_comment] ADD CONSTRAINT "fk_shipment_comment_shipment" FOREIGN KEY (shipment_id) REFERENCES shipment ("id");  
+ALTER TABLE [shipment_comment] ADD CONSTRAINT "fk_shipment_comment_user_acc" FOREIGN KEY (user_id) REFERENCES user_acc ("id");  
 GO
 
 
