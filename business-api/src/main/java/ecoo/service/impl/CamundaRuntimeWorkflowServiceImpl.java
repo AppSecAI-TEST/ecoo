@@ -346,8 +346,7 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
                 .withTaskAssignee(task.getAssignee())
                 .build();
 
-        final String message = request.isApprove() ? String.format("Task approved: %s", response.toString())
-                : String.format("Task declined: %s", response.toString());
+        final String message = String.format("Task %s: %s", request.getAction(), response.toString());
         LOG.info(message);
 
         if (StringUtils.isNotBlank(request.getComment())) {
@@ -355,7 +354,7 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
         }
 
         taskService.createComment(task.getId(), request.getProcessInstanceId(), message);
-        taskService.complete(task.getId(), createVariables().putValue("approved", request.isApprove()));
+        taskService.complete(task.getId(), createVariables().putValue("action", request.getAction()));
 
         return response;
     }

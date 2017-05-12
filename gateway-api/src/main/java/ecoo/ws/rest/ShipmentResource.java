@@ -48,6 +48,13 @@ public class ShipmentResource extends BaseResource {
         return ResponseEntity.ok(shipmentService.findByProcessInstanceId(processInstanceId));
     }
 
+    @RequestMapping(value = "/needsWork", method = RequestMethod.POST)
+    public ResponseEntity<NewShipmentResponse> needsWork(@RequestBody NewShipmentRequest request) {
+        Assert.notNull(request, "The variable shipment cannot be null.");
+        shipmentValidator.validate(request.getShipment());
+        return ResponseEntity.ok(workflowService.requestNewShipment(request));
+    }
+
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     public ResponseEntity<NewShipmentResponse> submit(@RequestBody NewShipmentRequest request) {
         Assert.notNull(request, "The variable shipment cannot be null.");

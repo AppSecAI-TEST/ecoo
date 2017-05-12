@@ -32,10 +32,10 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0y55ev9" sourceRef="VerifyUserAccountRequest" targetRef="UserAccountApproved" />
     <bpmn:sequenceFlow id="SequenceFlow_1w39fi9" name="Rejected" sourceRef="UserAccountApproved" targetRef="RejectUserAccountRequest">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!approved}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${action == "DECLINE"}]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0njtk01" name="Approved" sourceRef="UserAccountApproved" targetRef="ApproveUserAccountRequestTask">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${action == "APPROVE"}]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:serviceTask id="ApproveUserAccountRequestTask" name="Approve User Account Request" camunda:delegateExpression="${approveUserAccountRequestTask}">
       <bpmn:incoming>SequenceFlow_0njtk01</bpmn:incoming>

@@ -18,4 +18,9 @@ public interface ShipmentCommentService extends CrudService<Integer, ShipmentCom
      */
     List<ShipmentComment> findByShipmentId(Integer shipmentId);
 
+    /**
+     * Method to recreate the ES index.
+     */
+    void recreateIndex();
+
 }

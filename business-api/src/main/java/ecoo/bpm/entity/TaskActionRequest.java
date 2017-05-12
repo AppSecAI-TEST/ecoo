@@ -10,7 +10,7 @@ public class TaskActionRequest {
 
     private Integer requestingUserId;
 
-    private boolean approve;
+    private String action;
 
     private String comment;
 
@@ -33,12 +33,12 @@ public class TaskActionRequest {
         this.requestingUserId = requestingUserId;
     }
 
-    public boolean isApprove() {
-        return approve;
+    public String getAction() {
+        return action;
     }
 
-    public void setApprove(boolean approve) {
-        this.approve = approve;
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public String getComment() {
@@ -54,7 +54,7 @@ public class TaskActionRequest {
         return "TaskActionRequest{" +
                 "processInstanceId='" + processInstanceId + '\'' +
                 ", requestingUserId=" + requestingUserId +
-                ", approve=" + approve +
+                ", action='" + action + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
     }

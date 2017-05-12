@@ -92,9 +92,9 @@ public class ShipmentComment extends BaseModel<Integer> implements Serializable 
     @JsonGetter
     public String getDateCreatedDescription() {
         if (this.dateCreated == null) return null;
-        final DateTime dateCreated = new DateTime().withMillis(this.dateCreated.getTime());
         return TimeDescriptionBuilder.aTimeDescription()
-                .witEvaluationDate(dateCreated)
+                .withStartTime(this.dateCreated)
+                .witEvaluationDate(DateTime.now())
                 .build();
     }
 

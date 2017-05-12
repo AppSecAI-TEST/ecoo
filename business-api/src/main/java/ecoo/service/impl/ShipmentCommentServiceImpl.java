@@ -59,4 +59,6 @@ public class ShipmentCommentServiceImpl extends JdbcElasticsearchAuditTemplate<I
             aComment.setDateCreated(new Date());
         }
     }
+
+    
 }
