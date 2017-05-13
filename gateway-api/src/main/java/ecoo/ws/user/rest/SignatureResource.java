@@ -2,9 +2,9 @@ package ecoo.ws.user.rest;
 
 import ecoo.log.aspect.ProfileExecution;
 import ecoo.ws.common.rest.BaseResource;
-import ecoo.ws.user.rest.json.RegisterSignatureRequest;
-import ecoo.ws.user.rest.json.RegisterSignatureResponse;
-import ecoo.ws.user.rest.json.RegisterSignatureResponseBuilder;
+import ecoo.ws.user.rest.json.CreateSignatureRequest;
+import ecoo.ws.user.rest.json.CreateSignatureResponse;
+import ecoo.ws.user.rest.json.CreateSignatureResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class SignatureResource extends BaseResource {
 
     @ProfileExecution
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<RegisterSignatureResponse> register(@RequestBody RegisterSignatureRequest request) {
+    public ResponseEntity<CreateSignatureResponse> create(@RequestBody CreateSignatureRequest request) {
         Assert.notNull(request, "The variable request cannot be null.");
         Assert.hasText(request.getPersonalReference(), "System cannot complete request. The personal reference " +
                 "value is required or cannot be blank.");
@@ -40,7 +40,7 @@ public class SignatureResource extends BaseResource {
 
         LOG.info(request.toString());
 
-        return ResponseEntity.ok(RegisterSignatureResponseBuilder.aRegisterSignatureResponse()
+        return ResponseEntity.ok(CreateSignatureResponseBuilder.aRegisterSignatureResponse()
                 .withPersonalReference(request.getPersonalReference())
                 .withFirsName(request.getFirsName())
                 .withLastName(request.getLastName())

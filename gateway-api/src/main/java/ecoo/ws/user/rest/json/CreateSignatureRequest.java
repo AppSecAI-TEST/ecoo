@@ -4,7 +4,7 @@ package ecoo.ws.user.rest.json;
  * @author Justin Rundle
  * @since May 2017
  */
-public class RegisterSignatureResponse {
+public class CreateSignatureRequest {
 
     private String personalReference;
 
@@ -13,8 +13,6 @@ public class RegisterSignatureResponse {
     private String lastName;
 
     private String base64Payload;
-
-   private boolean successfulInd;
 
     public String getPersonalReference() {
         return personalReference;
@@ -48,22 +46,13 @@ public class RegisterSignatureResponse {
         this.base64Payload = base64Payload;
     }
 
-    public boolean isSuccessfulInd() {
-        return successfulInd;
-    }
-
-    public void setSuccessfulInd(boolean successfulInd) {
-        this.successfulInd = successfulInd;
-    }
-
     @Override
     public String toString() {
-        return "RegisterSignatureResponse{" +
+        return "CreateSignatureRequest{" +
                 "personalReference='" + personalReference + '\'' +
                 ", firsName='" + firsName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", base64Payload='" + base64Payload + '\'' +
-                ", successfulInd=" + successfulInd +
                 '}';
     }
 }
