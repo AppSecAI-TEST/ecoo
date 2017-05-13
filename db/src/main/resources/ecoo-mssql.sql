@@ -939,6 +939,8 @@ INSERT INTO "user_acc" ("id", "title", "first_name", "last_name", "display_name"
 (-99  ,NULL  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'no-reply@ecoo.co.za'  ,NULL  ,NULL  ,'anonymous'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL  ,NULL ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  , NULL),
 (-98  ,NULL  ,'SYSTEM'  ,'ACCOUNT'  ,'SYSTEM ACCOUNT'  ,NULL  ,NULL  ,NULL  ,'sysaccount'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
 (-97  ,NULL  ,'BATCH PROCESSOR'  ,'ACCOUNT'  ,'BATCH PROCESSOR ACCOUNT'  ,NULL  ,NULL  ,'E'  ,'batch'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
+-- meprE8E&H&6-qu5eSuN3
+(-96  ,NULL  ,'MOBILE'  ,'APP'  ,'MOBILE APP'  ,NULL  ,NULL  ,'E'  ,'mobile'  ,'1DECF8C589D5751C639229B33AA6C1E2'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
 (1  ,NULL  ,'SYSTEM'  ,'ADMINISTRATION'  ,'SYSTEM ADMINISTRATION'  ,'system@s-squared.co.za'  ,NULL  ,'E'  ,'admin'  ,'21232f297a57a5a743894a0e4a801fc3'  ,'OTH'  ,'admin' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL),
 (2  ,NULL  ,'LINDA'  ,'HOLTES'  ,'LINDA HOLTES'  ,'linda@uasalesonline.com'  ,NULL  ,'E'  ,'linda@uasalesonline.com'  ,'fe01ce2a7fbac8fafaed7c982a04e229'  ,NULL ,NULL ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL),
 (3  ,NULL  ,'LINDA'  ,'BLACKBEARD'  ,'LINDA LOUISE BLACKBEARD'  ,'support@s-squared.co.za'  ,NULL  ,'E'  ,'admin@rcci.co.za'  ,'fe01ce2a7fbac8fafaed7c982a04e229'  ,'RSA'  ,'5305160111082' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL),
