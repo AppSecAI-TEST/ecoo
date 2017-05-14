@@ -20,7 +20,8 @@ import java.util.List;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = RegisterUserAccountRequest.class, name = "RegisterUserAccountRequest"),
         @JsonSubTypes.Type(value = PasswordResetRequest.class, name = "PasswordResetRequest"),
-        @JsonSubTypes.Type(value = NewShipmentRequest.class, name = "NewShipmentRequest")
+        @JsonSubTypes.Type(value = NewShipmentRequest.class, name = "NewShipmentRequest"),
+        @JsonSubTypes.Type(value = CreateSignatureBpmRequest.class, name = "CreateSignatureRequest")
 })
 public abstract class WorkflowRequest implements Serializable {
 
