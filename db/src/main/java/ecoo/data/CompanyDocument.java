@@ -26,17 +26,13 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
     @Audited
     private Integer companyId;
 
-    @Column(name = "path")
-    @Audited
-    private String path;
-
-    @Column(name = "file_name")
-    @Audited
-    private String fileName;
-
     @Column(name = "doc_type")
     @Audited
     private String documentType;
+
+    @Column(name = "encoded_image")
+    @Audited
+    private String encodedImage;
 
     @Column(name = "mime_type")
     @Audited
@@ -71,6 +67,10 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
         this.primaryId = primaryId;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
     public Integer getCompanyId() {
         return companyId;
     }
@@ -79,28 +79,20 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
         this.companyId = companyId;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public String getDocumentType() {
         return documentType;
     }
 
     public void setDocumentType(String documentType) {
         this.documentType = documentType;
+    }
+
+    public String getEncodedImage() {
+        return encodedImage;
+    }
+
+    public void setEncodedImage(String encodedImage) {
+        this.encodedImage = encodedImage;
     }
 
     public String getMimeType() {
@@ -132,9 +124,8 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
         return "CompanyDocument{" +
                 "primaryId=" + primaryId +
                 ", companyId=" + companyId +
-                ", path='" + path + '\'' +
-                ", fileName='" + fileName + '\'' +
                 ", documentType='" + documentType + '\'' +
+                ", encodedImage='" + encodedImage + '\'' +
                 ", mimeType='" + mimeType + '\'' +
                 ", sizeInKb=" + sizeInKb +
                 ", dateCreated=" + dateCreated +
