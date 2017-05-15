@@ -16,6 +16,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Justin Rundle
@@ -49,8 +51,12 @@ public class GenerateCertificateOfOriginTask implements JavaDelegate {
 
 
     private File callAndSaveSSRSReport(Shipment shipment) throws IOException {
+        final Map<String, String> reportParameters = new HashMap<>();
+        reportParameters.put("userSignatureId", "1");
+        reportParameters.put("shipmentId", shipment.getPrimaryId().toString());
+
         final byte[] content = reportService.execute("/ECOO/CertificateOfOrigin"
-                , "userSignatureId", "1");
+                , reportParameters);
 
         // C:\Users\Justin\.lg\docs\invoices\1
         final String path = "C:\\Users\\Justin\\.ecoo\\temp\\coo";
@@ -59,7 +65,7 @@ public class GenerateCertificateOfOriginTask implements JavaDelegate {
             log.info(String.format("Directory %s created.", targetDir.getAbsolutePath()));
         }
 
-        final String fileName = "example.pdf";
+        final String fileName = "coo-" + shipment.getPrimaryId() + ".pdf";
         final File pdf = new File(targetDir.getAbsolutePath(), fileName);
 
         BufferedOutputStream stream = null;
