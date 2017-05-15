@@ -789,6 +789,39 @@ GO
 
 
 -- =====================================================================================
+-- SIGNATURE
+-- =====================================================================================
+CREATE TABLE "signature" (
+  "id" int IDENTITY(1,1) NOT NULL,
+  "personal_ref_value" varchar(50) NULL,
+  "first_name" varchar(100) NOT NULL,
+  "last_name" varchar(100) NOT NULL,
+  "encoded_image" varchar(max) NOT NULL,
+  "date_created" datetime NOT NULL,
+  "user_signature_id" int NULL,
+CONSTRAINT [pk_signature] PRIMARY KEY CLUSTERED 
+([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+CREATE TABLE "signature_log" (
+  "rev" int NOT NULL,
+  "revType" tinyint NOT NULL,
+  "id" int NOT NULL,
+  "personal_ref_value" varchar(50) NULL,
+  "first_name" varchar(100) NULL,
+  "last_name" varchar(100) NULL,
+  "encoded_image" varchar(max) NULL,
+  "date_created" datetime NULL,
+  "user_signature_id" int NULL,
+CONSTRAINT pk_signature_log PRIMARY KEY CLUSTERED 
+([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE "signature_log" ADD CONSTRAINT "fk_signature_log_rev" FOREIGN KEY ("rev") REFERENCES "revision" ("id");  
+ALTER TABLE "signature_log" ADD CONSTRAINT "fk_signature_log_rev_type" FOREIGN KEY ("revType") REFERENCES "rev_type" ("id");
+GO
+
+-- =====================================================================================
 -- USER
 -- =====================================================================================
 CREATE TABLE "user_acc" (

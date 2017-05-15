@@ -66,7 +66,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>="Shipment " &amp; First(Fields!export_ref.Value, "shipment")</Value>
+                <Value>=First(Fields!export_ref.Value, "shipment")</Value>
                 <Style>
                   <FontFamily>Calibri</FontFamily>
                   <FontSize>18pt</FontSize>
@@ -134,6 +134,7 @@
         </Paragraphs>
         <rd:DefaultName>id</rd:DefaultName>
         <Top>0.48514in</Top>
+        <Left>0in</Left>
         <Height>0.15542in</Height>
         <Width>3.05877in</Width>
         <ZIndex>5</ZIndex>
@@ -164,6 +165,7 @@
         </Paragraphs>
         <rd:DefaultName>id</rd:DefaultName>
         <Top>0.65306in</Top>
+        <Left>0in</Left>
         <Height>0.15542in</Height>
         <Width>3.05877in</Width>
         <ZIndex>6</ZIndex>
@@ -194,9 +196,102 @@
         </Paragraphs>
         <rd:DefaultName>id</rd:DefaultName>
         <Top>0.82515in</Top>
+        <Left>0in</Left>
         <Height>0.15542in</Height>
         <Width>3.05877in</Width>
         <ZIndex>7</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Textbox>
+      <Textbox Name="id11">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!consignee_province.Value, "shipment") &amp; " " &amp; First(Fields!consignee_postcode.Value, "shipment")</Value>
+                <Style>
+                  <FontFamily>Calibri</FontFamily>
+                  <FontWeight>Normal</FontWeight>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>id</rd:DefaultName>
+        <Top>0.98335in</Top>
+        <Left>0in</Left>
+        <Height>0.15542in</Height>
+        <Width>3.05877in</Width>
+        <ZIndex>8</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Textbox>
+      <Textbox Name="id12">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!consignee_country.Value, "shipment")</Value>
+                <Style>
+                  <FontFamily>Calibri</FontFamily>
+                  <FontWeight>Normal</FontWeight>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>id</rd:DefaultName>
+        <Top>1.14155in</Top>
+        <Height>0.15542in</Height>
+        <Width>3.05877in</Width>
+        <ZIndex>9</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Textbox>
+      <Textbox Name="id13">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!display_name.Value, "imageSrc")</Value>
+                <Style>
+                  <FontFamily>Calibri</FontFamily>
+                  <FontWeight>Normal</FontWeight>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>id</rd:DefaultName>
+        <Top>4.40243in</Top>
+        <Left>2.97792in</Left>
+        <Height>0.15542in</Height>
+        <Width>3.05877in</Width>
+        <ZIndex>10</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -235,13 +330,18 @@
             <Value>=Parameters!userSignatureId.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>select top 1 encoded_image from user_signature with(nolock)
-where id = @userSignatureId</CommandText>
+        <CommandText>select top 1 s.encoded_image,u.display_name from user_signature s with(nolock)
+	inner join dbo.user_acc u with(nolock) on u.id = s.user_id
+where s.id = @userSignatureId</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
         <Field Name="encoded_image">
           <DataField>encoded_image</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="display_name">
+          <DataField>display_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

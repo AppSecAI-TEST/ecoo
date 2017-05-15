@@ -21,7 +21,7 @@
     </bpmn:userTask>
     <bpmn:endEvent id="EndEvent_0ahpj89" name="User Registration Completed">
       <bpmn:incoming>SequenceFlow_1qc7sna</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0jp5t50</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0brcos7</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0p2kftd" sourceRef="RejectUserAccountRequest" targetRef="Task_0iqfyyc" />
     <bpmn:sequenceFlow id="SequenceFlow_16yvzvu" sourceRef="SendActivationEmailTask" targetRef="ConfirmUserAccountActivation" />
@@ -48,7 +48,7 @@
     <bpmn:serviceTask id="CompleteUserAccountActivation" name="Activate Account" camunda:delegateExpression="${completeUserAccountActivationTask}">
       <bpmn:incoming>SequenceFlow_0gpp9c4</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0gwmbpt</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0jp5t50</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0brcos7</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="RejectUserAccountRequest" name="Reject User Account Request" camunda:delegateExpression="${rejectUserAccountRequestTask}">
       <bpmn:incoming>SequenceFlow_1w39fi9</bpmn:incoming>
@@ -63,11 +63,11 @@
       <bpmn:outgoing>SequenceFlow_0gwmbpt</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_02bc89a" name="What is the source of the request?">
-      <bpmn:incoming>SequenceFlow_17levmb</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0k70lox</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0gzskao</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0gpp9c4</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_17levmb" sourceRef="ApproveUserAccountRequestTask" targetRef="ExclusiveGateway_02bc89a" />
+    <bpmn:sequenceFlow id="SequenceFlow_17levmb" sourceRef="ApproveUserAccountRequestTask" targetRef="RemoveAssociatedSignatureTask" />
     <bpmn:sequenceFlow id="SequenceFlow_0gzskao" name="User" sourceRef="ExclusiveGateway_02bc89a" targetRef="SendActivationEmailTask">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!adminSource}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -77,12 +77,17 @@
     <bpmn:sequenceFlow id="SequenceFlow_0gwmbpt" sourceRef="ConfirmUserAccountActivation" targetRef="CompleteUserAccountActivation" />
     <bpmn:sequenceFlow id="SequenceFlow_08fdnn1" sourceRef="MarkUserAccountAsPendingApprovalTask" targetRef="VerifyUserAccountRequest" />
     <bpmn:sequenceFlow id="SequenceFlow_1qc7sna" sourceRef="Task_0iqfyyc" targetRef="EndEvent_0ahpj89" />
-    <bpmn:sequenceFlow id="SequenceFlow_0jp5t50" sourceRef="CompleteUserAccountActivation" targetRef="EndEvent_0ahpj89" />
     <bpmn:sequenceFlow id="SequenceFlow_0h34fnl" sourceRef="MarkCompanyAsPendingApprovalTask" targetRef="MarkUserAccountAsPendingApprovalTask" />
     <bpmn:serviceTask id="MarkCompanyAsPendingApprovalTask" name="Mark Company As Pending Approval" camunda:delegateExpression="${markCompanyAsPendingApprovalTask}">
       <bpmn:incoming>SequenceFlow_0p7kr5c</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0h34fnl</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0k70lox" sourceRef="RemoveAssociatedSignatureTask" targetRef="ExclusiveGateway_02bc89a" />
+    <bpmn:serviceTask id="RemoveAssociatedSignatureTask" name="Remove Associated Signature" camunda:asyncBefore="true" camunda:delegateExpression="${removeAssociatedSignatureTask}">
+      <bpmn:incoming>SequenceFlow_17levmb</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0k70lox</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0brcos7" sourceRef="CompleteUserAccountActivation" targetRef="EndEvent_0ahpj89" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="UserRegistration">
@@ -108,9 +113,9 @@
         <dc:Bounds x="403" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_0ahpj89_di" bpmnElement="EndEvent_0ahpj89">
-        <dc:Bounds x="1609" y="102" width="36" height="36" />
+        <dc:Bounds x="1735" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1652" y="110" width="90" height="20" />
+          <dc:Bounds x="1778" y="110" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0p2kftd_di" bpmnElement="SequenceFlow_0p2kftd">
@@ -123,10 +128,10 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_16yvzvu_di" bpmnElement="SequenceFlow_16yvzvu">
-        <di:waypoint xsi:type="dc:Point" x="1148" y="282" />
-        <di:waypoint xsi:type="dc:Point" x="1234" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="1313" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="1380" y="282" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1146" y="257" width="90" height="20" />
+          <dc:Bounds x="1301.5" y="257" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ExclusiveGateway_1i9bgko_di" bpmnElement="UserAccountApproved" isMarkerVisible="true">
@@ -160,10 +165,10 @@
         <dc:Bounds x="641" y="242" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_0z0higs_di" bpmnElement="SendActivationEmailTask">
-        <dc:Bounds x="1048" y="242" width="100" height="80" />
+        <dc:Bounds x="1213" y="242" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1oyj4tb_di" bpmnElement="CompleteUserAccountActivation">
-        <dc:Bounds x="1234" y="420" width="100" height="80" />
+        <dc:Bounds x="1380" y="416" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_0i6f4dm_di" bpmnElement="RejectUserAccountRequest">
         <dc:Bounds x="641" y="-84" width="100" height="80" />
@@ -172,41 +177,43 @@
         <dc:Bounds x="1048" y="-84" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_1l50a73_di" bpmnElement="ConfirmUserAccountActivation">
-        <dc:Bounds x="1234" y="242" width="100" height="80" />
+        <dc:Bounds x="1380" y="242" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_02bc89a_di" bpmnElement="ExclusiveGateway_02bc89a" isMarkerVisible="true">
-        <dc:Bounds x="823.5361216730038" y="257" width="50" height="50" />
+        <dc:Bounds x="1002" y="257" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="803.5361216730038" y="213" width="90" height="20" />
+          <dc:Bounds x="982" y="213" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_17levmb_di" bpmnElement="SequenceFlow_17levmb">
         <di:waypoint xsi:type="dc:Point" x="741" y="282" />
-        <di:waypoint xsi:type="dc:Point" x="824" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="816" y="282" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="737.5" y="257" width="90" height="20" />
+          <dc:Bounds x="733.5" y="257" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0gzskao_di" bpmnElement="SequenceFlow_0gzskao">
-        <di:waypoint xsi:type="dc:Point" x="874" y="282" />
-        <di:waypoint xsi:type="dc:Point" x="1048" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="1052" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="1213" y="282" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="916" y="257" width="90" height="20" />
+          <dc:Bounds x="1087.5" y="257" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0gpp9c4_di" bpmnElement="SequenceFlow_0gpp9c4">
-        <di:waypoint xsi:type="dc:Point" x="849" y="307" />
-        <di:waypoint xsi:type="dc:Point" x="849" y="460" />
-        <di:waypoint xsi:type="dc:Point" x="1234" y="460" />
+        <di:waypoint xsi:type="dc:Point" x="1027" y="307" />
+        <di:waypoint xsi:type="dc:Point" x="1027" y="456" />
+        <di:waypoint xsi:type="dc:Point" x="1380" y="456" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="902" y="430.5" width="90" height="20" />
+          <dc:Bounds x="1071.8546139881623" y="427" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0gwmbpt_di" bpmnElement="SequenceFlow_0gwmbpt">
-        <di:waypoint xsi:type="dc:Point" x="1284" y="322" />
-        <di:waypoint xsi:type="dc:Point" x="1284" y="420" />
+        <di:waypoint xsi:type="dc:Point" x="1380" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="1357" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="1357" y="456" />
+        <di:waypoint xsi:type="dc:Point" x="1380" y="456" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1254" y="361" width="90" height="20" />
+          <dc:Bounds x="1327" y="359" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_08fdnn1_di" bpmnElement="SequenceFlow_08fdnn1">
@@ -220,18 +227,9 @@
         <di:waypoint xsi:type="dc:Point" x="1148" y="-44" />
         <di:waypoint xsi:type="dc:Point" x="1354" y="-44" />
         <di:waypoint xsi:type="dc:Point" x="1354" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="1609" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="1735" y="120" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1324" y="28" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0jp5t50_di" bpmnElement="SequenceFlow_0jp5t50">
-        <di:waypoint xsi:type="dc:Point" x="1334" y="460" />
-        <di:waypoint xsi:type="dc:Point" x="1472" y="460" />
-        <di:waypoint xsi:type="dc:Point" x="1472" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="1609" y="120" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1442" y="280" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0h34fnl_di" bpmnElement="SequenceFlow_0h34fnl">
@@ -244,6 +242,25 @@
       <bpmndi:BPMNShape id="ServiceTask_1dt0grh_di" bpmnElement="MarkCompanyAsPendingApprovalTask">
         <dc:Bounds x="-35" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0k70lox_di" bpmnElement="SequenceFlow_0k70lox">
+        <di:waypoint xsi:type="dc:Point" x="916" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="1002" y="282" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="914" y="257" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0x8hd7i_di" bpmnElement="RemoveAssociatedSignatureTask">
+        <dc:Bounds x="816" y="242" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0brcos7_di" bpmnElement="SequenceFlow_0brcos7">
+        <di:waypoint xsi:type="dc:Point" x="1480" y="456" />
+        <di:waypoint xsi:type="dc:Point" x="1608" y="456" />
+        <di:waypoint xsi:type="dc:Point" x="1608" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="1735" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1578" y="278" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

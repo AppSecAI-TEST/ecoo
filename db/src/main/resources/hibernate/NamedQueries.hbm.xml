@@ -3,6 +3,14 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
+    <sql-query name="FIND_SIGNATURE_BY_PERSONAL_REF">
+        <return class="ecoo.data.Signature"/>
+        <![CDATA[
+            select top 1 s.* from dbo.signature s with(nolock)
+            where s.personal_ref_value = :personalReference
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_CHAMBER_ADMIN_BY_USER">
         <return class="ecoo.data.ChamberAdmin"/>
         <![CDATA[

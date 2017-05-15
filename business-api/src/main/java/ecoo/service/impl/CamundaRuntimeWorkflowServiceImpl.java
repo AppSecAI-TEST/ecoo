@@ -324,6 +324,31 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
         return count;
     }
 
+    /**
+     * Method to approve the given workflow reuqest.
+     *
+     * @param workflowRequest The workflow request to approve.
+     * @return The approved request.
+     */
+    @Override
+    public WorkflowRequest approve(WorkflowRequest workflowRequest) {
+        Assert.notNull(workflowRequest, "System cannot complete request. Request cannot be null.");
+        Assert.notNull(workflowRequest.getProcessInstanceId(), "System cannot complete request. ProcessInstanceId cannot be null.");
+
+        final Task task = taskService.createTaskQuery().processInstanceId(workflowRequest.getProcessInstanceId()).active()
+                .singleResult();
+        Assert.notNull(task, String.format("System cannot complete request. No active task found for " +
+                "processInstanceId %s.", workflowRequest.getProcessInstanceId()));
+
+        final String message = String.format("Process %s approved.", workflowRequest.getProcessInstanceId());
+        taskService.createComment(task.getId(), workflowRequest.getProcessInstanceId(), message);
+
+        taskService.complete(task.getId(), createVariables().putValue(TaskVariables.REQUEST.variableName(), workflowRequest)
+                .putValue("action", "APPROVE"));
+
+        return workflowRequest;
+    }
+
     @Override
     public TaskCompletedResponse actionTask(TaskActionRequest request) {
         Assert.notNull(request, "System cannot complete request. Request cannot be null.");

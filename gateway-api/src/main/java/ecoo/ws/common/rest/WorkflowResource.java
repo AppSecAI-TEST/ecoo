@@ -3,7 +3,6 @@ package ecoo.ws.common.rest;
 import ecoo.bpm.common.TaskDefinition;
 import ecoo.bpm.entity.*;
 import ecoo.service.WorkflowService;
-import ecoo.service.impl.CamundaRuntimeWorkflowServiceImpl;
 import ecoo.ws.common.json.Activities;
 import ecoo.ws.common.json.ActivityType;
 import ecoo.ws.common.json.TaskListRow;
@@ -63,6 +62,13 @@ public class WorkflowResource extends BaseResource {
         return ResponseEntity.ok(workflowService.findByProcessInstanceId(processInstanceId));
     }
 
+    @RequestMapping(value = "/approve", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<WorkflowRequest> approve(@RequestBody WorkflowRequest workflowRequest) {
+        Assert.notNull(workflowRequest, "System cannot complete request. Request cannot be null.");
+        return ResponseEntity.ok(workflowService.approve(workflowRequest));
+    }
+
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<TaskCompletedResponse> actionTask(@RequestBody TaskActionRequest request) {
@@ -105,7 +111,6 @@ public class WorkflowResource extends BaseResource {
                         .build()).collect(Collectors.toCollection(ArrayList::new));
         return ResponseEntity.ok(myTasks);
     }
-
 
     @RequestMapping(value = "/processType/UserRegistration/user/{username:.+}", method = RequestMethod.GET)
     public ResponseEntity<Collection<TaskListRow>> myPendingUserRegistrationTasks(@PathVariable String username) {

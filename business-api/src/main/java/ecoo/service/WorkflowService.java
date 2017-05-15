@@ -13,6 +13,14 @@ import java.util.List;
 public interface WorkflowService {
 
     /**
+     * Method to approve the given workflow reuqest.
+     *
+     * @param workflowRequest The workflow request to approve.
+     * @return The approved request.
+     */
+    WorkflowRequest approve(WorkflowRequest workflowRequest);
+
+    /**
      * Method to request a new shipment.
      *
      * @param request The new shipment request.

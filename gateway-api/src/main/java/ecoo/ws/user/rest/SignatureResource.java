@@ -1,18 +1,21 @@
 package ecoo.ws.user.rest;
 
+import ecoo.data.Signature;
+import ecoo.data.audit.Revision;
 import ecoo.log.aspect.ProfileExecution;
+import ecoo.service.SignatureService;
 import ecoo.ws.common.rest.BaseResource;
 import ecoo.ws.user.rest.json.CreateSignatureRequest;
 import ecoo.ws.user.rest.json.CreateSignatureResponse;
 import ecoo.ws.user.rest.json.CreateSignatureResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 /**
  * @author Justin Rundle
@@ -24,6 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class SignatureResource extends BaseResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(SignatureResource.class.getSimpleName());
+
+    private SignatureService signatureService;
+
+    @Autowired
+    public SignatureResource(SignatureService signatureService) {
+        this.signatureService = signatureService;
+    }
 
     @ProfileExecution
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -40,6 +50,23 @@ public class SignatureResource extends BaseResource {
 
         LOG.info(request.toString());
 
+        Signature signature = signatureService.findByPersonalReference(request.getPersonalReference());
+        if (signature == null) {
+            LOG.info("No signature found for personalRef <{}> >> creating new entry.", request.getPersonalReference());
+            signature = new Signature();
+
+        } else {
+            LOG.info("Found signature for personalRef <{}> >> updating new entry {}.", request.getPersonalReference()
+                    , signature.getPrimaryId());
+        }
+
+        signature.setPersonalRefValue(request.getPersonalReference());
+        signature.setFirstName(request.getFirsName());
+        signature.setLastName(request.getLastName());
+        signature.setEncodedImage(request.getBase64Payload());
+
+        signatureService.save(signature);
+
         return ResponseEntity.ok(CreateSignatureResponseBuilder.aRegisterSignatureResponse()
                 .withPersonalReference(request.getPersonalReference())
                 .withFirsName(request.getFirsName())
@@ -47,5 +74,33 @@ public class SignatureResource extends BaseResource {
                 .withBase64Payload(request.getBase64Payload())
                 .withSuccessfulInd(true)
                 .build());
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Signature>> findAll() {
+        return ResponseEntity.ok(signatureService.findAll());
+    }
+
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Signature> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(signatureService.findById(id));
+    }
+
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Signature> delete(@PathVariable Integer id) {
+        final Signature entity = signatureService.findById(id);
+        return ResponseEntity.ok(signatureService.delete(entity));
+    }
+
+    @RequestMapping(value = "/createdBy/id/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Revision> findCreatedBy(@PathVariable Integer id) {
+        final Signature entity = signatureService.findById(id);
+        return ResponseEntity.ok(signatureService.findCreatedBy(entity));
+    }
+
+    @RequestMapping(value = "/modifiedBy/id/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Revision> findModifiedBy(@PathVariable Integer id) {
+        final Signature entity = signatureService.findById(id);
+        return ResponseEntity.ok(signatureService.findModifiedBy(entity));
     }
 }
