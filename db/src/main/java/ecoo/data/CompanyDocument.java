@@ -30,6 +30,10 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
     @Audited
     private String documentType;
 
+    @Column(name = "file_name")
+    @Audited
+    private String fileName;
+
     @Column(name = "encoded_image")
     @Audited
     private String encodedImage;
@@ -87,6 +91,14 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
         this.documentType = documentType;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public String getEncodedImage() {
         return encodedImage;
     }
@@ -125,6 +137,7 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
                 "primaryId=" + primaryId +
                 ", companyId=" + companyId +
                 ", documentType='" + documentType + '\'' +
+                ", fileName='" + fileName + '\'' +
                 ", encodedImage='" + encodedImage + '\'' +
                 ", mimeType='" + mimeType + '\'' +
                 ", sizeInKb=" + sizeInKb +

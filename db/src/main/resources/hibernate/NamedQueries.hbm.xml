@@ -44,6 +44,15 @@
 	  	]]>
     </sql-query>
 
+    <sql-query name="FIND_DOCUMENTS_BY_COMPANY_AND_TYPE">
+        <return class="ecoo.data.CompanyDocument"/>
+        <![CDATA[
+            select distinct cd.* from dbo.company_doc cd with(nolock)
+            where cd.company_id = :companyId
+            and cd.doc_type = :documentType
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_DOCUMENTS_BY_COMPANY">
         <return class="ecoo.data.CompanyDocument"/>
         <![CDATA[
