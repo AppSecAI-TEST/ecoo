@@ -62,6 +62,17 @@ public class JdbcUserServiceImpl extends JdbcElasticsearchAuditTemplate<Integer,
     }
 
     /**
+     * Returns the list of users for the given company.
+     *
+     * @param companyId The company pk to evaluate.
+     * @return The list of users.
+     */
+    @Override
+    public List<User> findUsersByCompany(Integer companyId) {
+        return userDao.findUsersByCompany(companyId);
+    }
+
+    /**
      * Returns a collection users associated to the given role.
      *
      * @param role The role to evaluate.

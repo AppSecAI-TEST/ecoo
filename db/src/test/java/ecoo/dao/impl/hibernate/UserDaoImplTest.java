@@ -35,6 +35,12 @@ public class UserDaoImplTest {
     }
 
     @Test
+    public void testFindUsersByCompany() {
+        Collection<User> data = userDao.findUsersByCompany(-1);
+        Assert.assertNotNull(data);
+    }
+
+    @Test
     public void testFindByRole() throws Exception {
         Collection<User> data = userDao.findByRole(Role.ROLE_SYSADMIN);
         Assert.assertNotNull(data);

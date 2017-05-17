@@ -37,6 +37,21 @@ public class UserDaoImpl extends BaseAuditLogDaoImpl<Integer, User> implements U
     }
 
     /**
+     * Returns the list of users for the given company.
+     *
+     * @param companyId The company pk to evaluate.
+     * @return The list of users.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<User> findUsersByCompany(Integer companyId) {
+        Assert.notNull(companyId, "The variable companyId cannot be null.");
+
+        return (List<User>) getHibernateTemplate().findByNamedQueryAndNamedParam("FIND_USERS_BY_COMPANY"
+                , "companyId", companyId);
+    }
+
+    /**
      * Returns a collection users associated to the given role.
      *
      * @param role The role to evaluate.

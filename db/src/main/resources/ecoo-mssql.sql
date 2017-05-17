@@ -600,6 +600,7 @@ GO
 INSERT INTO "company_type" ("id", "descr") VALUES
 ('E', 'EXPORTER'),
 ('FF', 'FREIGHT FORWARDER');
+GO
 
 CREATE TABLE "company_type_log" (
   "rev" int NOT NULL,
@@ -722,7 +723,7 @@ GO
 
 SET IDENTITY_INSERT "endpoint" ON ;
 INSERT INTO "endpoint" ("id", "name", "url", "requested_time", "response", "status") VALUES
-(1, 'Gateway API/1', 'http://localhost:7777/health', '2016-08-29 20:23:54', '{"status":"UP","diskSpace":{"status":"UP","total":240054693888,"free":8417980416,"threshold":10485760},"db":{"status":"UP","database":"MySQL","hello":1}}', 'UP');
+(1, 'Gateway API/1', 'http://localhost:3331/health', '2016-08-29 20:23:54', '{"status":"UP","diskSpace":{"status":"UP","total":240054693888,"free":8417980416,"threshold":10485760},"db":{"status":"UP","database":"MySQL","hello":1}}', 'UP');
 --(2, 'Workflow API/1', 'http://localhost:3333/bpm-ws/health', '2016-08-29 20:23:54', '{"status":"UP","diskSpace":{"status":"UP","total":240054693888,"free":8417980416,"threshold":10485760},"db":{"status":"UP","database":"MySQL","hello":1}}', 'UP'),
 --(3, 'Claim Upload Processor API/1', 'http://localhost:2223/claim-uploadprocessor-ws/health', '2016-08-29 20:23:54', '{"status":"UP","diskSpace":{"status":"UP","total":240054693888,"free":8417980416,"threshold":10485760},"db":{"status":"UP","database":"MySQL","hello":1}}', 'UP'),
 --(4, 'Metric Processor API/1', 'http://localhost:2225/metricprocessor-ws/health', '2016-08-29 20:23:54', '{"status":"UP","diskSpace":{"status":"UP","total":240054693888,"free":8417980416,"threshold":10485760},"db":{"status":"UP","database":"MySQL","hello":1}}', 'UP');
@@ -850,12 +851,13 @@ CREATE TABLE "user_acc" (
   "last_login_time" datetime NULL,
   "status" varchar(3) NOT NULL,
   "company_id" int NULL,
+  "designation" varchar(50) NULL,
 CONSTRAINT [pk_user_acc] PRIMARY KEY CLUSTERED 
 ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[user_acc]  WITH CHECK ADD CONSTRAINT [fk_user_acc_company] FOREIGN KEY(company_id) REFERENCES [dbo].company(id);
 ALTER TABLE [dbo].[user_acc] ADD  CONSTRAINT ix_user_001 UNIQUE NONCLUSTERED (username ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+ALTER TABLE [dbo].[user_acc] ADD CONSTRAINT "fk_user_company" FOREIGN KEY ("company_id") REFERENCES "company" ("id");  
 GO
 
 CREATE TABLE "user_acc_log" (
@@ -882,9 +884,47 @@ CREATE TABLE "user_acc_log" (
   "activation_serial_no" varchar(40) NULL,
   "last_login_time" datetime NULL,
   "status" varchar(3) NULL,
-  "company_id" int NULL,
+  "company" int NULL,
+  "designation" varchar(50) NULL,
 CONSTRAINT [pk_user_acc_log] PRIMARY KEY CLUSTERED 
 ([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE "user_acc_log" ADD CONSTRAINT "fk_user_acc_log_rev" FOREIGN KEY ("rev") REFERENCES "revision" ("id");  
+ALTER TABLE "user_acc_log" ADD CONSTRAINT "fk_user_acc_log_rev_type" FOREIGN KEY ("revType") REFERENCES "rev_type" ("id");
+GO
+
+CREATE TABLE company_sign (
+  id int IDENTITY(1,1) NOT NULL,
+  company_id int NOT NULL,
+  user_id int NOT NULL,
+  start_date datetime NOT NULL,
+  end_date datetime NOT NULL,
+CONSTRAINT [pk_company_sign] PRIMARY KEY CLUSTERED 
+([user_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].company_sign ADD  CONSTRAINT ix_company_sign_001 UNIQUE NONCLUSTERED (user_id ASC, company_id ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+GO
+
+ALTER TABLE "company_sign" ADD CONSTRAINT "fk_company_sig_user" FOREIGN KEY ("user_id") REFERENCES "user_acc" ("id");
+ALTER TABLE "company_sign" ADD CONSTRAINT "fk_company_sig_role" FOREIGN KEY ("company_id") REFERENCES "company" ("id");
+GO
+
+CREATE TABLE company_sign_log (
+  rev int NOT NULL,
+  revType tinyint NOT NULL,
+  id int IDENTITY(1,1) NOT NULL,
+  company_id int NULL,
+  user_id int NULL,
+  start_date datetime NULL,
+  end_date datetime NULL,
+CONSTRAINT [pk_company_sign_log] PRIMARY KEY CLUSTERED 
+([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE "company_sign_log" ADD CONSTRAINT "fk_company_sign_log_rev" FOREIGN KEY ("rev") REFERENCES "revision" ("id");  
+ALTER TABLE "company_sign_log" ADD CONSTRAINT "fk_company_sign_log_rev_type" FOREIGN KEY ("revType") REFERENCES "rev_type" ("id");
 GO
 
 CREATE TABLE [dbo].comm_type(

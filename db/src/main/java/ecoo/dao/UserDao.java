@@ -5,12 +5,21 @@ import ecoo.data.User;
 import ecoo.data.UserStatus;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Justin Rundle
  * @since April 2017
  */
 public interface UserDao extends AuditLogDao<Integer, User> {
+
+    /**
+     * Returns the list of users for the given company.
+     *
+     * @param companyId The company pk to evaluate.
+     * @return The list of users.
+     */
+    List<User> findUsersByCompany(Integer companyId);
 
     /**
      * Returns a collection users associated to the given role.

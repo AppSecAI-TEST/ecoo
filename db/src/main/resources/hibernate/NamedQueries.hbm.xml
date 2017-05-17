@@ -61,6 +61,14 @@
 	  	]]>
     </sql-query>
 
+    <sql-query name="FIND_USERS_BY_COMPANY">
+        <return class="ecoo.data.User"/>
+        <![CDATA[
+            select distinct uc.* from dbo.user_acc uc with(nolock)
+            where uc.company_id = :companyId
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_USERS_BY_ROLE">
         <return class="ecoo.data.User"/>
         <![CDATA[

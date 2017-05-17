@@ -10,12 +10,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Justin Rundle
  * @since April 2017
  */
 public interface UserService extends CrudService<Integer, User>, UserDetailsService, AuditedModelAware<User> {
+
+    /**
+     * Returns the list of users for the given company.
+     *
+     * @param companyId The company pk to evaluate.
+     * @return The list of users.
+     */
+    List<User> findUsersByCompany(Integer companyId);
 
     /**
      * Returns a collection users associated to the given role.

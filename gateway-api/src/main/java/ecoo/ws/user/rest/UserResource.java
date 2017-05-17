@@ -41,13 +41,18 @@ public class UserResource extends BaseResource {
 
     private CompanyValidator companyValidator;
 
-
     @Autowired
     public UserResource(UserService userService, WorkflowService workflowService, UserValidator userValidator, CompanyValidator companyValidator) {
         this.userService = userService;
         this.workflowService = workflowService;
         this.userValidator = userValidator;
         this.companyValidator = companyValidator;
+    }
+
+    @RequestMapping(value = "/company/{companyId}", method = RequestMethod.GET)
+    public ResponseEntity<Collection<User>> findUsersByCompany(@PathVariable Integer companyId) {
+        Assert.notNull(companyId, "The variable companyId cannot be null.");
+        return ResponseEntity.ok(userService.findUsersByCompany(companyId));
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)

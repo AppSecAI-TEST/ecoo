@@ -115,6 +115,10 @@ public class User extends BaseModel<Integer> implements UserDetails, Credentials
     @Audited
     private Company company;
 
+    @Column(name = "designation")
+    @Audited
+    private String designation;
+
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     @Cascade({CascadeType.ALL})
@@ -444,6 +448,14 @@ public class User extends BaseModel<Integer> implements UserDetails, Credentials
         this.company = company;
     }
 
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
     /**
      * Returns the user roles linked to this account.
      *
@@ -560,6 +572,7 @@ public class User extends BaseModel<Integer> implements UserDetails, Credentials
                 ", passwordExpired=" + passwordExpired +
                 ", activationSerialNumber='" + activationSerialNumber + '\'' +
                 ", company=" + company +
+                ", designation='" + designation + '\'' +
                 ", lastLoginTime=" + lastLoginTime +
                 ", userRoles=" + userRoles +
                 ", authorities=" + authorities +
