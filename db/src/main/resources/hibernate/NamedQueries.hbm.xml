@@ -3,6 +3,14 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
+    <sql-query name="FIND_COMPANY_SIGNATORIES_BY_COMPANY">
+        <return class="ecoo.data.CompanySignatory"/>
+        <![CDATA[
+            select distinct c.* from dbo.company_sign c with(nolock)
+            where c.company_id = :companyId
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_SIGNATURE_BY_PERSONAL_REF">
         <return class="ecoo.data.Signature"/>
         <![CDATA[
