@@ -884,7 +884,7 @@ CREATE TABLE "user_acc_log" (
   "activation_serial_no" varchar(40) NULL,
   "last_login_time" datetime NULL,
   "status" varchar(3) NULL,
-  "company" int NULL,
+  "company_id" int NULL,
   "designation" varchar(50) NULL,
 CONSTRAINT [pk_user_acc_log] PRIMARY KEY CLUSTERED 
 ([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
@@ -914,7 +914,7 @@ GO
 CREATE TABLE company_sign_log (
   rev int NOT NULL,
   revType tinyint NOT NULL,
-  id int IDENTITY(1,1) NOT NULL,
+  id int NOT NULL,
   company_id int NULL,
   user_id int NULL,
   start_date datetime NULL,

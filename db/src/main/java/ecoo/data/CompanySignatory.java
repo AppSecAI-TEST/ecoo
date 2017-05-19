@@ -1,6 +1,8 @@
 package ecoo.data;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import org.hibernate.envers.Audited;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,9 +28,10 @@ public class CompanySignatory extends BaseModel<Integer> implements Serializable
     @Audited
     private Integer companyId;
 
-    @Column(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     @Audited
-    private Integer userId;
+    private User user;
 
     @Column(name = "start_date")
     @Audited
@@ -67,12 +70,12 @@ public class CompanySignatory extends BaseModel<Integer> implements Serializable
         this.companyId = companyId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Date getStartDate() {
@@ -91,12 +94,20 @@ public class CompanySignatory extends BaseModel<Integer> implements Serializable
         this.endDate = endDate;
     }
 
+    @JsonGetter
+    public boolean isActive() {
+        final DateTime now = DateTime.now();
+        final DateTime startDate = now.withMillis(this.startDate.getTime()).withTimeAtStartOfDay();
+        final DateTime endDate = now.withMillis(this.endDate.getTime());
+        return (now.isEqual(startDate) || now.isAfter(startDate)) && now.isBefore(endDate);
+    }
+
     @Override
     public String toString() {
         return "CompanySignatory{" +
                 "primaryId=" + primaryId +
                 ", companyId=" + companyId +
-                ", userId=" + userId +
+                ", user=" + user +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 '}';

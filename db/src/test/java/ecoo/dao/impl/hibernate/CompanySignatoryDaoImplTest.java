@@ -39,6 +39,12 @@ public class CompanySignatoryDaoImplTest {
     }
 
     @Test
+    public void testFindByUserAndCompany() {
+        final CompanySignatory companySignatory = companySignatoryDao.findByUserAndCompany(1, 1);
+        Assert.assertNull(companySignatory);
+    }
+
+    @Test
     public void testFindByCompany() {
         final Collection<CompanySignatory> data = companySignatoryDao.findByCompanyId(1);
         Assert.assertNotNull(data);

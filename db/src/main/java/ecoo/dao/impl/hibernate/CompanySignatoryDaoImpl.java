@@ -23,6 +23,23 @@ public class CompanySignatoryDaoImpl extends BaseAuditLogDaoImpl<Integer, Compan
         super(sessionFactory, CompanySignatory.class);
     }
 
+    /**
+     * Returns the signatory for the given user and company.
+     *
+     * @param userId    The user to evaluate.
+     * @param companyId The company to evaluate.
+     * @return The signatory or null.
+     */
+    @Override
+    public CompanySignatory findByUserAndCompany(Integer userId, Integer companyId) {
+        Assert.notNull(userId, "The variable userId cannot be null.");
+        Assert.notNull(companyId, "The variable companyId cannot be null.");
+        final List<?> data = getHibernateTemplate().findByNamedQueryAndNamedParam("FIND_COMPANY_SIGNATORY_BY_USER_AND_COMPANY"
+                , new String[]{"userId", "companyId"}, new Object[]{userId, companyId});
+        if (data.isEmpty()) return null;
+        return (CompanySignatory) data.iterator().next();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<CompanySignatory> findByCompanyId(Integer companyId) {

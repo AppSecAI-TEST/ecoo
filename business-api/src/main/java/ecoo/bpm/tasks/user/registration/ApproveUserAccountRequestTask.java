@@ -34,13 +34,16 @@ public class ApproveUserAccountRequestTask implements JavaDelegate {
 
     private UserSignatureService userSignatureService;
 
+    private CompanySignatoryService companySignatoryService;
+
     @Autowired
-    public ApproveUserAccountRequestTask(CompanyService companyService, UserService userService, ChamberUserService chamberUserService, SignatureService signatureService, UserSignatureService userSignatureService) {
+    public ApproveUserAccountRequestTask(CompanyService companyService, UserService userService, ChamberUserService chamberUserService, SignatureService signatureService, UserSignatureService userSignatureService, CompanySignatoryService companySignatoryService) {
         this.companyService = companyService;
         this.userService = userService;
         this.chamberUserService = chamberUserService;
         this.signatureService = signatureService;
         this.userSignatureService = userSignatureService;
+        this.companySignatoryService = companySignatoryService;
     }
 
     @Override
@@ -62,16 +65,19 @@ public class ApproveUserAccountRequestTask implements JavaDelegate {
 
         final User approvedBy = userService.findById(approvedById);
 
-        final Company company = request.getCompany();
-        final Company approvedCompany = approveCompany(company);
-
         final User approvedUser = approveUser(user, request.getChamber());
         request.setUser(approvedUser);
+
+        final Company company = request.getCompany();
+        final Company approvedCompany = approveCompany(approvedUser, company);
     }
 
-    private Company approveCompany(Company company) {
+    private Company approveCompany(User user, Company company) {
         company.setStatus(CompanyStatus.Approved.id());
         companyService.save(company);
+
+        companySignatoryService.addSignatory(user, company.getPrimaryId());
+
         return companyService.findById(company.getPrimaryId());
     }
 

@@ -10,5 +10,21 @@ import java.util.List;
  */
 public interface CompanySignatoryDao extends AuditLogDao<Integer, CompanySignatory> {
 
+
+    /**
+     * Returns the signatory for the given user and company.
+     *
+     * @param userId    The user to evaluate.
+     * @param companyId The company to evaluate.
+     * @return The signatory or null.
+     */
+    CompanySignatory findByUserAndCompany(Integer userId, Integer companyId);
+
+    /**
+     * Returns all the signatories for the given company.
+     *
+     * @param companyId The company to evaluate.
+     * @return The list of signatories.
+     */
     List<CompanySignatory> findByCompanyId(Integer companyId);
 }
