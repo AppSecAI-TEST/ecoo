@@ -13,6 +13,14 @@ import java.util.List;
 public interface WorkflowService {
 
     /**
+     * Method to execute the forgot password process.
+     *
+     * @param request The forgot password request.
+     * @return The response.
+     */
+    ForgotPasswordResponse forgetPassword(ForgotPasswordRequest request);
+
+    /**
      * Method to approve the given workflow reuqest.
      *
      * @param workflowRequest The workflow request to approve.

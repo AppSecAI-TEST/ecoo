@@ -24,7 +24,12 @@ public enum CamundaProcess {
     /**
      * A new shipment request.
      */
-    CreateSignatureRequest("CreateSignatureRequest", "fa-dropbox");
+    CreateSignatureRequest("CreateSignatureRequest", "fa-dropbox"),
+
+    /**
+     * A forgot password request.
+     */
+    ForgotPassword("ForgotPassword", "fa-unlock-alt");
 
     private String id;
 

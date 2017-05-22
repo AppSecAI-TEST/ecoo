@@ -1,9 +1,6 @@
 package ecoo.ws.user.rest;
 
-import ecoo.bpm.entity.PasswordResetRequest;
-import ecoo.bpm.entity.PasswordResetResponse;
-import ecoo.bpm.entity.RegisterUserAccountRequest;
-import ecoo.bpm.entity.RegisterUserAccountResponse;
+import ecoo.bpm.entity.*;
 import ecoo.data.Role;
 import ecoo.data.User;
 import ecoo.data.UserStatus;
@@ -47,6 +44,11 @@ public class UserResource extends BaseResource {
         this.workflowService = workflowService;
         this.userValidator = userValidator;
         this.companyValidator = companyValidator;
+    }
+
+    @RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
+    public ResponseEntity<ForgotPasswordResponse> requestPasswordReset(@RequestBody ForgotPasswordRequest request) {
+        return ResponseEntity.ok(workflowService.forgetPassword(request));
     }
 
     @RequestMapping(value = "/company/{companyId}", method = RequestMethod.GET)

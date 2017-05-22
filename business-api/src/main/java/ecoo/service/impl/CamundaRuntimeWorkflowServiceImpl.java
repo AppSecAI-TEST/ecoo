@@ -66,6 +66,33 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
     }
 
     /**
+     * Method to execute the forgot password process.
+     *
+     * @param request The forgot password request.
+     * @return The response.
+     */
+    @Override
+    public ForgotPasswordResponse forgetPassword(ForgotPasswordRequest request) {
+        Assert.notNull(request, "The request cannot be null.");
+
+        final String businessKey = "FP-" + UUID.randomUUID().toString().replace("-", "");
+        LOG.info("businessKey: {}", businessKey);
+
+        request.setBusinessKey(businessKey);
+        request.setDateCreated(new Date());
+
+        final Map<String, Object> variables = new HashMap<>();
+        variables.put(TaskVariables.REQUEST.variableName(), request);
+
+        final ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(CamundaProcess.ForgotPassword.id()
+                , businessKey, variables);
+        LOG.info("Forgot password process started: " + processInstance.getProcessInstanceId());
+
+        return new ForgotPasswordResponse(processInstance.getProcessInstanceId()
+                , request.getEmailAddress());
+    }
+
+    /**
      * Method to request a new shipment.
      *
      * @param request The new shipment request.
