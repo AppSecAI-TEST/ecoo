@@ -37,10 +37,6 @@ public class Company extends BaseModel<Integer> implements Serializable {
     @Audited
     private String vatNo;
 
-    @Column(name = "ucr_no")
-    @Audited
-    private String ucrNo;
-
     @Column(name = "type_id")
     @Audited
     private String typeId;
@@ -131,14 +127,6 @@ public class Company extends BaseModel<Integer> implements Serializable {
 
     public void setVatNo(String vatNo) {
         this.vatNo = vatNo;
-    }
-
-    public String getUcrNo() {
-        return ucrNo;
-    }
-
-    public void setUcrNo(String ucrNo) {
-        this.ucrNo = ucrNo;
     }
 
     public String getTypeId() {
@@ -258,7 +246,6 @@ public class Company extends BaseModel<Integer> implements Serializable {
                 ", name='" + name + '\'' +
                 ", registrationNo='" + registrationNo + '\'' +
                 ", vatNo='" + vatNo + '\'' +
-                ", ucrNo='" + ucrNo + '\'' +
                 ", typeId='" + typeId + '\'' +
                 ", building='" + building + '\'' +
                 ", street='" + street + '\'' +

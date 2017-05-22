@@ -109,7 +109,7 @@ public class DataResource extends BaseResource {
     public ResponseEntity<Collection<CommunicationType>> communicationPreferenceTypes() {
         final Collection<CommunicationType> data = new ArrayList<>();
         // TODO: Read from db in the future.
-        data.add(new CommunicationType("S", "SMS"));
+//        data.add(new CommunicationType("S", "SMS"));
         data.add(new CommunicationType("E", "EMAIL"));
         return ResponseEntity.ok(data);
     }

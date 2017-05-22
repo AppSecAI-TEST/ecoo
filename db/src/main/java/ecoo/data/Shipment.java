@@ -53,6 +53,10 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Audited
     private String letterOfCreditNumber;
 
+    @Column(name = "ucr_no")
+    @Audited
+    private String ucrNumber;
+
     @Column(name = "consignee_name")
     @Audited
     private String consigneeName;
@@ -219,6 +223,14 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
 
     public void setLetterOfCreditNumber(String letterOfCreditNumber) {
         this.letterOfCreditNumber = letterOfCreditNumber;
+    }
+
+    public String getUcrNumber() {
+        return ucrNumber;
+    }
+
+    public void setUcrNumber(String ucrNumber) {
+        this.ucrNumber = ucrNumber;
     }
 
     public String getConsigneeName() {
@@ -392,6 +404,7 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
                 ", buyerReference='" + buyerReference + '\'' +
                 ", buyerOrderDate=" + buyerOrderDate +
                 ", letterOfCreditNumber='" + letterOfCreditNumber + '\'' +
+                ", ucrNumber='" + ucrNumber + '\'' +
                 ", consigneeName='" + consigneeName + '\'' +
                 ", consigneeBuilding='" + consigneeBuilding + '\'' +
                 ", consigneeStreet='" + consigneeStreet + '\'' +
