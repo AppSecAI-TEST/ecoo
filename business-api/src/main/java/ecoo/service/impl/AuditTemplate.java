@@ -3,16 +3,13 @@ package ecoo.service.impl;
 import ecoo.dao.AuditLogDao;
 import ecoo.dao.UserDao;
 import ecoo.data.BaseModel;
+import ecoo.data.audit.Revision;
 import ecoo.data.KnownUser;
 import ecoo.data.User;
-import ecoo.data.audit.Revision;
 import ecoo.service.AuditedModelAware;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -25,10 +22,8 @@ import java.util.GregorianCalendar;
  * @author Justin Rundle
  * @since April 2017
  */
-public abstract class JdbcElasticsearchAuditTemplate<P extends Serializable, M extends BaseModel<P>
-        , D extends AuditLogDao<P, M>
-        , R extends ElasticsearchRepository<M, P>>
-        extends ElasticsearchTemplateService<P, M> implements AuditedModelAware<M> {
+public abstract class AuditTemplate<P, M extends BaseModel<P>, D extends AuditLogDao<P, M>> extends JdbcTemplateService<P, M>
+        implements AuditedModelAware<M> {
 
     private D dao;
 
@@ -36,14 +31,13 @@ public abstract class JdbcElasticsearchAuditTemplate<P extends Serializable, M e
     private UserDao userDao;
 
     /**
-     * Constructs a new {@link JdbcElasticsearchAuditTemplate} service object.
+     * Constructs a new {@link AuditTemplate} service object.
      *
      * @param dao The object used to save/load the models.
      * @throws IllegalArgumentException If the dao is null.
      */
-    public JdbcElasticsearchAuditTemplate(D dao, R repository, ElasticsearchTemplate elasticsearchTemplate
-            , Class<M> indexClass) {
-        super(dao, repository, elasticsearchTemplate, indexClass);
+    public AuditTemplate(D dao) {
+        super(dao);
         this.dao = dao;
     }
 

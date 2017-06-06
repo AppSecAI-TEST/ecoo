@@ -26,15 +26,11 @@ public abstract class ElasticsearchTemplateService<P extends Serializable, M ext
 
     private ElasticsearchTemplate elasticsearchTemplate;
 
-    private Class<M> indexClass;
-
     public ElasticsearchTemplateService(BaseDao<P, M> dao, ElasticsearchRepository<M, P> repository
-            , ElasticsearchTemplate elasticsearchTemplate
-            , Class<M> indexClass) {
+            , ElasticsearchTemplate elasticsearchTemplate) {
         this.dao = dao;
         this.repository = repository;
         this.elasticsearchTemplate = elasticsearchTemplate;
-        this.indexClass = indexClass;
     }
 
     /**
@@ -111,6 +107,22 @@ public abstract class ElasticsearchTemplateService<P extends Serializable, M ext
     }
 
     /**
+     * Method to insert or update the given entities.
+     *
+     * @param entities The entities to save.
+     * @return The saved entities.
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public Collection<M> saveAll(Collection<M> entities) {
+        Assert.notNull(entities);
+        for (M entity : entities) {
+            save(entity);
+        }
+        return entities;
+    }
+
+    /**
      * Method called before save is called.
      *
      * @param entity The entity to save.
@@ -142,16 +154,6 @@ public abstract class ElasticsearchTemplateService<P extends Serializable, M ext
      * @param entity The entity to save.
      */
     protected void beforeDelete(M entity) {
-    }
-
-    /**
-     * Method to recreate the ES index.
-     */
-    public void recreateIndex() {
-        if (elasticsearchTemplate.indexExists(indexClass)) {
-            elasticsearchTemplate.deleteIndex(indexClass);
-        }
-        elasticsearchTemplate.createIndex(indexClass);
     }
 
     protected final List<String> queryForIds(SearchQuery searchQuery) {

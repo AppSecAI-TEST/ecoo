@@ -43,11 +43,6 @@ public interface ShipmentService extends CrudService<Integer, Shipment>, Audited
             , User requestingUser);
 
     /**
-     * Method to recreate the ES index.
-     */
-    void recreateIndex();
-
-    /**
      * The method used to re-open a shipment.
      *
      * @param shipment The shipment to re-open.

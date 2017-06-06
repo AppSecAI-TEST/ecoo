@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * @author Justin Rundle
  * @since June 2017
@@ -21,6 +24,16 @@ public class PackingListResource extends BaseResource {
     @Autowired
     public PackingListResource(PackingListService packingListService) {
         this.packingListService = packingListService;
+    }
+
+    @RequestMapping(value = "/shipment/{shipmentId}", method = RequestMethod.GET)
+    public ResponseEntity<List<PackingList>> findPackingListsByShipmentId(@PathVariable Integer shipmentId) {
+        return ResponseEntity.ok(packingListService.findPackingListsByShipmentId(shipmentId));
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public ResponseEntity<Collection<PackingList>> saveAll(@RequestBody Collection<PackingList> packingLists) {
+        return ResponseEntity.ok(packingListService.saveAll(packingLists));
     }
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)

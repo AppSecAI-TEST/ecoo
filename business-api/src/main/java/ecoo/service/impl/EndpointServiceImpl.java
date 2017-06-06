@@ -18,12 +18,12 @@ import java.util.Date;
  * @since April 2017
  */
 @Service
-public class JdbcEndpointServiceImpl extends JdbcTemplateService<Integer, Endpoint> implements EndpointService {
+public class EndpointServiceImpl extends JdbcTemplateService<Integer, Endpoint> implements EndpointService {
 
     private EndpointDao endpointDao;
 
     @Autowired
-    public JdbcEndpointServiceImpl(EndpointDao endpointDao) {
+    public EndpointServiceImpl(EndpointDao endpointDao) {
         super(endpointDao);
         this.endpointDao = endpointDao;
     }

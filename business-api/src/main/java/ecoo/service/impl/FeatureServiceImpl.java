@@ -13,12 +13,12 @@ import org.springframework.util.Assert;
  * @since April 2017
  */
 @Service(value = "featureService")
-public class JdbcFeatureTemplateImpl extends JdbcAuditTemplate<Integer, Feature, FeatureDao> implements FeatureService {
+public class FeatureServiceImpl extends AuditTemplate<Integer, Feature, FeatureDao> implements FeatureService {
 
     private FeatureDao featureDao;
 
     @Autowired
-    public JdbcFeatureTemplateImpl(FeatureDao featureDao) {
+    public FeatureServiceImpl(FeatureDao featureDao) {
         super(featureDao);
         this.featureDao = featureDao;
     }

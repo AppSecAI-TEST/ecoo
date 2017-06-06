@@ -161,9 +161,4 @@ public interface UserService extends CrudService<Integer, User>, UserDetailsServ
      * @return The authentication model.
      */
     Authentication authenticate(String username, String password);
-
-    /**
-     * Method to recreate the ES index.
-     */
-    void recreateIndex();
 }

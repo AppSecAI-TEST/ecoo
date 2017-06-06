@@ -11,13 +11,12 @@ import org.springframework.stereotype.Service;
  * @since April 2017
  */
 @Service
-public class JdbcCompanyServiceImpl extends JdbcAuditTemplate<Integer, Company, CompanyDao>
-        implements CompanyService {
+public class CompanyServiceImpl extends AuditTemplate<Integer, Company, CompanyDao> implements CompanyService {
 
     private CompanyDao companyDao;
 
     @Autowired
-    public JdbcCompanyServiceImpl(CompanyDao companyDao) {
+    public CompanyServiceImpl(CompanyDao companyDao) {
         super(companyDao);
         this.companyDao = companyDao;
     }

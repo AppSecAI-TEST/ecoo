@@ -16,12 +16,18 @@ import java.math.BigDecimal;
 @Document(type = "ecoo", indexName = "ecoo.coo", shards = 1, replicas = 0)
 public class CertificateOfOrigin extends BaseModel<Integer> implements Serializable {
 
+    private static final long serialVersionUID = 4991785189692239969L;
+    
     @Id
     @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "shipment_id")
+    @Column(name = "id")
     @Audited
     private Integer primaryId;
+
+    @Column(name = "shipment_id")
+    @Audited
+    private Integer shipmentId;
 
     @Column(name = "marks")
     @Audited
@@ -61,6 +67,14 @@ public class CertificateOfOrigin extends BaseModel<Integer> implements Serializa
     @Override
     public void setPrimaryId(Integer primaryId) {
         this.primaryId = primaryId;
+    }
+
+    public Integer getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setShipmentId(Integer shipmentId) {
+        this.shipmentId = shipmentId;
     }
 
     public String getMarks() {
@@ -107,6 +121,7 @@ public class CertificateOfOrigin extends BaseModel<Integer> implements Serializa
     public String toString() {
         return "CertificateOfOrigin{" +
                 "primaryId=" + primaryId +
+                ", shipmentId=" + shipmentId +
                 ", marks='" + marks + '\'' +
                 ", boxNumber='" + boxNumber + '\'' +
                 ", descr='" + descr + '\'' +

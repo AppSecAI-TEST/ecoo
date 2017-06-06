@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * @author Justin Rundle
  * @since June 2017
@@ -23,14 +26,19 @@ public class CertificateOfOriginResource extends BaseResource {
         this.certificateOfOriginService = certificateOfOriginService;
     }
 
+    @RequestMapping(value = "/shipment/{shipmentId}", method = RequestMethod.GET)
+    public ResponseEntity<List<CertificateOfOrigin>> findCertificateOfOriginsByShipmentId(@PathVariable Integer shipmentId) {
+        return ResponseEntity.ok(certificateOfOriginService.findCertificateOfOriginsByShipmentId(shipmentId));
+    }
+
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<CertificateOfOrigin> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(certificateOfOriginService.findById(id));
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<CertificateOfOrigin> save(@RequestBody CertificateOfOrigin certificateOfOrigin) {
-        return ResponseEntity.ok(certificateOfOriginService.save(certificateOfOrigin));
+    public ResponseEntity<Collection<CertificateOfOrigin>> saveAll(@RequestBody Collection<CertificateOfOrigin> certificateOfOrigins) {
+        return ResponseEntity.ok(certificateOfOriginService.saveAll(certificateOfOrigins));
     }
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE)

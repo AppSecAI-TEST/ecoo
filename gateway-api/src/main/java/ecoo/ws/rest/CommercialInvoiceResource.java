@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * @author Justin Rundle
  * @since June 2017
@@ -23,14 +26,19 @@ public class CommercialInvoiceResource extends BaseResource {
         this.commercialInvoiceService = commercialInvoiceService;
     }
 
+    @RequestMapping(value = "/shipment/{shipmentId}", method = RequestMethod.GET)
+    public ResponseEntity<List<CommercialInvoice>> findCommercialInvoicesByShipmentId(@PathVariable Integer shipmentId) {
+        return ResponseEntity.ok(commercialInvoiceService.findCommercialInvoicesByShipmentId(shipmentId));
+    }
+
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<CommercialInvoice> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(commercialInvoiceService.findById(id));
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<CommercialInvoice> save(@RequestBody CommercialInvoice commercialInvoice) {
-        return ResponseEntity.ok(commercialInvoiceService.save(commercialInvoice));
+    public ResponseEntity<Collection<CommercialInvoice>> saveAll(@RequestBody Collection<CommercialInvoice> commercialInvoices) {
+        return ResponseEntity.ok(commercialInvoiceService.saveAll(commercialInvoices));
     }
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE)

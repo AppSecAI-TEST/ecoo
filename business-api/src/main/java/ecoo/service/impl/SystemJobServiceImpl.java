@@ -17,12 +17,12 @@ import java.util.Date;
  * @since April 2017
  */
 @Service
-public class JdbcSystemJobServiceImpl extends JdbcTemplateService<Integer, SystemJob> implements SystemJobService {
+public class SystemJobServiceImpl extends JdbcTemplateService<Integer, SystemJob> implements SystemJobService {
 
     private SystemJobDao systemJobDao;
 
     @Autowired
-    public JdbcSystemJobServiceImpl(SystemJobDao systemJobDao) {
+    public SystemJobServiceImpl(SystemJobDao systemJobDao) {
         super(systemJobDao);
         this.systemJobDao = systemJobDao;
     }

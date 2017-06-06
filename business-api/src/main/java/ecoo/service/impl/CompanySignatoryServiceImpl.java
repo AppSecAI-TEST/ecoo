@@ -20,7 +20,7 @@ import java.util.List;
  * @since May 2017
  */
 @Service
-public class CompanySignatoryServiceImpl extends JdbcAuditTemplate<Integer, CompanySignatory, CompanySignatoryDao>
+public class CompanySignatoryServiceImpl extends AuditTemplate<Integer, CompanySignatory, CompanySignatoryDao>
         implements CompanySignatoryService {
 
     private CompanySignatoryDao companySignatoryDao;

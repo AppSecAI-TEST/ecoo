@@ -41,9 +41,12 @@ import java.util.List;
  * @since April 2017
  */
 @Service(value = "userService")
-public class JdbcUserServiceImpl extends JdbcElasticsearchAuditTemplate<Integer, User, UserDao, UserElasticsearchRepository> implements UserService {
+public class UserServiceImpl extends ElasticsearchAuditTemplate<Integer
+        , User
+        , UserDao
+        , UserElasticsearchRepository> implements UserService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JdbcUserServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private UserDao userDao;
 
@@ -52,10 +55,10 @@ public class JdbcUserServiceImpl extends JdbcElasticsearchAuditTemplate<Integer,
     private UserElasticsearchRepository userElasticsearchRepository;
 
     @Autowired
-    public JdbcUserServiceImpl(UserDao userDao, @Qualifier("userElasticsearchRepository") UserElasticsearchRepository userElasticsearchRepository
+    public UserServiceImpl(UserDao userDao, @Qualifier("userElasticsearchRepository") UserElasticsearchRepository userElasticsearchRepository
             , UserValidator userValidator
             , ElasticsearchTemplate elasticsearchTemplate) {
-        super(userDao, userElasticsearchRepository, elasticsearchTemplate, User.class);
+        super(userDao, userElasticsearchRepository, elasticsearchTemplate);
         this.userDao = userDao;
         this.userValidator = userValidator;
         this.userElasticsearchRepository = userElasticsearchRepository;

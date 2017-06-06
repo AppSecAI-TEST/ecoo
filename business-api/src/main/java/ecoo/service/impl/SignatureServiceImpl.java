@@ -14,7 +14,7 @@ import java.util.Date;
  * @since May 2017
  */
 @Service
-public class SignatureServiceImpl extends JdbcAuditTemplate<Integer, Signature, SignatureDao>
+public class SignatureServiceImpl extends AuditTemplate<Integer, Signature, SignatureDao>
         implements SignatureService {
 
     private SignatureDao signatureDao;

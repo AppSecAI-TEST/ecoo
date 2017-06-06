@@ -16,12 +16,18 @@ import java.math.BigDecimal;
 @Document(type = "ecoo", indexName = "ecoo.packing.list", shards = 1, replicas = 0)
 public class PackingList extends BaseModel<Integer> implements Serializable {
 
+    private static final long serialVersionUID = 3990141658386743293L;
+
     @Id
     @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "shipment_id")
+    @Column(name = "id")
     @Audited
     private Integer primaryId;
+
+    @Column(name = "shipment_id")
+    @Audited
+    private Integer shipmentId;
 
     @Column(name = "product_code")
     @Audited
@@ -65,6 +71,14 @@ public class PackingList extends BaseModel<Integer> implements Serializable {
     @Override
     public void setPrimaryId(Integer primaryId) {
         this.primaryId = primaryId;
+    }
+
+    public Integer getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setShipmentId(Integer shipmentId) {
+        this.shipmentId = shipmentId;
     }
 
     public String getProductCode() {
@@ -119,6 +133,7 @@ public class PackingList extends BaseModel<Integer> implements Serializable {
     public String toString() {
         return "PackingList{" +
                 "primaryId=" + primaryId +
+                ", shipmentId=" + shipmentId +
                 ", productCode='" + productCode + '\'' +
                 ", descr='" + descr + '\'' +
                 ", qty=" + qty +

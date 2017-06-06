@@ -13,13 +13,13 @@ import java.util.List;
  * @since April 2017
  */
 @Service
-public class JdbcUserSignatureServiceImpl extends JdbcAuditTemplate<Integer, UserSignature, UserSignatureDao>
+public class UserSignatureServiceImpl extends AuditTemplate<Integer, UserSignature, UserSignatureDao>
         implements UserSignatureService {
 
     private UserSignatureDao userSignatureDao;
 
     @Autowired
-    public JdbcUserSignatureServiceImpl(UserSignatureDao userSignatureDao) {
+    public UserSignatureServiceImpl(UserSignatureDao userSignatureDao) {
         super(userSignatureDao);
         this.userSignatureDao = userSignatureDao;
     }

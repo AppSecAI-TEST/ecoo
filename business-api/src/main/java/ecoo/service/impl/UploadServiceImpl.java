@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
  * @since April 2017
  */
 @Component(value = "uploadService")
-public class JdbcUploadServiceImpl extends JdbcTemplateService<Integer, Upload> implements UploadService {
+public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> implements UploadService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JdbcUploadServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UploadServiceImpl.class);
 
     private UploadDao uploadDao;
 
@@ -49,7 +49,7 @@ public class JdbcUploadServiceImpl extends JdbcTemplateService<Integer, Upload> 
     private FeatureService featureService;
 
     @Autowired
-    public JdbcUploadServiceImpl(UploadDao uploadDao
+    public UploadServiceImpl(UploadDao uploadDao
             , RequiredFieldMappingDao requiredFieldMappingDao
             , RequiredFieldMappingItemDao requiredFieldMappingItemDao
             , UploadDataDao uploadDataDao

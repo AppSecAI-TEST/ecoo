@@ -1,8 +1,8 @@
 package ecoo.ws.cache.rest;
 
-import ecoo.dao.impl.es.UserElasticsearchIndexLoader;
+import ecoo.command.RecreateElasticsearchUserIndexCommand;
+import ecoo.command.ReloadElasticsearchUserIndexCommand;
 import ecoo.dao.impl.es.UserElasticsearchRepository;
-import ecoo.service.UserService;
 import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,29 +22,27 @@ public class UserCacheResource extends BaseResource {
 
     private UserElasticsearchRepository userElasticsearchRepository;
 
-    private UserElasticsearchIndexLoader userElasticsearchIndexLoader;
+    private RecreateElasticsearchUserIndexCommand recreateElasticsearchUserIndexCommand;
 
-    private UserService userService;
+    private ReloadElasticsearchUserIndexCommand reloadElasticsearchUserIndexCommand;
 
     @Autowired
-    public UserCacheResource(@Qualifier("userElasticsearchRepository") UserElasticsearchRepository userElasticsearchRepository
-            , UserElasticsearchIndexLoader userElasticsearchIndexLoader
-            , UserService userService) {
+    public UserCacheResource(@Qualifier("userElasticsearchRepository") UserElasticsearchRepository userElasticsearchRepository, RecreateElasticsearchUserIndexCommand recreateElasticsearchUserIndexCommand, ReloadElasticsearchUserIndexCommand reloadElasticsearchUserIndexCommand) {
         this.userElasticsearchRepository = userElasticsearchRepository;
-        this.userElasticsearchIndexLoader = userElasticsearchIndexLoader;
-        this.userService = userService;
+        this.recreateElasticsearchUserIndexCommand = recreateElasticsearchUserIndexCommand;
+        this.reloadElasticsearchUserIndexCommand = reloadElasticsearchUserIndexCommand;
     }
 
     @RequestMapping(value = "/recreate", method = RequestMethod.GET)
     public ResponseEntity<Boolean> recreate() {
-        userService.recreateIndex();
+        recreateElasticsearchUserIndexCommand.execute();
         return ResponseEntity.ok(true);
     }
 
     @RequestMapping(value = "/forceRefresh", method = RequestMethod.GET)
     public ResponseEntity<Integer> forceRefresh() {
-        userElasticsearchRepository.deleteAll();
-        return ResponseEntity.ok(userElasticsearchIndexLoader.loadAll().size());
+        recreateElasticsearchUserIndexCommand.execute();
+        return ResponseEntity.ok(reloadElasticsearchUserIndexCommand.execute());
     }
 
     @RequestMapping(value = "/size", method = RequestMethod.GET)

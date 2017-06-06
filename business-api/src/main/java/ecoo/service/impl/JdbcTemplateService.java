@@ -68,6 +68,22 @@ public abstract class JdbcTemplateService<P, M> implements CrudService<P, M> {
     }
 
     /**
+     * Method to insert or update the given entities.
+     *
+     * @param entities The entities to save.
+     * @return The saved entities.
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public Collection<M> saveAll(Collection<M> entities) {
+        Assert.notNull(entities);
+        for (M entity : entities) {
+            save(entity);
+        }
+        return entities;
+    }
+
+    /**
      * Method called before save is called.
      *
      * @param entity The entity to save.

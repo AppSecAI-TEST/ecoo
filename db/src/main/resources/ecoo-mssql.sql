@@ -1568,13 +1568,14 @@ GO
 -- COMMERCIAL INVOICE
 ----------------------------------------------------------------------------------------------------------------
 CREATE TABLE [ecoo].[dbo].[doc_comm_inv](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[shipment_id] [int] NOT NULL,
 	[product_code] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
 	[qty] [tinyint] NOT NULL,
 	[price] [decimal](19,4) NOT NULL,
 	[amount] [decimal](19,4) NOT NULL,
-CONSTRAINT [pk_doc_comm_inv] PRIMARY KEY CLUSTERED ([shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+CONSTRAINT [pk_doc_comm_inv] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE doc_comm_inv ADD CONSTRAINT "fk_doc_comm_inv_shipment" FOREIGN KEY ([shipment_id]) REFERENCES [shipment] ("id");
@@ -1583,13 +1584,14 @@ GO
 CREATE TABLE [dbo].[doc_comm_inv_log](
 	[rev] int NOT NULL,
 	[revType] tinyint NOT NULL,
-	[shipment_id] [int] NOT NULL,
+	[id] [int] NOT NULL,
+	[shipment_id] [int] NULL,
 	[product_code] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
 	[qty] [tinyint] NULL,
 	[price] [decimal](19,4) NULL,
 	[amount] [decimal](19,4) NULL,
-CONSTRAINT [pk_doc_comm_inv_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+CONSTRAINT [pk_doc_comm_inv_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[doc_comm_inv_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_comm_inv_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])
@@ -1604,13 +1606,14 @@ GO
 -- CERTIFICATE OF ORIGIN
 ----------------------------------------------------------------------------------------------------------------
 CREATE TABLE [ecoo].[dbo].[doc_coo](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[shipment_id] [int] NOT NULL,
 	[marks] [varchar](50) NULL,
 	[box_no] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
 	[tariff_code] [varchar](100) NULL,
 	[gross_weight] [decimal](19,4) NOT NULL
-CONSTRAINT [pk_doc_coo] PRIMARY KEY CLUSTERED ([shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+CONSTRAINT [pk_doc_coo] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE doc_coo ADD CONSTRAINT "fk_doc_coo_shipment" FOREIGN KEY ([shipment_id]) REFERENCES [shipment] ("id");
@@ -1620,13 +1623,14 @@ GO
 CREATE TABLE [dbo].[doc_coo_log](
 	[rev] int NOT NULL,
 	[revType] tinyint NOT NULL,
-	[shipment_id] [int] NOT NULL,
+	[id] [int] NOT NULL,
+	[shipment_id] [int] NULL,
 	[marks] [varchar](50) NULL,
 	[box_no] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
 	[tariff_code] [varchar](100) NULL,
 	[gross_weight] [decimal](19,4) NULL
-CONSTRAINT [pk_doc_coo_log] PRIMARY KEY CLUSTERED ([rev] ASC, [shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+CONSTRAINT [pk_doc_coo_log] PRIMARY KEY CLUSTERED ([rev] ASC, [id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[doc_coo_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_coo_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])
@@ -1641,6 +1645,7 @@ GO
 -- PACKING LIST
 ----------------------------------------------------------------------------------------------------------------
 CREATE TABLE [ecoo].[dbo].[doc_pack_list](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[shipment_id] [int] NOT NULL,
 	[product_code] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
@@ -1648,7 +1653,7 @@ CREATE TABLE [ecoo].[dbo].[doc_pack_list](
 	[net_weight] [decimal](19,4) NOT NULL,
 	[gross_weight] [decimal](19,4) NOT NULL,
 	[volume] [decimal](19,4) NOT NULL,
-CONSTRAINT [pk_doc_pack_list] PRIMARY KEY CLUSTERED ([shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+CONSTRAINT [pk_doc_pack_list] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE doc_pack_list ADD CONSTRAINT "fk_doc_pack_list_shipment" FOREIGN KEY ([shipment_id]) REFERENCES [shipment] ("id");
@@ -1657,14 +1662,15 @@ GO
 CREATE TABLE [dbo].[doc_pack_list_log](
 	[rev] int NOT NULL,
 	[revType] tinyint NOT NULL,
-	[shipment_id] [int] NOT NULL,
+	[id] [int] NOT NULL,
+	[shipment_id] [int] NULL,
 	[product_code] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
 	[qty] [tinyint] NULL,
 	[net_weight] [decimal](19,4) NULL,
 	[gross_weight] [decimal](19,4) NULL,
 	[volume] [decimal](19,4) NULL,
-CONSTRAINT [pk_doc_pack_list_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+CONSTRAINT [pk_doc_pack_list_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[doc_pack_list_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_pack_list_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])

@@ -46,4 +46,12 @@ public interface CrudService<P, M> {
      * @return The deleted entity.
      */
     M delete(M entity);
+
+    /**
+     * Method to insert or update the given entities.
+     *
+     * @param entities The entities to save.
+     * @return The saved entities.
+     */
+    Collection<M> saveAll(Collection<M> entities);
 }

@@ -33,7 +33,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
  * @since May 2017
  */
 @Service
-public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Integer, Shipment, ShipmentDao, ShipmentElasticsearchRepository>
+public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shipment, ShipmentDao, ShipmentElasticsearchRepository>
         implements ShipmentService {
 
     private ShipmentElasticsearchRepository shipmentElasticsearchRepository;
@@ -43,10 +43,10 @@ public class JdbcShipmentServiceImpl extends JdbcElasticsearchAuditTemplate<Inte
     private String indexType;
 
     @Autowired
-    public JdbcShipmentServiceImpl(ShipmentDao shipmentDao
+    public ShipmentServiceImpl(ShipmentDao shipmentDao
             , @Qualifier("shipmentElasticsearchRepository") ShipmentElasticsearchRepository shipmentElasticsearchRepository
             , ElasticsearchTemplate elasticsearchTemplate) {
-        super(shipmentDao, shipmentElasticsearchRepository, elasticsearchTemplate, Shipment.class);
+        super(shipmentDao, shipmentElasticsearchRepository, elasticsearchTemplate);
         this.shipmentElasticsearchRepository = shipmentElasticsearchRepository;
 
         this.indexName = Shipment.class.getAnnotation(Document.class).indexName();

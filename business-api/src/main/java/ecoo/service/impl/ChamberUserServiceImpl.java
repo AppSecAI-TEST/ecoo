@@ -20,13 +20,13 @@ import java.util.HashSet;
  * @since April 2017
  */
 @Service
-public class JdbcChamberUserServiceImpl extends JdbcAuditTemplate<Integer, ChamberUser, ChamberUserDao>
+public class ChamberUserServiceImpl extends AuditTemplate<Integer, ChamberUser, ChamberUserDao>
         implements ChamberUserService {
 
     private ChamberUserDao chamberUserDao;
 
     @Autowired
-    public JdbcChamberUserServiceImpl(ChamberUserDao chamberUserDao) {
+    public ChamberUserServiceImpl(ChamberUserDao chamberUserDao) {
         super(chamberUserDao);
         this.chamberUserDao = chamberUserDao;
     }

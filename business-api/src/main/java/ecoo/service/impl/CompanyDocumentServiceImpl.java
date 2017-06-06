@@ -13,13 +13,13 @@ import java.util.List;
  * @since April 2017
  */
 @Service
-public class JdbcCompanyDocumentServiceImpl extends JdbcAuditTemplate<Integer, CompanyDocument, CompanyDocumentDao>
+public class CompanyDocumentServiceImpl extends AuditTemplate<Integer, CompanyDocument, CompanyDocumentDao>
         implements CompanyDocumentService {
 
     private CompanyDocumentDao companyDocumentDao;
 
     @Autowired
-    public JdbcCompanyDocumentServiceImpl(CompanyDocumentDao companyDocumentDao) {
+    public CompanyDocumentServiceImpl(CompanyDocumentDao companyDocumentDao) {
         super(companyDocumentDao);
         this.companyDocumentDao = companyDocumentDao;
     }

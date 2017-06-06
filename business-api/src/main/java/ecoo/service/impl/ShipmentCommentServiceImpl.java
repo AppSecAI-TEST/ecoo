@@ -18,7 +18,7 @@ import java.util.List;
  * @since May 2017
  */
 @Service
-public class ShipmentCommentServiceImpl extends JdbcElasticsearchAuditTemplate<Integer, ShipmentComment, ShipmentCommentDao, ShipmentCommentElasticsearchRepository>
+public class ShipmentCommentServiceImpl extends ElasticsearchAuditTemplate<Integer, ShipmentComment, ShipmentCommentDao, ShipmentCommentElasticsearchRepository>
         implements ShipmentCommentService {
 
     private ShipmentCommentElasticsearchRepository shipmentCommentElasticsearchRepository;
@@ -27,7 +27,7 @@ public class ShipmentCommentServiceImpl extends JdbcElasticsearchAuditTemplate<I
     public ShipmentCommentServiceImpl(ShipmentCommentDao shipmentCommentDao
             , @Qualifier("shipmentCommentElasticsearchRepository") ShipmentCommentElasticsearchRepository shipmentCommentElasticsearchRepository
             , ElasticsearchTemplate elasticsearchTemplate) {
-        super(shipmentCommentDao, shipmentCommentElasticsearchRepository, elasticsearchTemplate, ShipmentComment.class);
+        super(shipmentCommentDao, shipmentCommentElasticsearchRepository, elasticsearchTemplate);
         this.shipmentCommentElasticsearchRepository = shipmentCommentElasticsearchRepository;
     }
 
@@ -60,5 +60,5 @@ public class ShipmentCommentServiceImpl extends JdbcElasticsearchAuditTemplate<I
         }
     }
 
-    
+
 }

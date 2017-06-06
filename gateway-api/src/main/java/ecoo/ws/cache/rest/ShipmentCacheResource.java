@@ -1,8 +1,8 @@
 package ecoo.ws.cache.rest;
 
-import ecoo.dao.impl.es.ShipmentElasticsearchIndexLoader;
+import ecoo.command.RecreateElasticsearchShipmentIndexCommand;
+import ecoo.command.ReloadElasticsearchShipmentIndexCommand;
 import ecoo.dao.impl.es.ShipmentElasticsearchRepository;
-import ecoo.service.ShipmentService;
 import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,29 +22,26 @@ public class ShipmentCacheResource extends BaseResource {
 
     private ShipmentElasticsearchRepository shipmentElasticsearchRepository;
 
-    private ShipmentElasticsearchIndexLoader shipmentElasticsearchIndexLoader;
+    private RecreateElasticsearchShipmentIndexCommand recreateElasticsearchShipmentIndexCommand;
 
-    private ShipmentService shipmentService;
+    private ReloadElasticsearchShipmentIndexCommand reloadElasticsearchShipmentIndexCommand;
 
     @Autowired
-    public ShipmentCacheResource(@Qualifier("shipmentElasticsearchRepository") ShipmentElasticsearchRepository shipmentElasticsearchRepository
-            , ShipmentElasticsearchIndexLoader shipmentElasticsearchIndexLoader
-            , ShipmentService shipmentService) {
+    public ShipmentCacheResource(@Qualifier("shipmentElasticsearchRepository") ShipmentElasticsearchRepository shipmentElasticsearchRepository, RecreateElasticsearchShipmentIndexCommand recreateElasticsearchShipmentIndexCommand, ReloadElasticsearchShipmentIndexCommand reloadElasticsearchShipmentIndexCommand) {
         this.shipmentElasticsearchRepository = shipmentElasticsearchRepository;
-        this.shipmentElasticsearchIndexLoader = shipmentElasticsearchIndexLoader;
-        this.shipmentService = shipmentService;
+        this.recreateElasticsearchShipmentIndexCommand = recreateElasticsearchShipmentIndexCommand;
+        this.reloadElasticsearchShipmentIndexCommand = reloadElasticsearchShipmentIndexCommand;
     }
 
     @RequestMapping(value = "/recreate", method = RequestMethod.GET)
     public ResponseEntity<Boolean> recreate() {
-        shipmentService.recreateIndex();
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(recreateElasticsearchShipmentIndexCommand.execute());
     }
 
     @RequestMapping(value = "/forceRefresh", method = RequestMethod.GET)
     public ResponseEntity<Integer> forceRefresh() {
-        shipmentElasticsearchRepository.deleteAll();
-        return ResponseEntity.ok(shipmentElasticsearchIndexLoader.loadAll().size());
+        recreateElasticsearchShipmentIndexCommand.execute();
+        return ResponseEntity.ok(reloadElasticsearchShipmentIndexCommand.execute());
     }
 
     @RequestMapping(value = "/size", method = RequestMethod.GET)

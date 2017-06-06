@@ -19,7 +19,7 @@ import java.util.Collection;
  * @since April 2017
  */
 @Component
-public class JdbcDataServiceImpl implements DataService {
+public class DataServiceImpl implements DataService {
 
     private ProvinceDao provinceDao;
 
@@ -30,7 +30,7 @@ public class JdbcDataServiceImpl implements DataService {
     private MetricTypeDao metricTypeDao;
 
     @Autowired
-    public JdbcDataServiceImpl(ProvinceDao provinceDao, CountryDao countryDao
+    public DataServiceImpl(ProvinceDao provinceDao, CountryDao countryDao
             , TitleDao titleDao
             , MetricTypeDao metricTypeDao) {
         this.provinceDao = provinceDao;

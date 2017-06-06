@@ -2,7 +2,6 @@ package ecoo.ws.cache.rest;
 
 import ecoo.dao.impl.es.ShipmentCommentElasticsearchIndexLoader;
 import ecoo.dao.impl.es.ShipmentCommentElasticsearchRepository;
-import ecoo.service.ShipmentCommentService;
 import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,20 +23,15 @@ public class ShipmentCommentCacheResource extends BaseResource {
 
     private ShipmentCommentElasticsearchIndexLoader shipmentCommentElasticsearchIndexLoader;
 
-    private ShipmentCommentService shipmentCommentService;
-
     @Autowired
     public ShipmentCommentCacheResource(@Qualifier("shipmentCommentElasticsearchRepository") ShipmentCommentElasticsearchRepository shipmentCommentElasticsearchRepository
-            , ShipmentCommentElasticsearchIndexLoader shipmentCommentElasticsearchIndexLoader
-            , ShipmentCommentService shipmentCommentService) {
+            , ShipmentCommentElasticsearchIndexLoader shipmentCommentElasticsearchIndexLoader) {
         this.shipmentCommentElasticsearchRepository = shipmentCommentElasticsearchRepository;
         this.shipmentCommentElasticsearchIndexLoader = shipmentCommentElasticsearchIndexLoader;
-        this.shipmentCommentService = shipmentCommentService;
     }
 
     @RequestMapping(value = "/recreate", method = RequestMethod.GET)
     public ResponseEntity<Boolean> recreate() {
-        shipmentCommentService.recreateIndex();
         return ResponseEntity.ok(true);
     }
 
