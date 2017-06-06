@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * @since June 2017
  */
 @RestController
-@RequestMapping("/api/shipments/packingList")
+@RequestMapping("/api/shipments/pl")
 public class PackingListResource extends BaseResource {
 
     private PackingListService packingListService;
