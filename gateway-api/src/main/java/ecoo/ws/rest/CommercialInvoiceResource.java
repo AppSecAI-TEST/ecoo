@@ -33,8 +33,9 @@ public class CommercialInvoiceResource extends BaseResource {
         return ResponseEntity.ok(commercialInvoiceService.save(commercialInvoice));
     }
 
-    @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public ResponseEntity<CommercialInvoice> delete(@RequestBody CommercialInvoice commercialInvoice) {
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<CommercialInvoice> delete(@PathVariable Integer id) {
+        final CommercialInvoice commercialInvoice = commercialInvoiceService.findById(id);
         return ResponseEntity.ok(commercialInvoiceService.delete(commercialInvoice));
     }
 

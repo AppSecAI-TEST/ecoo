@@ -28,9 +28,10 @@ public class PackingListResource extends BaseResource {
         return ResponseEntity.ok(packingListService.findById(id));
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<PackingList> save(@RequestBody PackingList packingList) {
-        return ResponseEntity.ok(packingListService.save(packingList));
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<PackingList> delete(@PathVariable Integer id) {
+        final PackingList packingList = packingListService.findById(id);
+        return ResponseEntity.ok(packingListService.delete(packingList));
     }
 
     @RequestMapping(value = "", method = RequestMethod.DELETE)

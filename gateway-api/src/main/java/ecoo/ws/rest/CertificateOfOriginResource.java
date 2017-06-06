@@ -33,8 +33,9 @@ public class CertificateOfOriginResource extends BaseResource {
         return ResponseEntity.ok(certificateOfOriginService.save(certificateOfOrigin));
     }
 
-    @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public ResponseEntity<CertificateOfOrigin> delete(@RequestBody CertificateOfOrigin certificateOfOrigin) {
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<CertificateOfOrigin> delete(@PathVariable Integer id) {
+        final CertificateOfOrigin certificateOfOrigin = certificateOfOriginService.findById(id);
         return ResponseEntity.ok(certificateOfOriginService.delete(certificateOfOrigin));
     }
 
