@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+
 /**
  * @author Justin Rundle
  * @since April 2017
@@ -51,6 +53,11 @@ public class CompanyResource extends BaseResource {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<Company> save(@RequestBody Company entity) {
         return ResponseEntity.ok(companyService.save(entity));
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Company>> findAll() {
+        return ResponseEntity.ok(companyService.findAll());
     }
 
     @RequestMapping(value = "", method = RequestMethod.DELETE)
