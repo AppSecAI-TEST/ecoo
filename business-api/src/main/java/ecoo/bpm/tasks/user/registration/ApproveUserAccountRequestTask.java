@@ -65,7 +65,8 @@ public class ApproveUserAccountRequestTask implements JavaDelegate {
 
         final User approvedBy = userService.findById(approvedById);
 
-        final User approvedUser = approveUser(user, request.getChamber());
+        final User approvedUser = approveUser(user, request.getChamber()
+                , request.getMember().equalsIgnoreCase("Y"));
         request.setUser(approvedUser);
 
         final Company company = request.getCompany();
@@ -81,13 +82,13 @@ public class ApproveUserAccountRequestTask implements JavaDelegate {
         return companyService.findById(company.getPrimaryId());
     }
 
-    private User approveUser(User user, Chamber chamber) {
+    private User approveUser(User user, Chamber chamber, boolean member) {
         user.setStatus(UserStatus.Approved.id());
         userService.save(user);
 
         ChamberUser chamberUser = chamberUserService.findByChamberAndUser(chamber.getPrimaryId(), user.getPrimaryId());
         if (chamberUser == null) {
-            chamberUserService.addAssociation(chamber, user);
+            chamberUserService.addAssociation(chamber, user, member);
         }
 
         return userService.findById(user.getPrimaryId());

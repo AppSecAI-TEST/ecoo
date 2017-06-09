@@ -29,6 +29,8 @@ public class RegisterUserAccountRequest extends WorkflowRequest implements Seria
 
     private Signature signature;
 
+    private String member;
+
     @JsonGetter
     @Override
     public CamundaProcess getType() {
@@ -83,6 +85,14 @@ public class RegisterUserAccountRequest extends WorkflowRequest implements Seria
         this.signature = signature;
     }
 
+    public String getMember() {
+        return member;
+    }
+
+    public void setMember(String member) {
+        this.member = member;
+    }
+
     @Override
     public String toString() {
         return "RegisterUserAccountRequest{" +
@@ -91,6 +101,7 @@ public class RegisterUserAccountRequest extends WorkflowRequest implements Seria
                 ", chamber=" + chamber +
                 ", plainTextPassword='" + plainTextPassword + '\'' +
                 ", source='" + source + '\'' +
+                ", member='" + member + '\'' +
                 '}';
     }
 }

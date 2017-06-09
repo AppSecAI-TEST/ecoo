@@ -38,7 +38,7 @@ public class ChamberUserServiceImpl extends AuditTemplate<Integer, ChamberUser, 
 
     @Transactional
     @Override
-    public ChamberUser addAssociation(Chamber chamber, User user) {
+    public ChamberUser addAssociation(Chamber chamber, User user, boolean member) {
         Assert.notNull(chamber, "The variable chamber cannot be null.");
         Assert.notNull(user, "The variable user cannot be null.");
 
@@ -47,6 +47,7 @@ public class ChamberUserServiceImpl extends AuditTemplate<Integer, ChamberUser, 
         chamberUser.setUserId(user.getPrimaryId());
         chamberUser.setStartDate(DateTime.now().toDate());
         chamberUser.setEndDate(DateTime.parse("99991231", DateTimeFormat.forPattern("yyyyMMdd")).toDate());
+        chamberUser.setMember(member);
 
         return save(chamberUser);
     }

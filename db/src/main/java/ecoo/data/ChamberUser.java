@@ -40,6 +40,11 @@ public class ChamberUser extends BaseModel<Integer> implements Serializable {
     private Date endDate;
 
 
+    @Column(name = "member_ind")
+    @Audited
+    private boolean member;
+
+
     /**
      * Returns the unique identifier of the object.
      *
@@ -92,6 +97,14 @@ public class ChamberUser extends BaseModel<Integer> implements Serializable {
         this.endDate = endDate;
     }
 
+    public boolean isMember() {
+        return member;
+    }
+
+    public void setMember(boolean member) {
+        this.member = member;
+    }
+
     @Override
     public String toString() {
         return "ChamberUser{" +
@@ -100,6 +113,7 @@ public class ChamberUser extends BaseModel<Integer> implements Serializable {
                 ", userId=" + userId +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", member=" + member +
                 '}';
     }
 }

@@ -1168,6 +1168,7 @@ CREATE TABLE "chamber_user" (
   user_id int NOT NULL,
   start_date datetime NOT NULL,
   end_date datetime NOT NULL,
+  member_ind bit NOT NULL, 
 CONSTRAINT [pk_chamber_user] PRIMARY KEY CLUSTERED 
 ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
@@ -1184,6 +1185,7 @@ CREATE TABLE chamber_user_log (
   user_id int NULL,
   start_date datetime NULL,
   end_date datetime NULL,
+  member_ind bit NULL, 
 CONSTRAINT pk_chamber_user_log PRIMARY KEY CLUSTERED 
 ([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO

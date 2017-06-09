@@ -15,7 +15,7 @@ public interface ChamberUserService extends CrudService<Integer, ChamberUser>, A
 
     ChamberUser findByChamberAndUser(Integer chamberId, Integer userId);
 
-    ChamberUser addAssociation(Chamber chamber, User user);
+    ChamberUser addAssociation(Chamber chamber, User user, boolean member);
 
     Collection<ChamberUser> findByUser(Integer userId);
 
