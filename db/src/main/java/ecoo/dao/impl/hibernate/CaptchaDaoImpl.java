@@ -1,6 +1,6 @@
 package ecoo.dao.impl.hibernate;
 
-import ecoo.dao.impl.CaptchaDao;
+import ecoo.dao.CaptchaDao;
 import ecoo.data.Captcha;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

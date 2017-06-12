@@ -1,9 +1,6 @@
 package ecoo.service;
 
-import ecoo.data.Country;
-import ecoo.data.MetricType;
-import ecoo.data.Province;
-import ecoo.data.Title;
+import ecoo.data.*;
 
 import java.util.Collection;
 
@@ -12,6 +9,13 @@ import java.util.Collection;
  * @since April 2017
  */
 public interface DataService {
+
+    /**
+     * Returns a list of all the transport types.
+     *
+     * @return A list.
+     */
+    Collection<TransportType> transportTypes();
 
     /**
      * Returns a list of all the metric types.

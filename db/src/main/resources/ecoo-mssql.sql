@@ -526,6 +526,34 @@ GO
 
 
 -- =====================================================================================
+-- MODE OF TRANSPORT
+-- =====================================================================================
+CREATE TABLE [dbo].transport_type(
+	[id] [varchar](3) NOT NULL,
+	[descr] [varchar](50) NOT NULL,
+CONSTRAINT [pk_transport_type] PRIMARY KEY CLUSTERED 
+([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+INSERT INTO "transport_type" ("id", "descr") VALUES
+('S', 'SHIPPING'),
+('A', 'AIR');
+
+CREATE TABLE "transport_type_log" (
+  "rev" int NOT NULL,
+  "revType" tinyint NOT NULL,
+	[id] [varchar](3) NOT NULL,
+	[descr] [varchar](50) NULL,
+CONSTRAINT pk_transport_type_log PRIMARY KEY CLUSTERED 
+([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE "transport_type_log" ADD CONSTRAINT "fk_transport_type_log_rev" FOREIGN KEY ("rev") REFERENCES "revision" ("id");  
+ALTER TABLE "transport_type_log" ADD CONSTRAINT "fk_transport_type_log_rev_type" FOREIGN KEY ("revType") REFERENCES "rev_type" ("id");
+GO
+
+
+-- =====================================================================================
 -- DOC TYPE
 -- =====================================================================================
 CREATE TABLE [dbo].doc_type(
@@ -1548,11 +1576,13 @@ CREATE TABLE [ecoo].[dbo].[shipment](
 	[status] [varchar](3) NOT NULL,
 	[owner] [smallint] NOT NULL,
 	[process_instance_id] [varchar](50) NULL,
+	[transport_type] [varchar](3) NOT NULL,
 CONSTRAINT [pk_shipment] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_chamber" FOREIGN KEY (chamber_id) REFERENCES chamber ("id");  
 ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_status" FOREIGN KEY ([status]) REFERENCES [shipment_status] ("id");
+ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_transport_type" FOREIGN KEY ([transport_type]) REFERENCES [transport_type] ("id");
 
 CREATE TABLE [dbo].[shipment_log](
 	[rev] int NOT NULL,
@@ -1586,6 +1616,7 @@ CREATE TABLE [dbo].[shipment_log](
 	[status] [varchar](3) NULL,
 	[owner] [smallint] NULL,
 	[process_instance_id] [varchar](50) NULL,
+	[transport_type] [varchar](3) NULL,
 CONSTRAINT [pk_shipment_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 

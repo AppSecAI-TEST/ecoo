@@ -1,4 +1,4 @@
-package ecoo.dao.impl;
+package ecoo.dao;
 
 
 import ecoo.dao.AuditLogDao;

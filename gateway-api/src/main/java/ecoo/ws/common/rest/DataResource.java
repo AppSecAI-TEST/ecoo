@@ -27,6 +27,11 @@ public class DataResource extends BaseResource {
 
     private DataService dataService;
 
+    @RequestMapping(value = "/transportTypes", method = RequestMethod.GET)
+    public ResponseEntity<Collection<TransportType>> transportTypes() {
+        return ResponseEntity.ok(dataService.transportTypes());
+    }
+
     @RequestMapping(value = "/uploadTypes", method = RequestMethod.GET)
     public ResponseEntity<Collection<UploadType>> uploadTypes() {
         final Collection<UploadType> data = new ArrayList<>();

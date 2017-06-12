@@ -144,4 +144,8 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
                 ", dateCreated=" + dateCreated +
                 '}';
     }
+
+    public boolean isDocumentType(DocumentTypes documentType) {
+        return this.documentType != null && this.documentType.equalsIgnoreCase(documentType.getPrimaryId());
+    }
 }

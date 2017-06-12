@@ -137,6 +137,10 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Audited
     private String processInstanceId;
 
+    @Column(name = "transport_type")
+    @Audited
+    private String transportTypeId;
+
     @JsonIgnore
     public boolean isInStatus(ShipmentStatus... status) {
         Assert.notNull(status);
@@ -393,6 +397,14 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.ownerId = ownerId;
     }
 
+    public String getTransportTypeId() {
+        return transportTypeId;
+    }
+
+    public void setTransportTypeId(String transportTypeId) {
+        this.transportTypeId = transportTypeId;
+    }
+
     @Override
     public String toString() {
         return "Shipment{" +
@@ -425,6 +437,7 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
                 ", status='" + status + '\'' +
                 ", ownerId=" + ownerId +
                 ", processInstanceId='" + processInstanceId + '\'' +
+                ", transportTypeId='" + transportTypeId + '\'' +
                 '}';
     }
 }

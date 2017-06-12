@@ -1,13 +1,7 @@
 package ecoo.service.impl;
 
-import ecoo.dao.CountryDao;
-import ecoo.dao.MetricTypeDao;
-import ecoo.dao.ProvinceDao;
-import ecoo.dao.TitleDao;
-import ecoo.data.Country;
-import ecoo.data.MetricType;
-import ecoo.data.Province;
-import ecoo.data.Title;
+import ecoo.dao.*;
+import ecoo.data.*;
 import ecoo.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,14 +23,28 @@ public class DataServiceImpl implements DataService {
 
     private MetricTypeDao metricTypeDao;
 
+    private TransportTypeDao transportTypeDao;
+
     @Autowired
     public DataServiceImpl(ProvinceDao provinceDao, CountryDao countryDao
             , TitleDao titleDao
-            , MetricTypeDao metricTypeDao) {
+            , MetricTypeDao metricTypeDao
+            , TransportTypeDao transportTypeDao) {
         this.provinceDao = provinceDao;
         this.countryDao = countryDao;
         this.titleDao = titleDao;
         this.metricTypeDao = metricTypeDao;
+        this.transportTypeDao = transportTypeDao;
+    }
+
+    /**
+     * Returns a list of all the transport types.
+     *
+     * @return A list.
+     */
+    @Override
+    public Collection<TransportType> transportTypes() {
+        return transportTypeDao.findAll();
     }
 
     /**

@@ -1,7 +1,7 @@
 package ecoo.service.impl;
 
 
-import ecoo.dao.impl.CaptchaDao;
+import ecoo.dao.CaptchaDao;
 import ecoo.data.Captcha;
 import ecoo.service.CaptchaService;
 import org.apache.commons.lang3.StringUtils;

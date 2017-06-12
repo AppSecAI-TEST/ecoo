@@ -2,7 +2,10 @@
 
 package ecoo.ws.user.rest;
 
+import ecoo.bpm.BusinessRuleViolationException;
 import ecoo.data.CompanyDocument;
+import ecoo.data.DocumentTypes;
+import ecoo.data.Role;
 import ecoo.data.audit.Revision;
 import ecoo.service.CompanyDocumentService;
 import ecoo.ws.common.command.DownloadCompanyDocument;
@@ -103,7 +106,21 @@ public class CompanyDocumentResource extends BaseResource {
     @RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<CompanyDocument> delete(@PathVariable Integer id) {
         final CompanyDocument entity = companyDocumentService.findById(id);
-        return ResponseEntity.ok(companyDocumentService.delete(entity));
+        if (entity == null) {
+            return ResponseEntity.ok(null);
+        } else {
+            if (entity.isDocumentType(DocumentTypes.ProofOfCompanyRegistration)) {
+                if (currentUser().isInRole(Role.ROLE_SYSADMIN)) {
+                    return ResponseEntity.ok(companyDocumentService.delete(entity));
+                } else {
+                    throw new BusinessRuleViolationException(String.format("System cannot delete document. " +
+                            "You do not have permission to delete the proof of company registration document " +
+                            "%s.", entity.getPrimaryId()));
+                }
+            } else {
+                return ResponseEntity.ok(companyDocumentService.delete(entity));
+            }
+        }
     }
 
     @RequestMapping(value = "/createdBy/id/{id}", method = RequestMethod.GET)
