@@ -141,6 +141,14 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Audited
     private String transportTypeId;
 
+    @Column(name = "port_of_load")
+    @Audited
+    private String portOfLoading;
+
+    @Column(name = "port_of_accept")
+    @Audited
+    private String portOfAcceptance;
+
     @JsonIgnore
     public boolean isInStatus(ShipmentStatus... status) {
         Assert.notNull(status);
@@ -405,6 +413,22 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.transportTypeId = transportTypeId;
     }
 
+    public String getPortOfLoading() {
+        return portOfLoading;
+    }
+
+    public void setPortOfLoading(String portOfLoading) {
+        this.portOfLoading = portOfLoading;
+    }
+
+    public String getPortOfAcceptance() {
+        return portOfAcceptance;
+    }
+
+    public void setPortOfAcceptance(String portOfAcceptance) {
+        this.portOfAcceptance = portOfAcceptance;
+    }
+
     @Override
     public String toString() {
         return "Shipment{" +
@@ -438,6 +462,8 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
                 ", ownerId=" + ownerId +
                 ", processInstanceId='" + processInstanceId + '\'' +
                 ", transportTypeId='" + transportTypeId + '\'' +
+                ", portOfLoading='" + portOfLoading + '\'' +
+                ", portOfAcceptance='" + portOfAcceptance + '\'' +
                 '}';
     }
 }

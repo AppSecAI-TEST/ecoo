@@ -173,7 +173,7 @@ INSERT INTO "rev_type" ("id", "desrc") VALUES
 CREATE TABLE [dbo].[captcha](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[value] [varchar](8) NOT NULL,
-	[data] [varchar](max) NOT NULL,
+	[data] [nvarchar](max) NOT NULL,
  CONSTRAINT [pk_captcha] PRIMARY KEY CLUSTERED 
 ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
@@ -186,7 +186,7 @@ CREATE TABLE "captcha_log" (
   "revType" tinyint NOT NULL,
 	[id] [int] NOT NULL,
 	[value] [varchar](8) NULL,
-	[data] [varchar](max) NULL,
+	[data] [nvarchar](max) NULL,
 CONSTRAINT pk_captcha_log PRIMARY KEY CLUSTERED 
 ([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
@@ -1576,6 +1576,8 @@ CREATE TABLE [ecoo].[dbo].[shipment](
 	[status] [varchar](3) NOT NULL,
 	[owner] [smallint] NOT NULL,
 	[process_instance_id] [varchar](50) NULL,
+	[port_of_load] [varchar](200) NULL,
+	[port_of_accept] [varchar](200) NULL,
 	[transport_type] [varchar](3) NOT NULL,
 CONSTRAINT [pk_shipment] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
@@ -1616,6 +1618,8 @@ CREATE TABLE [dbo].[shipment_log](
 	[status] [varchar](3) NULL,
 	[owner] [smallint] NULL,
 	[process_instance_id] [varchar](50) NULL,
+	[port_of_load] [varchar](200) NULL,
+	[port_of_accept] [varchar](200) NULL,
 	[transport_type] [varchar](3) NULL,
 CONSTRAINT [pk_shipment_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
@@ -1640,6 +1644,56 @@ ALTER TABLE [shipment_comment] ADD CONSTRAINT "fk_shipment_comment_shipment" FOR
 ALTER TABLE [shipment_comment] ADD CONSTRAINT "fk_shipment_comment_user_acc" FOREIGN KEY (user_id) REFERENCES user_acc ("id");  
 GO
 
+
+CREATE TABLE [dbo].shipment_doc_type(
+	[id] [varchar](3) NOT NULL,
+	[descr] [varchar](100) NOT NULL,
+CONSTRAINT pk_shipment_doc_type
+PRIMARY KEY CLUSTERED 
+([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+INSERT INTO shipment_doc_type ("id", "descr") VALUES
+('CI', 'COMMERCIAL INVOICE');
+GO
+
+CREATE TABLE [dbo].[shipment_doc](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[shipment_id] [int] NOT NULL,
+	[doc_type] [varchar](3) NOT NULL,
+	[file_name] [varchar](255) NOT NULL,
+	[data] nvarchar(max) NOT NULL,
+	[mime_type] varchar(20) NOT NULL,
+	[size_in_kb] smallint NOT NULL,
+	[date_created] datetime NOT NULL,
+ CONSTRAINT [pk_shipment_doc] PRIMARY KEY CLUSTERED 
+([shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [shipment_doc] ADD CONSTRAINT "fk_shipment_doc_shipment" FOREIGN KEY (shipment_id) REFERENCES shipment ("id");  
+ALTER TABLE [shipment_doc] ADD CONSTRAINT "fk_shipment_doc_shipment_doc_type" FOREIGN KEY ([doc_type]) REFERENCES shipment_doc_type ("id");  
+GO
+
+CREATE TABLE [dbo].[shipment_doc_log](
+	[rev] int NOT NULL,
+	[revType] tinyint NOT NULL,
+	[id] [int] NOT NULL,
+	[shipment_id] [int] NULL,
+	[doc_type] [varchar](3) NULL,
+	[file_name] [varchar](255) NULL,
+	[data] nvarchar(max) NULL,
+	[mime_type] varchar(20) NULL,
+	[size_in_kb] smallint NULL,
+	[date_created] datetime NULL,
+CONSTRAINT [pk_shipment_doc_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[shipment_doc_log]  WITH NOCHECK ADD  CONSTRAINT [fk_shipment_doc_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])
+ALTER TABLE [dbo].[shipment_doc_log] CHECK CONSTRAINT [fk_shipment_doc_log_revision]
+
+ALTER TABLE [dbo].[shipment_doc_log]  WITH NOCHECK ADD  CONSTRAINT [fk_shipment_doc_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
+ALTER TABLE [dbo].[shipment_doc_log] CHECK CONSTRAINT [fk_shipment_doc_log_rev_type]
+GO
 
 ----------------------------------------------------------------------------------------------------------------
 -- COMMERCIAL INVOICE
@@ -1677,7 +1731,6 @@ ALTER TABLE [dbo].[doc_comm_inv_log] CHECK CONSTRAINT [fk_doc_comm_inv_log_revis
 ALTER TABLE [dbo].[doc_comm_inv_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_comm_inv_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
 ALTER TABLE [dbo].[doc_comm_inv_log] CHECK CONSTRAINT [fk_doc_comm_inv_log_rev_type]
 GO
-
 
 ----------------------------------------------------------------------------------------------------------------
 -- CERTIFICATE OF ORIGIN

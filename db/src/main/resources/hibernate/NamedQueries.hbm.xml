@@ -3,6 +3,23 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
+    <sql-query name="FIND_DOCUMENTS_BY_SHIPMENT_AND_TYPE">
+        <return class="ecoo.data.ShipmentDocument"/>
+        <![CDATA[
+            select distinct cd.* from dbo.shipment_doc cd with(nolock)
+            where cd.shipment_id = :shipmentId
+            and cd.doc_type = :documentType
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_DOCUMENTS_BY_SHIPMENT">
+        <return class="ecoo.data.ShipmentDocument"/>
+        <![CDATA[
+            select distinct cd.* from dbo.shipment_doc cd with(nolock)
+            where cd.shipment_id = :shipmentId
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_COMPANY_SIGNATORY_BY_USER_AND_COMPANY">
         <return class="ecoo.data.CompanySignatory"/>
         <![CDATA[

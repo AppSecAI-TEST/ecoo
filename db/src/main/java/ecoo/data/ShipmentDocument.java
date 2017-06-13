@@ -9,13 +9,13 @@ import java.util.Date;
 
 /**
  * @author Justin Rundle
- * @since April 2017
+ * @since June 2017
  */
 @Entity
-@Table(name = "company_doc")
-public class CompanyDocument extends BaseModel<Integer> implements Serializable {
+@Table(name = "shipment_doc")
+public class ShipmentDocument extends BaseModel<Integer> implements Serializable {
 
-    private static final long serialVersionUID = 8647765913897173175L;
+    private static final long serialVersionUID = 453376563925311953L;
 
     @Id
     @Column(name = "id")
@@ -23,9 +23,9 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
     @Audited
     private Integer primaryId;
 
-    @Column(name = "company_id")
+    @Column(name = "shipment_id")
     @Audited
-    private Integer companyId;
+    private Integer shipmentId;
 
     @Column(name = "doc_type")
     @Audited
@@ -35,9 +35,9 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
     @Audited
     private String fileName;
 
-    @Column(name = "encoded_image")
+    @Column(name = "data")
     @Audited
-    private String encodedImage;
+    private String data;
 
     @Column(name = "mime_type")
     @Audited
@@ -51,14 +51,13 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
     @Audited
     private Date dateCreated;
 
-    public CompanyDocument() {
+    public ShipmentDocument() {
     }
 
     @JsonIgnore
     public boolean isDocumentType(DocumentTypes documentType) {
         return this.documentType != null && this.documentType.equalsIgnoreCase(documentType.getPrimaryId());
     }
-
 
     /**
      * Returns the unique identifier of the object.
@@ -80,16 +79,12 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
         this.primaryId = primaryId;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Integer getShipmentId() {
+        return shipmentId;
     }
 
-    public Integer getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+    public void setShipmentId(Integer shipmentId) {
+        this.shipmentId = shipmentId;
     }
 
     public String getDocumentType() {
@@ -108,12 +103,13 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
         this.fileName = fileName;
     }
 
-    public String getEncodedImage() {
-        return encodedImage;
+    @JsonIgnore
+    public String getData() {
+        return data;
     }
 
-    public void setEncodedImage(String encodedImage) {
-        this.encodedImage = encodedImage;
+    public void setData(String data) {
+        this.data = data;
     }
 
     public String getMimeType() {
@@ -142,12 +138,12 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
 
     @Override
     public String toString() {
-        return "CompanyDocument{" +
+        return "ShipmentDocument{" +
                 "primaryId=" + primaryId +
-                ", companyId=" + companyId +
+                ", shipmentId=" + shipmentId +
                 ", documentType='" + documentType + '\'' +
                 ", fileName='" + fileName + '\'' +
-                ", encodedImage='" + encodedImage + '\'' +
+                ", data='" + data + '\'' +
                 ", mimeType='" + mimeType + '\'' +
                 ", sizeInKb=" + sizeInKb +
                 ", dateCreated=" + dateCreated +
