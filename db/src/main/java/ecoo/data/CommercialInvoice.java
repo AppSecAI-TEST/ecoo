@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "doc_comm_inv")
-@Document(type = "ecoo", indexName = "ecoo.commercial.invoice", shards = 1, replicas = 0)
+@Document(type = "ecoo.commercial.invoice", indexName = "ecoo.commercial.invoice", shards = 1, replicas = 0)
 public class CommercialInvoice extends BaseModel<Integer> implements Serializable {
 
     private static final long serialVersionUID = 7031097514722247965L;

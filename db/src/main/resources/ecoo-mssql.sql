@@ -1739,10 +1739,9 @@ CREATE TABLE [ecoo].[dbo].[doc_coo](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[shipment_id] [int] NOT NULL,
 	[marks] [varchar](50) NULL,
-	[box_no] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
-	[tariff_code] [varchar](100) NULL,
-	[gross_weight] [decimal](19,4) NOT NULL
+	[qty] [tinyint] NULL,
+	[price] [decimal](19,4) NULL,
 CONSTRAINT [pk_doc_coo] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
@@ -1756,10 +1755,9 @@ CREATE TABLE [dbo].[doc_coo_log](
 	[id] [int] NOT NULL,
 	[shipment_id] [int] NULL,
 	[marks] [varchar](50) NULL,
-	[box_no] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
-	[tariff_code] [varchar](100) NULL,
-	[gross_weight] [decimal](19,4) NULL
+	[qty] [tinyint] NULL,
+	[price] [decimal](19,4) NULL,
 CONSTRAINT [pk_doc_coo_log] PRIMARY KEY CLUSTERED ([rev] ASC, [id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 

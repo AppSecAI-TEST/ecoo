@@ -15,8 +15,10 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "shipment")
-@Document(type = "ecoo", indexName = "ecoo.shipment", shards = 1, replicas = 0)
+@Document(type = "ecoo.shipment", indexName = "ecoo.shipment", shards = 1, replicas = 0)
 public class Shipment extends BaseModel<Integer> implements Serializable {
+
+    private static final long serialVersionUID = 5624075215737017054L;
 
     @Id
     @org.springframework.data.annotation.Id

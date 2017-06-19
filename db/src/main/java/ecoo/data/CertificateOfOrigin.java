@@ -13,11 +13,11 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "doc_coo")
-@Document(type = "ecoo", indexName = "ecoo.coo", shards = 1, replicas = 0)
+@Document(type = "ecoo.coo", indexName = "ecoo.coo", shards = 1, replicas = 0)
 public class CertificateOfOrigin extends BaseModel<Integer> implements Serializable {
 
     private static final long serialVersionUID = 4991785189692239969L;
-    
+
     @Id
     @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,21 +33,17 @@ public class CertificateOfOrigin extends BaseModel<Integer> implements Serializa
     @Audited
     private String marks;
 
-    @Column(name = "box_no")
-    @Audited
-    private String boxNumber;
-
     @Column(name = "descr")
     @Audited
     private String descr;
 
-    @Column(name = "tariff_code")
+    @Column(name = "qty")
     @Audited
-    private String tariffCode;
+    private BigDecimal qty;
 
-    @Column(name = "gross_weight")
+    @Column(name = "price")
     @Audited
-    private BigDecimal grossWeight;
+    private BigDecimal price;
 
     /**
      * Returns the unique identifier of the object.
@@ -85,14 +81,6 @@ public class CertificateOfOrigin extends BaseModel<Integer> implements Serializa
         this.marks = marks;
     }
 
-    public String getBoxNumber() {
-        return boxNumber;
-    }
-
-    public void setBoxNumber(String boxNumber) {
-        this.boxNumber = boxNumber;
-    }
-
     public String getDescr() {
         return descr;
     }
@@ -101,20 +89,20 @@ public class CertificateOfOrigin extends BaseModel<Integer> implements Serializa
         this.descr = descr;
     }
 
-    public String getTariffCode() {
-        return tariffCode;
+    public BigDecimal getQty() {
+        return qty;
     }
 
-    public void setTariffCode(String tariffCode) {
-        this.tariffCode = tariffCode;
+    public void setQty(BigDecimal qty) {
+        this.qty = qty;
     }
 
-    public BigDecimal getGrossWeight() {
-        return grossWeight;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setGrossWeight(BigDecimal grossWeight) {
-        this.grossWeight = grossWeight;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     @Override
@@ -123,10 +111,9 @@ public class CertificateOfOrigin extends BaseModel<Integer> implements Serializa
                 "primaryId=" + primaryId +
                 ", shipmentId=" + shipmentId +
                 ", marks='" + marks + '\'' +
-                ", boxNumber='" + boxNumber + '\'' +
                 ", descr='" + descr + '\'' +
-                ", tariffCode='" + tariffCode + '\'' +
-                ", grossWeight=" + grossWeight +
+                ", qty=" + qty +
+                ", price=" + price +
                 '}';
     }
 }

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user_acc")
-@Document(type = "ecoo", indexName = "ecoo.user", shards = 1, replicas = 0)
+@Document(type = "ecoo.user", indexName = "ecoo.user", shards = 1, replicas = 0)
 public class User extends BaseModel<Integer> implements UserDetails, CredentialsContainer {
 
     private static final long serialVersionUID = -6052051635817263810L;
