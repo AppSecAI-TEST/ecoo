@@ -2,296 +2,354 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
-      <Textbox Name="textbox1">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Certificate Of Origin</Value>
-                <Style>
-                  <FontFamily>Calibri</FontFamily>
-                  <FontSize>18pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
+      <Rectangle Name="Rectangle13">
+        <ReportItems>
+          <Textbox Name="Textbox19">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Country of Origin</Value>
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox17</rd:DefaultName>
+            <Top>0.04793cm</Top>
+            <Left>0.06953cm</Left>
+            <Height>0.42123cm</Height>
+            <Width>7.40021cm</Width>
             <Style>
-              <TextAlign>Right</TextAlign>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
             </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>textbox1</rd:DefaultName>
-        <Left>3.97187in</Left>
-        <Height>0.27in</Height>
-        <Width>2.27813in</Width>
-        <Style />
-      </Textbox>
-      <Image Name="signature">
-        <Source>Database</Source>
-        <Value>=First(Fields!encoded_image.Value, "imageSrc")</Value>
-        <MIMEType>image/png</MIMEType>
-        <Sizing>Fit</Sizing>
-        <Top>9.31016cm</Top>
-        <Left>7.56391cm</Left>
-        <Height>2.71708cm</Height>
-        <Width>8.06167cm</Width>
+          </Textbox>
+          <Textbox Name="Textbox34">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!country_of_origin.Value, "shipment")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox34</rd:DefaultName>
+            <Top>0.46916cm</Top>
+            <Left>0.06953cm</Left>
+            <Height>0.34108cm</Height>
+            <Width>7.39668cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>4.09835cm</Top>
+        <Left>0.05407cm</Left>
+        <Height>0.87164cm</Height>
+        <Width>7.79782cm</Width>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle11">
+        <ReportItems>
+          <Textbox Name="chamber_line_3">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!consignee.Value, "shipment")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.22833in</Top>
+            <Left>0.05515in</Left>
+            <Height>1.37332cm</Height>
+            <Width>2.8843in</Width>
+            <Style />
+          </Textbox>
+          <Textbox Name="Textbox18">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Goods consinged from (Exporters's business name, full address, country)</Value>
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox17</rd:DefaultName>
+            <Top>0.0635cm</Top>
+            <Left>0.03531cm</Left>
+            <Height>0.51647cm</Height>
+            <Width>7.4309cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>0.0635cm</Top>
+        <Left>0.05407cm</Left>
+        <Height>2.12967cm</Height>
+        <Width>7.79782cm</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
           </Border>
         </Style>
-      </Image>
-      <Image Name="Image1">
-        <Source>Embedded</Source>
-        <Value>RCCILOGO1024x270</Value>
-        <Sizing>FitProportional</Sizing>
-        <Top>0.82691cm</Top>
-        <Left>7.94566cm</Left>
-        <Height>2.21438cm</Height>
-        <Width>7.95583cm</Width>
+      </Rectangle>
+      <Rectangle Name="Rectangle1">
+        <ReportItems>
+          <Textbox Name="title">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Certificate Of Origin</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>18pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.025in</Top>
+            <Left>0.05082in</Left>
+            <Height>0.25889in</Height>
+            <Width>7.64465cm</Width>
+            <Style />
+          </Textbox>
+          <Image Name="chamber_logo">
+            <Source>Database</Source>
+            <Value>=First(Fields!logo_src.Value, "chamber")</Value>
+            <MIMEType>image/png</MIMEType>
+            <Sizing>Fit</Sizing>
+            <Top>0.75636cm</Top>
+            <Left>0.12905cm</Left>
+            <Height>1.66373cm</Height>
+            <Width>7.64464cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Image>
+          <Textbox Name="chamber_name">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!name.Value, "chamber")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.96946in</Top>
+            <Left>0.05081in</Left>
+            <Height>0.25cm</Height>
+            <Width>3.0097in</Width>
+            <ZIndex>2</ZIndex>
+            <Style />
+          </Textbox>
+          <Textbox Name="chamber_line_1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!line_1.Value, "chamber")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>1.06788in</Top>
+            <Left>0.05081in</Left>
+            <Height>0.25cm</Height>
+            <Width>3.00971in</Width>
+            <ZIndex>3</ZIndex>
+            <Style />
+          </Textbox>
+          <Textbox Name="chamber_line_2">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!line_2.Value, "chamber")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>1.17556in</Top>
+            <Left>0.05081in</Left>
+            <Height>0.25cm</Height>
+            <Width>3.00971in</Width>
+            <ZIndex>4</ZIndex>
+            <Style />
+          </Textbox>
+          <Textbox Name="chamber_tel">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!telephone.Value, "chamber")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>1.28324in</Top>
+            <Left>0.05082in</Left>
+            <Height>0.25cm</Height>
+            <Width>3.0097in</Width>
+            <ZIndex>5</ZIndex>
+            <Style />
+          </Textbox>
+          <Textbox Name="chamber_email">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!email.Value, "chamber")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>1.39091in</Top>
+            <Left>0.05082in</Left>
+            <Height>0.25cm</Height>
+            <Width>3.0097in</Width>
+            <ZIndex>6</ZIndex>
+            <Style />
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>0.0635cm</Top>
+        <Left>7.85189cm</Left>
+        <Height>4.03485cm</Height>
+        <Width>7.79601cm</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
           </Border>
         </Style>
-      </Image>
-      <Textbox Name="textbox2">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!export_ref.Value, "shipment")</Value>
-                <Style>
-                  <FontFamily>Calibri</FontFamily>
-                  <FontSize>18pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>textbox1</rd:DefaultName>
-        <Height>0.27in</Height>
-        <Width>1.76771in</Width>
-        <ZIndex>3</ZIndex>
-        <Style />
-      </Textbox>
-      <Textbox Name="id7">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!consignee_name.Value, "shipment")</Value>
-                <Style>
-                  <FontFamily>Calibri</FontFamily>
-                  <FontWeight>Normal</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>id</rd:DefaultName>
-        <Top>0.32556in</Top>
-        <Height>0.15542in</Height>
-        <Width>3.05877in</Width>
-        <ZIndex>4</ZIndex>
-        <Style />
-      </Textbox>
-      <Textbox Name="id8">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!consignee_building.Value, "shipment")</Value>
-                <Style>
-                  <FontFamily>Calibri</FontFamily>
-                  <FontWeight>Normal</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>id</rd:DefaultName>
-        <Top>0.48514in</Top>
-        <Height>0.15542in</Height>
-        <Width>3.05877in</Width>
-        <ZIndex>5</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Textbox>
-      <Textbox Name="id9">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!consignee_street.Value, "shipment")</Value>
-                <Style>
-                  <FontFamily>Calibri</FontFamily>
-                  <FontWeight>Normal</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>id</rd:DefaultName>
-        <Top>0.65306in</Top>
-        <Height>0.15542in</Height>
-        <Width>3.05877in</Width>
-        <ZIndex>6</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Textbox>
-      <Textbox Name="id10">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!consignee_city.Value, "shipment")</Value>
-                <Style>
-                  <FontFamily>Calibri</FontFamily>
-                  <FontWeight>Normal</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>id</rd:DefaultName>
-        <Top>0.82515in</Top>
-        <Height>0.15542in</Height>
-        <Width>3.05877in</Width>
-        <ZIndex>7</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Textbox>
-      <Textbox Name="id11">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!consignee_province.Value, "shipment") &amp; " " &amp; First(Fields!consignee_postcode.Value, "shipment")</Value>
-                <Style>
-                  <FontFamily>Calibri</FontFamily>
-                  <FontWeight>Normal</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>id</rd:DefaultName>
-        <Top>0.98335in</Top>
-        <Height>0.15542in</Height>
-        <Width>3.05877in</Width>
-        <ZIndex>8</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Textbox>
-      <Textbox Name="id12">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!consignee_country.Value, "shipment")</Value>
-                <Style>
-                  <FontFamily>Calibri</FontFamily>
-                  <FontWeight>Normal</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>id</rd:DefaultName>
-        <Top>1.14155in</Top>
-        <Height>0.15542in</Height>
-        <Width>3.05877in</Width>
-        <ZIndex>9</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Textbox>
-      <Textbox Name="id13">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!display_name.Value, "imageSrc")</Value>
-                <Style>
-                  <FontFamily>Calibri</FontFamily>
-                  <FontWeight>Normal</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>id</rd:DefaultName>
-        <Top>4.40243in</Top>
-        <Left>2.97792in</Left>
-        <Height>0.15542in</Height>
-        <Width>3.05877in</Width>
-        <ZIndex>10</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Textbox>
+      </Rectangle>
       <Tablix Name="table1">
         <TablixBody>
           <TablixColumns>
@@ -302,18 +360,18 @@
               <Width>1.42396in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.82292in</Width>
+              <Width>2.79688in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.75314in</Width>
+              <Width>0.47392in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.91666in</Width>
+              <Width>1.10151in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>0.22in</Height>
+              <Height>0.20438in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -327,6 +385,7 @@
                               <Value>#</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -363,6 +422,7 @@
                               <Value>Marks</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -399,6 +459,7 @@
                               <Value>Description of Goods</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -435,6 +496,7 @@
                               <Value>Qty</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -468,9 +530,10 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Weight</Value>
+                              <Value>Price</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -498,7 +561,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.5225in</Height>
+              <Height>0.18917in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -512,6 +575,7 @@
                               <Value>=Fields!id.Value</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>6pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -546,6 +610,7 @@
                               <Value>=Fields!marks.Value</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>6pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -580,6 +645,7 @@
                               <Value>=Fields!descr.Value</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>6pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -602,16 +668,17 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="box_no">
+                    <Textbox Name="qty">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!box_no.Value</Value>
+                              <Value>=Fields!qty.Value</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>6pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -620,7 +687,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>box_no</rd:DefaultName>
+                      <rd:DefaultName>qty</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -643,9 +710,10 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!gross_weight.Value</Value>
+                              <Value>=Fields!price.Value</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
+                                <FontSize>6pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -703,17 +771,618 @@
         </TablixRowHierarchy>
         <FixedColumnHeaders>true</FixedColumnHeaders>
         <DataSetName>lines</DataSetName>
-        <Top>1.44222in</Top>
-        <Height>0.7425in</Height>
-        <Width>6.26043in</Width>
-        <ZIndex>11</ZIndex>
-        <Style />
+        <Top>3.29965in</Top>
+        <Left>0.02129in</Left>
+        <Height>0.39355in</Height>
+        <Width>6.14002in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
       </Tablix>
+      <Rectangle Name="Rectangle8">
+        <ReportItems>
+          <Textbox Name="Textbox14">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>FOR OFFICIAL USE</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>Gray</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox12</rd:DefaultName>
+            <Top>0.09878cm</Top>
+            <Left>0.0963cm</Left>
+            <Height>0.6cm</Height>
+            <Width>4.43874cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox15">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>ORIGINAL</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>Gray</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox12</rd:DefaultName>
+            <Top>0.09878cm</Top>
+            <Left>4.7961cm</Left>
+            <Height>0.6cm</Height>
+            <Width>2.8782cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>4.09835cm</Top>
+        <Left>7.84939cm</Left>
+        <Height>0.87517cm</Height>
+        <Width>7.80033cm</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle12">
+        <ReportItems>
+          <Textbox Name="chamber_line_4">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!buyer.Value, "shipment")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.22833in</Top>
+            <Left>0.04126in</Left>
+            <Height>1.06623cm</Height>
+            <Width>2.89958in</Width>
+            <Style />
+          </Textbox>
+          <Textbox Name="Textbox22">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Goods consinged to(Consignee's business name, full address, country)</Value>
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox17</rd:DefaultName>
+            <Top>0.0635cm</Top>
+            <Left>0.03531cm</Left>
+            <Height>0.51647cm</Height>
+            <Width>7.4309cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>2.20023cm</Top>
+        <Left>0.05408cm</Left>
+        <Height>1.89812cm</Height>
+        <Width>7.79782cm</Width>
+        <ZIndex>5</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle14">
+        <ReportItems>
+          <Textbox Name="Textbox20">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Goods Exported To</Value>
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox17</rd:DefaultName>
+            <Top>0.06591cm</Top>
+            <Left>0.07306cm</Left>
+            <Height>0.42123cm</Height>
+            <Width>7.39668cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox35">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!goods_exported_to.Value, "shipment")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox34</rd:DefaultName>
+            <Top>0.48714cm</Top>
+            <Left>0.07306cm</Left>
+            <Height>0.34108cm</Height>
+            <Width>7.39668cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>4.96999cm</Top>
+        <Left>0.05407cm</Left>
+        <Height>1.15196cm</Height>
+        <Width>7.79782cm</Width>
+        <ZIndex>6</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle16">
+        <ReportItems>
+          <Textbox Name="Textbox23">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Reference No.:</Value>
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox17</rd:DefaultName>
+            <Top>0.06591cm</Top>
+            <Left>0.06703cm</Left>
+            <Height>0.42123cm</Height>
+            <Width>7.39668cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox37">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!export_ref.Value, "shipment")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox34</rd:DefaultName>
+            <Top>0.48714cm</Top>
+            <Left>0.06703cm</Left>
+            <Height>0.34108cm</Height>
+            <Width>7.39668cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>4.97351cm</Top>
+        <Left>7.85189cm</Left>
+        <Height>1.14844cm</Height>
+        <Width>7.79782cm</Width>
+        <ZIndex>7</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle17">
+        <ReportItems>
+          <Textbox Name="Textbox24">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Date</Value>
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox17</rd:DefaultName>
+            <Top>0.07408cm</Top>
+            <Left>0.07305cm</Left>
+            <Height>0.42123cm</Height>
+            <Width>7.39668cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox38">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!export_inv_date.Value, "shipment")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <Format>yyyy-MM-dd</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox34</rd:DefaultName>
+            <Top>0.49531cm</Top>
+            <Left>0.07556cm</Left>
+            <Height>0.34108cm</Height>
+            <Width>7.39668cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>6.129cm</Top>
+        <Left>7.84939cm</Left>
+        <Height>0.97885cm</Height>
+        <Width>7.80032cm</Width>
+        <ZIndex>8</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle18">
+        <ReportItems>
+          <Textbox Name="Textbox25">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Mode of Transport</Value>
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox17</rd:DefaultName>
+            <Top>0.06591cm</Top>
+            <Left>0.06953cm</Left>
+            <Height>0.42123cm</Height>
+            <Width>7.39668cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox39">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!mode_of_transport.Value, "shipment")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox34</rd:DefaultName>
+            <Top>0.48714cm</Top>
+            <Left>0.06953cm</Left>
+            <Height>0.34108cm</Height>
+            <Width>7.39668cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>6.12659cm</Top>
+        <Left>0.05407cm</Left>
+        <Height>0.98126cm</Height>
+        <Width>7.79782cm</Width>
+        <ZIndex>9</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle19">
+        <ReportItems>
+          <Textbox Name="Textbox26">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Remarks</Value>
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox17</rd:DefaultName>
+            <Top>0.08926cm</Top>
+            <Left>0.06953cm</Left>
+            <Height>0.42123cm</Height>
+            <Width>7.39668cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>7.10785cm</Top>
+        <Left>0.0576cm</Left>
+        <Height>1.00461cm</Height>
+        <Width>15.59212cm</Width>
+        <ZIndex>10</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle22">
+        <ReportItems>
+          <Image Name="signature">
+            <Source>Database</Source>
+            <Value>=First(Fields!encoded_image.Value, "imageSrc")</Value>
+            <MIMEType>image/png</MIMEType>
+            <Sizing>Fit</Sizing>
+            <Top>0.26918cm</Top>
+            <Left>7.40795cm</Left>
+            <Height>2.25942cm</Height>
+            <Width>8.06167cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Image>
+          <Textbox Name="id13">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!display_name.Value, "imageSrc")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>id</rd:DefaultName>
+            <Top>1.05107in</Top>
+            <Left>2.91652in</Left>
+            <Height>0.18093in</Height>
+            <Width>3.17389in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>9.52183cm</Top>
+        <Left>0.05407cm</Left>
+        <Height>3.64415cm</Height>
+        <Width>15.59565cm</Width>
+        <ZIndex>11</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
     </ReportItems>
-    <Height>12.38743cm</Height>
+    <Height>29.77056cm</Height>
     <Style />
   </Body>
-  <Width>15.90149cm</Width>
+  <Width>16.56106cm</Width>
   <Page>
     <PageHeight>29.7cm</PageHeight>
     <PageWidth>21cm</PageWidth>
@@ -765,120 +1434,66 @@ where s.id = @userSignatureId</CommandText>
             <Value>=Parameters!shipmentId.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>select * from shipment with(nolock) where id = @shipmentId</CommandText>
+        <CommandText>SELECT 
+	  CASE WHEN consignee_name IS NULL THEN '' ELSE consignee_name END	  
+	+ CASE WHEN consignee_building IS NULL THEN '' ELSE ', ' + consignee_building END
+	+ CASE WHEN consignee_street IS NULL THEN '' ELSE ', ' + consignee_street END
+	+ CASE WHEN consignee_city IS NULL THEN '' ELSE ', ' + consignee_city END
+	+ CASE WHEN consignee_province IS NULL THEN '' ELSE ', ' + consignee_province END 
+	+ CASE WHEN consignee_postcode IS NULL THEN '' ELSE ' ' + consignee_postcode END 
+	+ CASE WHEN consignee_country IS NULL THEN '' ELSE ', ' + consignee_country END consignee
+
+	, CASE WHEN buyer_name IS NULL THEN '' ELSE buyer_name END	
+	+ CASE WHEN buyer_building IS NULL THEN '' ELSE ', ' + buyer_building END
+	+ CASE WHEN buyer_street IS NULL THEN '' ELSE ', ' + buyer_street END
+	+ CASE WHEN buyer_city IS NULL THEN '' ELSE ', ' + buyer_city END
+	+ CASE WHEN buyer_province IS NULL THEN '' ELSE ', ' + buyer_province END 
+	+ CASE WHEN buyer_postcode IS NULL THEN '' ELSE ' ' + buyer_postcode END 
+	+ CASE WHEN buyer_country IS NULL THEN '' ELSE ', ' + buyer_country END buyer
+
+	,CASE WHEN consignee_country IS NULL THEN '' ELSE consignee_country END country_of_origin
+	,CASE WHEN port_of_accept IS NULL THEN '' ELSE port_of_accept END goods_exported_to
+	,t.descr mode_of_transport
+	,s.export_ref
+	,s.export_inv_date
+	
+FROM shipment s WITH(NOLOCK)
+	LEFT OUTER JOIN country consignee_country WITH(NOLOCK)
+		ON consignee_country.id = s.consignee_country
+	LEFT OUTER JOIN country buyer_country WITH(NOLOCK)
+		ON buyer_country.id = s.buyer_country
+	LEFT OUTER JOIN transport_type t WITH(NOLOCK)
+		ON t.id = s.transport_type
+WHERE s.id = @shipmentId </CommandText>
       </Query>
       <Fields>
-        <Field Name="id">
-          <DataField>id</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+        <Field Name="consignee">
+          <DataField>consignee</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="chamber_id">
-          <DataField>chamber_id</DataField>
-          <rd:TypeName>System.Int16</rd:TypeName>
+        <Field Name="buyer">
+          <DataField>buyer</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="country_of_origin">
+          <DataField>country_of_origin</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="export_ref">
           <DataField>export_ref</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="export_inv_no">
-          <DataField>export_inv_no</DataField>
+        <Field Name="goods_exported_to">
+          <DataField>goods_exported_to</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="mode_of_transport">
+          <DataField>mode_of_transport</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="export_inv_date">
           <DataField>export_inv_date</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="buyer_ref">
-          <DataField>buyer_ref</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="buyer_order_date">
-          <DataField>buyer_order_date</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="letter_credit_no">
-          <DataField>letter_credit_no</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="consignee_name">
-          <DataField>consignee_name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="consignee_building">
-          <DataField>consignee_building</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="consignee_street">
-          <DataField>consignee_street</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="consignee_city">
-          <DataField>consignee_city</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="consignee_postcode">
-          <DataField>consignee_postcode</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="consignee_province">
-          <DataField>consignee_province</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="consignee_country">
-          <DataField>consignee_country</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="buyer_name">
-          <DataField>buyer_name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="buyer_building">
-          <DataField>buyer_building</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="buyer_street">
-          <DataField>buyer_street</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="buyer_city">
-          <DataField>buyer_city</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="buyer_postcode">
-          <DataField>buyer_postcode</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="buyer_province">
-          <DataField>buyer_province</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="buyer_country">
-          <DataField>buyer_country</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="place_of_issue">
-          <DataField>place_of_issue</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="date_of_issue">
-          <DataField>date_of_issue</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="date_submitted">
-          <DataField>date_submitted</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="status">
-          <DataField>status</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="owner">
-          <DataField>owner</DataField>
-          <rd:TypeName>System.Int16</rd:TypeName>
-        </Field>
-        <Field Name="process_instance_id">
-          <DataField>process_instance_id</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -905,21 +1520,69 @@ where s.id = @userSignatureId</CommandText>
           <DataField>marks</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="box_no">
-          <DataField>box_no</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="descr">
           <DataField>descr</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="tariff_code">
-          <DataField>tariff_code</DataField>
+        <Field Name="qty">
+          <DataField>qty</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="price">
+          <DataField>price</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="chamber">
+      <Query>
+        <DataSourceName>ecoo</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@shipmentId">
+            <Value>=Parameters!shipmentId.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+select c.name
+,c.building + ', ' + c.street + ', ' line_1
+,c.city + ', ' + c.postcode + ', ' + cc.descr line_2
+,'Tel: ' + c.phone_no + ' Fax: ' + c.fax_no telephone
+,'Email: ' + c.email email
+,d.encoded_image logo_src
+from shipment s with(nolock)
+inner join chamber c with(nolock)
+	on c.id = s.chamber_id
+inner join chamber_doc d with(nolock)
+	on d.chamber_id = c.id
+	and d.doc_type = 'L'
+inner join country cc with(nolock)
+	on cc.id = c.country_id
+where s.id = @shipmentId</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="name">
+          <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="gross_weight">
-          <DataField>gross_weight</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+        <Field Name="line_1">
+          <DataField>line_1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="line_2">
+          <DataField>line_2</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="telephone">
+          <DataField>telephone</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="email">
+          <DataField>email</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="logo_src">
+          <DataField>logo_src</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -927,11 +1590,29 @@ where s.id = @userSignatureId</CommandText>
   <ReportParameters>
     <ReportParameter Name="userSignatureId">
       <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>User Signature ID</Prompt>
+      <UsedInQuery>True</UsedInQuery>
+      <cl:ComponentMetadata xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition">
+        <cl:HideUpdateNotifications>true</cl:HideUpdateNotifications>
+      </cl:ComponentMetadata>
     </ReportParameter>
     <ReportParameter Name="shipmentId">
       <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Shipment ID</Prompt>
+      <UsedInQuery>True</UsedInQuery>
+      <cl:ComponentMetadata xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition">
+        <cl:HideUpdateNotifications>true</cl:HideUpdateNotifications>
+      </cl:ComponentMetadata>
     </ReportParameter>
   </ReportParameters>
   <EmbeddedImages>
