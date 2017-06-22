@@ -1242,10 +1242,14 @@ ALTER TABLE chamber_admin ADD CONSTRAINT "fk_chamber_admin_chamber" FOREIGN KEY 
 ALTER TABLE chamber_admin ADD CONSTRAINT "fk_chamber_admin_user" FOREIGN KEY (user_id) REFERENCES user_acc ("id");
 GO
 
+-- RANDBURG Admins
 INSERT INTO chamber_admin VALUES(1,1 /*SYS ADMIN*/,GETDATE(),'9999/12/31');
 INSERT INTO chamber_admin VALUES(1,2 /*LINDA HOLTES*/,GETDATE(),'9999/12/31');
 INSERT INTO chamber_admin VALUES(1,3 /*LINDA BLACKBEARD*/,GETDATE(),'9999/12/31');
 INSERT INTO chamber_admin VALUES(1,4 /*JACQUELINE*/,GETDATE(),'9999/12/31');
+
+-- DURBAN Admins
+INSERT INTO chamber_admin VALUES(2,1 /*SYS ADMIN*/,GETDATE(),'9999/12/31');
 GO
 
 CREATE TABLE chamber_admin_log (
