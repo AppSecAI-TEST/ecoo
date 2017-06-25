@@ -1290,8 +1290,44 @@
             <rd:DefaultName>Textbox17</rd:DefaultName>
             <Top>0.08926cm</Top>
             <Left>0.06953cm</Left>
-            <Height>0.42123cm</Height>
+            <Height>0.3154cm</Height>
             <Width>7.39668cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox40">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!remarks.Value, "shipment")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <Format>yyyy-MM-dd</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox34</rd:DefaultName>
+            <Top>0.40466cm</Top>
+            <Left>0.06953cm</Left>
+            <Height>0.44691cm</Height>
+            <Width>15.18847cm</Width>
+            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1457,6 +1493,8 @@ where s.id = @userSignatureId</CommandText>
 	,s.export_ref
 	,s.export_inv_date
 	
+	,c.remarks
+	
 FROM shipment s WITH(NOLOCK)
 	LEFT OUTER JOIN country consignee_country WITH(NOLOCK)
 		ON consignee_country.id = s.consignee_country
@@ -1464,6 +1502,8 @@ FROM shipment s WITH(NOLOCK)
 		ON buyer_country.id = s.buyer_country
 	LEFT OUTER JOIN transport_type t WITH(NOLOCK)
 		ON t.id = s.transport_type
+	LEFT OUTER JOIN doc_coo c WITH(NOLOCK) 
+		ON c.shipment_id = s.id
 WHERE s.id = @shipmentId </CommandText>
       </Query>
       <Fields>
@@ -1495,6 +1535,10 @@ WHERE s.id = @shipmentId </CommandText>
           <DataField>export_inv_date</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
+        <Field Name="remarks">
+          <DataField>remarks</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="lines">
@@ -1505,15 +1549,17 @@ WHERE s.id = @shipmentId </CommandText>
             <Value>=Parameters!shipmentId.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>select * from doc_coo with(nolock) where shipment_id = @shipmentId</CommandText>
+        <CommandText>select l.* from doc_coo c with(nolock)
+	inner join doc_coo_ln l with(nolock) on c.shipment_id = l.parent_id
+where shipment_id = @shipmentId</CommandText>
       </Query>
       <Fields>
         <Field Name="id">
           <DataField>id</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="shipment_id">
-          <DataField>shipment_id</DataField>
+        <Field Name="parent_id">
+          <DataField>parent_id</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="marks">
