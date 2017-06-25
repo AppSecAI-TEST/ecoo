@@ -36,6 +36,11 @@ public class PackingListResource extends BaseResource {
         return ResponseEntity.ok(packingListService.saveAll(packingLists));
     }
 
+    @RequestMapping(value = "/line", method = RequestMethod.POST)
+    public ResponseEntity<PackingList> save(@RequestBody PackingList packingList) {
+        return ResponseEntity.ok(packingListService.save(packingList));
+    }
+
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<PackingList> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(packingListService.findById(id));

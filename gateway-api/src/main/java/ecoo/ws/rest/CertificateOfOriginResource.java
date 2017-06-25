@@ -29,6 +29,11 @@ public class CertificateOfOriginResource extends BaseResource {
         return ResponseEntity.ok(certificateOfOriginService.findById(id));
     }
 
+    @RequestMapping(value = "/line/id/{id}", method = RequestMethod.GET)
+    public ResponseEntity<CertificateOfOriginLine> findLineById(@PathVariable Integer id) {
+        return ResponseEntity.ok(certificateOfOriginService.findLineById(id));
+    }
+
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<CertificateOfOrigin> save(@RequestBody CertificateOfOrigin certificateOfOrigin) {
         return ResponseEntity.ok(certificateOfOriginService.save(certificateOfOrigin));

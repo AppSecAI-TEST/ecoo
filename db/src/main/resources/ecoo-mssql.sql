@@ -1713,7 +1713,7 @@ CREATE TABLE [ecoo].[dbo].[doc_comm_inv](
 	[marks] [varchar](50) NULL,
 	[product_code] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
-	[qty] [tinyint] NOT NULL,
+	[qty] [int] NOT NULL,
 	[price] [decimal](19,4) NOT NULL,
 	[amount] [decimal](19,4) NOT NULL,
 CONSTRAINT [pk_doc_comm_inv] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
@@ -1730,7 +1730,7 @@ CREATE TABLE [dbo].[doc_comm_inv_log](
 	[marks] [varchar](50) NULL,
 	[product_code] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
-	[qty] [tinyint] NULL,
+	[qty] [int] NULL,
 	[price] [decimal](19,4) NULL,
 	[amount] [decimal](19,4) NULL,
 CONSTRAINT [pk_doc_comm_inv_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]

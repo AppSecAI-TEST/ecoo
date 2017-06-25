@@ -6,6 +6,7 @@ import ecoo.dao.impl.es.CertificateOfOriginElasticsearchRepository;
 import ecoo.data.CertificateOfOrigin;
 import ecoo.data.CertificateOfOriginLine;
 import ecoo.service.CertificateOfOriginService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -60,5 +61,15 @@ public class CertificateOfOriginServiceImpl extends ElasticsearchAuditTemplate<I
         reload(certificateOfOrigin);
 
         return line;
+    }
+
+    /**
+     * Method called before save is called.
+     *
+     * @param entity The entity to save.
+     */
+    @Override
+    protected void beforeSave(CertificateOfOrigin entity) {
+        entity.setRemarks(StringUtils.stripToNull(entity.getRemarks()));
     }
 }
