@@ -113,7 +113,7 @@ abstract class BaseHibernateDaoImpl<P extends Serializable, M extends BaseModel<
 
         } else {
             getHibernateTemplate().merge(model);
-            return true;
+            return afterSave(model);
         }
     }
 

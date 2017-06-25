@@ -1,11 +1,13 @@
 package ecoo.data;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.envers.Audited;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Justin Rundle
@@ -20,30 +22,19 @@ public class CertificateOfOrigin extends BaseModel<Integer> implements Serializa
 
     @Id
     @org.springframework.data.annotation.Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "shipment_id")
     @Audited
     private Integer primaryId;
 
-    @Column(name = "shipment_id")
+    @Column(name = "remarks")
     @Audited
-    private Integer shipmentId;
+    private String remarks;
 
-    @Column(name = "marks")
-    @Audited
-    private String marks;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
+    private List<CertificateOfOriginLine> lines = new ArrayList<>();
 
-    @Column(name = "descr")
-    @Audited
-    private String descr;
-
-    @Column(name = "qty")
-    @Audited
-    private BigDecimal qty;
-
-    @Column(name = "price")
-    @Audited
-    private BigDecimal price;
 
     /**
      * Returns the unique identifier of the object.
@@ -65,55 +56,28 @@ public class CertificateOfOrigin extends BaseModel<Integer> implements Serializa
         this.primaryId = primaryId;
     }
 
-    public Integer getShipmentId() {
-        return shipmentId;
+    public String getRemarks() {
+        return remarks;
     }
 
-    public void setShipmentId(Integer shipmentId) {
-        this.shipmentId = shipmentId;
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
-    public String getMarks() {
-        return marks;
+    public List<CertificateOfOriginLine> getLines() {
+        return lines;
     }
 
-    public void setMarks(String marks) {
-        this.marks = marks;
-    }
-
-    public String getDescr() {
-        return descr;
-    }
-
-    public void setDescr(String descr) {
-        this.descr = descr;
-    }
-
-    public BigDecimal getQty() {
-        return qty;
-    }
-
-    public void setQty(BigDecimal qty) {
-        this.qty = qty;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setLines(List<CertificateOfOriginLine> lines) {
+        this.lines = lines;
     }
 
     @Override
     public String toString() {
         return "CertificateOfOrigin{" +
                 "primaryId=" + primaryId +
-                ", shipmentId=" + shipmentId +
-                ", marks='" + marks + '\'' +
-                ", descr='" + descr + '\'' +
-                ", qty=" + qty +
-                ", price=" + price +
+                ", remarks='" + remarks + '\'' +
+                ", lines=" + lines +
                 '}';
     }
 }

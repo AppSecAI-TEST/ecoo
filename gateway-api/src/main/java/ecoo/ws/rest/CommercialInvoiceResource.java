@@ -41,6 +41,11 @@ public class CommercialInvoiceResource extends BaseResource {
         return ResponseEntity.ok(commercialInvoiceService.saveAll(commercialInvoices));
     }
 
+    @RequestMapping(value = "/line", method = RequestMethod.POST)
+    public ResponseEntity<CommercialInvoice> save(@RequestBody CommercialInvoice commercialInvoice) {
+        return ResponseEntity.ok(commercialInvoiceService.save(commercialInvoice));
+    }
+
     @RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<CommercialInvoice> delete(@PathVariable Integer id) {
         final CommercialInvoice commercialInvoice = commercialInvoiceService.findById(id);

@@ -19,4 +19,13 @@ public class CertificateOfOriginDaoImpl extends BaseAuditLogDaoImpl<Integer, Cer
     public CertificateOfOriginDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, CertificateOfOrigin.class);
     }
+
+    @Override
+    protected boolean afterSave(CertificateOfOrigin model) {
+        model.getLines().stream().filter(line -> line.getParentId() == null).forEach(line -> {
+            line.setParentId(model.getPrimaryId());
+            getHibernateTemplate().merge(line);
+        });
+        return true;
+    }
 }

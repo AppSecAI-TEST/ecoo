@@ -1,8 +1,7 @@
 package ecoo.service;
 
 import ecoo.data.CertificateOfOrigin;
-
-import java.util.List;
+import ecoo.data.CertificateOfOriginLine;
 
 /**
  * @author Justin Rundle
@@ -10,5 +9,9 @@ import java.util.List;
  */
 public interface CertificateOfOriginService extends CrudService<Integer, CertificateOfOrigin>, AuditedModelAware<CertificateOfOrigin> {
 
-    List<CertificateOfOrigin> findCertificateOfOriginsByShipmentId(Integer shipmentId);
+    CertificateOfOrigin delete(CertificateOfOriginLine line);
+
+    CertificateOfOriginLine findLineById(Integer id);
+
+    CertificateOfOriginLine save(CertificateOfOriginLine certificateOfOriginLine);
 }

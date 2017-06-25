@@ -1,7 +1,6 @@
 package ecoo.data;
 
 import org.hibernate.envers.Audited;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,11 +11,10 @@ import java.math.BigDecimal;
  * @since June 2017
  */
 @Entity
-@Table(name = "doc_comm_inv")
-@Document(type = "ecoo.commercial.invoice", indexName = "ecoo.commercial.invoice", shards = 1, replicas = 0)
-public class CommercialInvoice extends BaseModel<Integer> implements Serializable {
+@Table(name = "doc_coo_ln")
+public class CertificateOfOriginLine extends BaseModel<Integer> implements Serializable {
 
-    private static final long serialVersionUID = 7031097514722247965L;
+    private static final long serialVersionUID = 7354968025491578532L;
 
     @Id
     @org.springframework.data.annotation.Id
@@ -25,17 +23,13 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
     @Audited
     private Integer primaryId;
 
-    @Column(name = "shipment_id")
+    @Column(name = "parent_id")
     @Audited
-    private Integer shipmentId;
+    private Integer parentId;
 
     @Column(name = "marks")
     @Audited
     private String marks;
-
-    @Column(name = "product_code")
-    @Audited
-    private String productCode;
 
     @Column(name = "descr")
     @Audited
@@ -48,10 +42,6 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
     @Column(name = "price")
     @Audited
     private BigDecimal price;
-
-    @Column(name = "amount")
-    @Audited
-    private BigDecimal amount;
 
     /**
      * Returns the unique identifier of the object.
@@ -73,12 +63,12 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
         this.primaryId = primaryId;
     }
 
-    public Integer getShipmentId() {
-        return shipmentId;
+    public Integer getParentId() {
+        return parentId;
     }
 
-    public void setShipmentId(Integer shipmentId) {
-        this.shipmentId = shipmentId;
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 
     public String getMarks() {
@@ -87,14 +77,6 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
 
     public void setMarks(String marks) {
         this.marks = marks;
-    }
-
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
     }
 
     public String getDescr() {
@@ -121,25 +103,15 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
         this.price = price;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
     @Override
     public String toString() {
-        return "CommercialInvoice{" +
+        return "CertificateOfOriginLine{" +
                 "primaryId=" + primaryId +
-                ", shipmentId=" + shipmentId +
+                ", parentId=" + parentId +
                 ", marks='" + marks + '\'' +
-                ", productCode='" + productCode + '\'' +
                 ", descr='" + descr + '\'' +
                 ", qty=" + qty +
                 ", price=" + price +
-                ", amount=" + amount +
                 '}';
     }
 }

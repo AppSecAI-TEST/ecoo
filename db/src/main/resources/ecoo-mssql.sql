@@ -1710,6 +1710,7 @@ GO
 CREATE TABLE [ecoo].[dbo].[doc_comm_inv](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[shipment_id] [int] NOT NULL,
+	[marks] [varchar](50) NULL,
 	[product_code] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
 	[qty] [tinyint] NOT NULL,
@@ -1726,6 +1727,7 @@ CREATE TABLE [dbo].[doc_comm_inv_log](
 	[revType] tinyint NOT NULL,
 	[id] [int] NOT NULL,
 	[shipment_id] [int] NULL,
+	[marks] [varchar](50) NULL,
 	[product_code] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
 	[qty] [tinyint] NULL,
@@ -1745,29 +1747,20 @@ GO
 -- CERTIFICATE OF ORIGIN
 ----------------------------------------------------------------------------------------------------------------
 CREATE TABLE [ecoo].[dbo].[doc_coo](
-	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[shipment_id] [int] NOT NULL,
-	[marks] [varchar](50) NULL,
-	[descr] [varchar](100) NULL,
-	[qty] [tinyint] NULL,
-	[price] [decimal](19,4) NULL,
-CONSTRAINT [pk_doc_coo] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+	[remarks] [varchar](100) NULL,
+CONSTRAINT [pk_doc_coo] PRIMARY KEY CLUSTERED ([shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE doc_coo ADD CONSTRAINT "fk_doc_coo_shipment" FOREIGN KEY ([shipment_id]) REFERENCES [shipment] ("id");
 GO  
- 
 
 CREATE TABLE [dbo].[doc_coo_log](
 	[rev] int NOT NULL,
 	[revType] tinyint NOT NULL,
-	[id] [int] NOT NULL,
-	[shipment_id] [int] NULL,
-	[marks] [varchar](50) NULL,
-	[descr] [varchar](100) NULL,
-	[qty] [tinyint] NULL,
-	[price] [decimal](19,4) NULL,
-CONSTRAINT [pk_doc_coo_log] PRIMARY KEY CLUSTERED ([rev] ASC, [id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+	[shipment_id] [int] NOT NULL,
+	[remarks] [varchar](100) NULL,
+CONSTRAINT [pk_doc_coo_log] PRIMARY KEY CLUSTERED ([rev] ASC, [shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[doc_coo_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_coo_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])
@@ -1775,6 +1768,39 @@ ALTER TABLE [dbo].[doc_coo_log] CHECK CONSTRAINT [fk_doc_coo_log_revision]
 
 ALTER TABLE [dbo].[doc_coo_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_coo_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
 ALTER TABLE [dbo].[doc_coo_log] CHECK CONSTRAINT [fk_doc_coo_log_rev_type]
+GO
+
+CREATE TABLE [ecoo].[dbo].[doc_coo_ln](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[parent_id] [int] NULL,
+	[marks] [varchar](50) NULL,
+	[descr] [varchar](100) NULL,
+	[qty] [tinyint] NULL,
+	[price] [decimal](19,4) NULL,
+CONSTRAINT [pk_doc_coo_ln] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE doc_coo_ln ADD CONSTRAINT [fk_doc_coo_ln_doc_coo] FOREIGN KEY ([parent_id]) REFERENCES [doc_coo] ([shipment_id]);
+GO  
+ 
+
+CREATE TABLE [dbo].[doc_coo_ln_log](
+	[rev] int NOT NULL,
+	[revType] tinyint NOT NULL,
+	[id] [int] NOT NULL,
+	[parent_id] [int] NULL,
+	[marks] [varchar](50) NULL,
+	[descr] [varchar](100) NULL,
+	[qty] [tinyint] NULL,
+	[price] [decimal](19,4) NULL,
+CONSTRAINT [pk_doc_coo_ln_log] PRIMARY KEY CLUSTERED ([rev] ASC, [id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[doc_coo_ln_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_coo_ln_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])
+ALTER TABLE [dbo].[doc_coo_ln_log] CHECK CONSTRAINT [fk_doc_coo_ln_log_revision]
+
+ALTER TABLE [dbo].[doc_coo_ln_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_coo_ln_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
+ALTER TABLE [dbo].[doc_coo_ln_log] CHECK CONSTRAINT [fk_doc_coo_ln_log_rev_type]
 GO
 
 

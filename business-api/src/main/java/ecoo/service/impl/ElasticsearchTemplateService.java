@@ -1,6 +1,7 @@
 package ecoo.service.impl;
 
 import ecoo.dao.BaseDao;
+import ecoo.data.BaseModel;
 import ecoo.service.CrudService;
 import org.elasticsearch.common.collect.Lists;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -18,7 +19,8 @@ import java.util.List;
  * @author Justin Rundle
  * @since April 2017
  */
-public abstract class ElasticsearchTemplateService<P extends Serializable, M extends Serializable> implements CrudService<P, M> {
+public abstract class ElasticsearchTemplateService<P extends Serializable
+        , M extends BaseModel<P>> implements CrudService<P, M> {
 
     private BaseDao<P, M> dao;
 
@@ -89,6 +91,19 @@ public abstract class ElasticsearchTemplateService<P extends Serializable, M ext
         return entity;
     }
 
+    protected final M reload(M entity) {
+        return reload(entity.getPrimaryId());
+    }
+
+    protected final M reload(P id) {
+        M entity = dao.findByPrimaryId(id);
+        if (entity == null) {
+            return null;
+        } else {
+            return repository.save(entity);
+        }
+    }
+
     /**
      * Method to insert or update the given entity.
      *
@@ -102,8 +117,7 @@ public abstract class ElasticsearchTemplateService<P extends Serializable, M ext
         beforeSave(entity);
 
         dao.mergeThenSave(entity);
-        repository.save(entity);
-        return entity;
+        return reload(entity);
     }
 
     /**
