@@ -1,11 +1,13 @@
 package ecoo.data;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.envers.Audited;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Justin Rundle
@@ -29,29 +31,47 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
     @Audited
     private Integer shipmentId;
 
-    @Column(name = "marks")
+    @Column(name = "notif_party_name")
     @Audited
-    private String marks;
+    private String notifyPartyName;
 
-    @Column(name = "product_code")
+    @Column(name = "notif_party_building")
     @Audited
-    private String productCode;
+    private String notifyPartyBuilding;
 
-    @Column(name = "descr")
+    @Column(name = "notif_party_street")
     @Audited
-    private String descr;
+    private String notifyPartyStreet;
 
-    @Column(name = "qty")
+    @Column(name = "notif_party_city")
     @Audited
-    private BigDecimal qty;
+    private String notifyPartyCity;
 
-    @Column(name = "price")
+    @Column(name = "notif_party_postcode")
     @Audited
-    private BigDecimal price;
+    private String notifyPartyPostcode;
 
-    @Column(name = "amount")
+    @Column(name = "notif_party_province")
     @Audited
-    private BigDecimal amount;
+    private String notifyPartyProvince;
+
+    @Column(name = "notif_party_country")
+    @Audited
+    private String notifyPartyCountry;
+
+    @Column(name = "notif_party_phone_no")
+    @Audited
+    private String notifyPartyPhoneNo;
+
+    @Column(name = "notif_party_email")
+    @Audited
+    private String notifyPartyEmail;
+
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
+    private List<CommercialInvoiceLine> lines = new ArrayList<>();
 
     /**
      * Returns the unique identifier of the object.
@@ -81,52 +101,84 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
         this.shipmentId = shipmentId;
     }
 
-    public String getMarks() {
-        return marks;
+    public String getNotifyPartyName() {
+        return notifyPartyName;
     }
 
-    public void setMarks(String marks) {
-        this.marks = marks;
+    public void setNotifyPartyName(String notifyPartyName) {
+        this.notifyPartyName = notifyPartyName;
     }
 
-    public String getProductCode() {
-        return productCode;
+    public String getNotifyPartyBuilding() {
+        return notifyPartyBuilding;
     }
 
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
+    public void setNotifyPartyBuilding(String notifyPartyBuilding) {
+        this.notifyPartyBuilding = notifyPartyBuilding;
     }
 
-    public String getDescr() {
-        return descr;
+    public String getNotifyPartyStreet() {
+        return notifyPartyStreet;
     }
 
-    public void setDescr(String descr) {
-        this.descr = descr;
+    public void setNotifyPartyStreet(String notifyPartyStreet) {
+        this.notifyPartyStreet = notifyPartyStreet;
     }
 
-    public BigDecimal getQty() {
-        return qty;
+    public String getNotifyPartyCity() {
+        return notifyPartyCity;
     }
 
-    public void setQty(BigDecimal qty) {
-        this.qty = qty;
+    public void setNotifyPartyCity(String notifyPartyCity) {
+        this.notifyPartyCity = notifyPartyCity;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public String getNotifyPartyPostcode() {
+        return notifyPartyPostcode;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setNotifyPartyPostcode(String notifyPartyPostcode) {
+        this.notifyPartyPostcode = notifyPartyPostcode;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public String getNotifyPartyProvince() {
+        return notifyPartyProvince;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setNotifyPartyProvince(String notifyPartyProvince) {
+        this.notifyPartyProvince = notifyPartyProvince;
+    }
+
+    public String getNotifyPartyCountry() {
+        return notifyPartyCountry;
+    }
+
+    public void setNotifyPartyCountry(String notifyPartyCountry) {
+        this.notifyPartyCountry = notifyPartyCountry;
+    }
+
+    public String getNotifyPartyPhoneNo() {
+        return notifyPartyPhoneNo;
+    }
+
+    public void setNotifyPartyPhoneNo(String notifyPartyPhoneNo) {
+        this.notifyPartyPhoneNo = notifyPartyPhoneNo;
+    }
+
+    public String getNotifyPartyEmail() {
+        return notifyPartyEmail;
+    }
+
+    public void setNotifyPartyEmail(String notifyPartyEmail) {
+        this.notifyPartyEmail = notifyPartyEmail;
+    }
+
+    public List<CommercialInvoiceLine> getLines() {
+        return lines;
+    }
+
+    public void setLines(List<CommercialInvoiceLine> lines) {
+        this.lines = lines;
     }
 
     @Override
@@ -134,12 +186,16 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
         return "CommercialInvoice{" +
                 "primaryId=" + primaryId +
                 ", shipmentId=" + shipmentId +
-                ", marks='" + marks + '\'' +
-                ", productCode='" + productCode + '\'' +
-                ", descr='" + descr + '\'' +
-                ", qty=" + qty +
-                ", price=" + price +
-                ", amount=" + amount +
+                ", notifyPartyName='" + notifyPartyName + '\'' +
+                ", notifyPartyBuilding='" + notifyPartyBuilding + '\'' +
+                ", notifyPartyStreet='" + notifyPartyStreet + '\'' +
+                ", notifyPartyCity='" + notifyPartyCity + '\'' +
+                ", notifyPartyPostcode='" + notifyPartyPostcode + '\'' +
+                ", notifyPartyProvince='" + notifyPartyProvince + '\'' +
+                ", notifyPartyCountry='" + notifyPartyCountry + '\'' +
+                ", notifyPartyPhoneNo='" + notifyPartyPhoneNo + '\'' +
+                ", notifyPartyEmail='" + notifyPartyEmail + '\'' +
+                ", lines=" + lines +
                 '}';
     }
 }

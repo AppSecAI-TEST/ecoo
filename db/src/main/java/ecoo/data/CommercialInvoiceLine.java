@@ -11,10 +11,10 @@ import java.math.BigDecimal;
  * @since June 2017
  */
 @Entity
-@Table(name = "doc_coo_ln")
-public class CertificateOfOriginLine extends BaseModel<Integer> implements Serializable {
+@Table(name = "doc_comm_inv_ln")
+public class CommercialInvoiceLine extends BaseModel<Integer> implements Serializable {
 
-    private static final long serialVersionUID = 7354968025491578532L;
+    private static final long serialVersionUID = -5005255906788175733L;
 
     @Id
     @org.springframework.data.annotation.Id
@@ -35,10 +35,6 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
     @Audited
     private String descr;
 
-    @Column(name = "origin")
-    @Audited
-    private String origin;
-
     @Column(name = "qty")
     @Audited
     private BigDecimal qty;
@@ -46,6 +42,10 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
     @Column(name = "price")
     @Audited
     private BigDecimal price;
+
+    @Column(name = "amount")
+    @Audited
+    private BigDecimal amount;
 
     /**
      * Returns the unique identifier of the object.
@@ -91,14 +91,6 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
         this.descr = descr;
     }
 
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
-    }
-
     public BigDecimal getQty() {
         return qty;
     }
@@ -115,16 +107,24 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
         this.price = price;
     }
 
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
     @Override
     public String toString() {
-        return "CertificateOfOriginLine{" +
+        return "CommercialInvoiceLine{" +
                 "primaryId=" + primaryId +
                 ", parentId=" + parentId +
                 ", marks='" + marks + '\'' +
                 ", descr='" + descr + '\'' +
-                ", origin='" + origin + '\'' +
                 ", qty=" + qty +
                 ", price=" + price +
+                ", amount=" + amount +
                 '}';
     }
 }

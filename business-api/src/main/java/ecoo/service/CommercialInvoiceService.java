@@ -1,8 +1,7 @@
 package ecoo.service;
 
 import ecoo.data.CommercialInvoice;
-
-import java.util.List;
+import ecoo.data.CommercialInvoiceLine;
 
 /**
  * @author Justin Rundle
@@ -10,5 +9,9 @@ import java.util.List;
  */
 public interface CommercialInvoiceService extends CrudService<Integer, CommercialInvoice>, AuditedModelAware<CommercialInvoice> {
 
-    List<CommercialInvoice> findCommercialInvoicesByShipmentId(Integer shipmentId);
+    CommercialInvoice delete(CommercialInvoiceLine line);
+
+    CommercialInvoiceLine findLineById(Integer id);
+
+    CommercialInvoiceLine save(CommercialInvoiceLine entity);
 }

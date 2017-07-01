@@ -25,16 +25,30 @@ public class DataServiceImpl implements DataService {
 
     private TransportTypeDao transportTypeDao;
 
+    private CurrencyDao currencyDao;
+
     @Autowired
     public DataServiceImpl(ProvinceDao provinceDao, CountryDao countryDao
             , TitleDao titleDao
             , MetricTypeDao metricTypeDao
-            , TransportTypeDao transportTypeDao) {
+            , TransportTypeDao transportTypeDao
+            , CurrencyDao currencyDao) {
         this.provinceDao = provinceDao;
         this.countryDao = countryDao;
         this.titleDao = titleDao;
         this.metricTypeDao = metricTypeDao;
         this.transportTypeDao = transportTypeDao;
+        this.currencyDao = currencyDao;
+    }
+
+    /**
+     * Returns a list of all the currencies.
+     *
+     * @return A list.
+     */
+    @Override
+    public Collection<Currency> currencies() {
+        return currencyDao.findAll();
     }
 
     /**

@@ -59,6 +59,34 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Audited
     private String ucrNumber;
 
+    @Column(name = "exporter_name")
+    @Audited
+    private String exporterName;
+
+    @Column(name = "exporter_building")
+    @Audited
+    private String exporterBuilding;
+
+    @Column(name = "exporter_street")
+    @Audited
+    private String exporterStreet;
+
+    @Column(name = "exporter_city")
+    @Audited
+    private String exporterCity;
+
+    @Column(name = "exporter_postcode")
+    @Audited
+    private String exporterPostcode;
+
+    @Column(name = "exporter_province")
+    @Audited
+    private String exporterProvince;
+
+    @Column(name = "exporter_country")
+    @Audited
+    private String exporterCountry;
+
     @Column(name = "consignee_name")
     @Audited
     private String consigneeName;
@@ -150,6 +178,10 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Column(name = "port_of_accept")
     @Audited
     private String portOfAcceptance;
+
+    @Column(name = "currency")
+    @Audited
+    private String currency;
 
     @JsonIgnore
     public boolean isInStatus(ShipmentStatus... status) {
@@ -245,6 +277,62 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
 
     public void setUcrNumber(String ucrNumber) {
         this.ucrNumber = ucrNumber;
+    }
+
+    public String getExporterName() {
+        return exporterName;
+    }
+
+    public void setExporterName(String exporterName) {
+        this.exporterName = exporterName;
+    }
+
+    public String getExporterBuilding() {
+        return exporterBuilding;
+    }
+
+    public void setExporterBuilding(String exporterBuilding) {
+        this.exporterBuilding = exporterBuilding;
+    }
+
+    public String getExporterStreet() {
+        return exporterStreet;
+    }
+
+    public void setExporterStreet(String exporterStreet) {
+        this.exporterStreet = exporterStreet;
+    }
+
+    public String getExporterCity() {
+        return exporterCity;
+    }
+
+    public void setExporterCity(String exporterCity) {
+        this.exporterCity = exporterCity;
+    }
+
+    public String getExporterPostcode() {
+        return exporterPostcode;
+    }
+
+    public void setExporterPostcode(String exporterPostcode) {
+        this.exporterPostcode = exporterPostcode;
+    }
+
+    public String getExporterProvince() {
+        return exporterProvince;
+    }
+
+    public void setExporterProvince(String exporterProvince) {
+        this.exporterProvince = exporterProvince;
+    }
+
+    public String getExporterCountry() {
+        return exporterCountry;
+    }
+
+    public void setExporterCountry(String exporterCountry) {
+        this.exporterCountry = exporterCountry;
     }
 
     public String getConsigneeName() {
@@ -431,6 +519,14 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.portOfAcceptance = portOfAcceptance;
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     @Override
     public String toString() {
         return "Shipment{" +
@@ -443,6 +539,13 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
                 ", buyerOrderDate=" + buyerOrderDate +
                 ", letterOfCreditNumber='" + letterOfCreditNumber + '\'' +
                 ", ucrNumber='" + ucrNumber + '\'' +
+                ", exporterName='" + exporterName + '\'' +
+                ", exporterBuilding='" + exporterBuilding + '\'' +
+                ", exporterStreet='" + exporterStreet + '\'' +
+                ", exporterCity='" + exporterCity + '\'' +
+                ", exporterPostcode='" + exporterPostcode + '\'' +
+                ", exporterProvince='" + exporterProvince + '\'' +
+                ", exporterCountry='" + exporterCountry + '\'' +
                 ", consigneeName='" + consigneeName + '\'' +
                 ", consigneeBuilding='" + consigneeBuilding + '\'' +
                 ", consigneeStreet='" + consigneeStreet + '\'' +
@@ -466,6 +569,7 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
                 ", transportTypeId='" + transportTypeId + '\'' +
                 ", portOfLoading='" + portOfLoading + '\'' +
                 ", portOfAcceptance='" + portOfAcceptance + '\'' +
+                ", currency='" + currency + '\'' +
                 '}';
     }
 }

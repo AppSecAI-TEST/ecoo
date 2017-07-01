@@ -27,6 +27,11 @@ public class DataResource extends BaseResource {
 
     private DataService dataService;
 
+    @RequestMapping(value = "/currencies", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Currency>> currencies() {
+        return ResponseEntity.ok(dataService.currencies());
+    }
+
     @RequestMapping(value = "/transportTypes", method = RequestMethod.GET)
     public ResponseEntity<Collection<TransportType>> transportTypes() {
         return ResponseEntity.ok(dataService.transportTypes());

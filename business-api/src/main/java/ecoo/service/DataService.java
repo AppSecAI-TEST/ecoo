@@ -11,6 +11,13 @@ import java.util.Collection;
 public interface DataService {
 
     /**
+     * Returns a list of all the currencies.
+     *
+     * @return A list.
+     */
+    Collection<Currency> currencies();
+
+    /**
      * Returns a list of all the transport types.
      *
      * @return A list.

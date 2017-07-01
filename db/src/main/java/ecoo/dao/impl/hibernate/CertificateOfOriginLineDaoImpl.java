@@ -13,11 +13,11 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository(value = "certificateOfOriginLineDao")
-public class CertificateOfOriginDaoLineImpl extends BaseAuditLogDaoImpl<Integer, CertificateOfOriginLine>
+public class CertificateOfOriginLineDaoImpl extends BaseAuditLogDaoImpl<Integer, CertificateOfOriginLine>
         implements CertificateOfOriginLineDao {
 
     @Autowired
-    public CertificateOfOriginDaoLineImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
+    public CertificateOfOriginLineDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, CertificateOfOriginLine.class);
     }
 }

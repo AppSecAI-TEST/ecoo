@@ -3,6 +3,23 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
+    <sql-query name="FIND_CHAMBER_RATES_BY_CHAMBER_AND_MEMBER">
+        <return class="ecoo.data.ChamberRate"/>
+        <![CDATA[
+            select distinct c.* from dbo.chamber_rate c with(nolock)
+            where c.chamber_id = :chamberId
+            and c.member = :member
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_CHAMBER_RATES_BY_CHAMBER">
+        <return class="ecoo.data.ChamberRate"/>
+        <![CDATA[
+            select distinct c.* from dbo.chamber_rate c with(nolock)
+            where c.chamber_id = :chamberId
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_DOCUMENTS_BY_SHIPMENT_AND_TYPE">
         <return class="ecoo.data.ShipmentDocument"/>
         <![CDATA[
