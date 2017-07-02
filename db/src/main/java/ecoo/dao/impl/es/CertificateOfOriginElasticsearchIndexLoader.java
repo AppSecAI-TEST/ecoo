@@ -103,7 +103,11 @@ public class CertificateOfOriginElasticsearchIndexLoader {
                 LOG.error(e.getMessage(), e);
             }
         }
-        return (List<CertificateOfOrigin>) certificateOfOriginElasticsearchRepository.save(data);
+        if (data.isEmpty()) {
+            return data;
+        } else {
+            return (List<CertificateOfOrigin>) certificateOfOriginElasticsearchRepository.save(data);
+        }
     }
 
     public void deleteAll() {

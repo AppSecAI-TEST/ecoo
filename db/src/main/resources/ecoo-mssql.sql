@@ -1825,6 +1825,7 @@ CREATE TABLE [ecoo].[dbo].[doc_comm_inv](
 	[notif_party_country] [varchar](100) NULL,
 	[notif_party_phone_no] [varchar](20) NOT NULL,
 	[notif_party_email] [varchar](255) NULL,
+	[pay_instruct] [varchar](255) NULL,
 CONSTRAINT [pk_doc_comm_inv] PRIMARY KEY CLUSTERED ([shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
@@ -1844,6 +1845,7 @@ CREATE TABLE [dbo].[doc_comm_inv_log](
 	[notif_party_country] [varchar](100) NULL,
 	[notif_party_phone_no] [varchar](20) NOT NULL,
 	[notif_party_email] [varchar](255) NULL,
+	[pay_instruct] [varchar](255) NULL,
 CONSTRAINT [pk_doc_comm_inv_log] PRIMARY KEY CLUSTERED ([rev] ASC, [shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 

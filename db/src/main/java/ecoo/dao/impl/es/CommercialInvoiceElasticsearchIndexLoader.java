@@ -103,7 +103,11 @@ public class CommercialInvoiceElasticsearchIndexLoader {
                 LOG.error(e.getMessage(), e);
             }
         }
-        return (List<CommercialInvoice>) commercialInvoiceElasticsearchRepository.save(data);
+        if (data.isEmpty()) {
+            return data;
+        } else {
+            return (List<CommercialInvoice>) commercialInvoiceElasticsearchRepository.save(data);
+        }
     }
 
     public void deleteAll() {

@@ -31,6 +31,10 @@ public class CommercialInvoiceLine extends BaseModel<Integer> implements Seriali
     @Audited
     private String marks;
 
+    @Column(name = "product_code")
+    @Audited
+    private String productCode;
+
     @Column(name = "descr")
     @Audited
     private String descr;
@@ -83,6 +87,14 @@ public class CommercialInvoiceLine extends BaseModel<Integer> implements Seriali
         this.marks = marks;
     }
 
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+
     public String getDescr() {
         return descr;
     }
@@ -121,6 +133,7 @@ public class CommercialInvoiceLine extends BaseModel<Integer> implements Seriali
                 "primaryId=" + primaryId +
                 ", parentId=" + parentId +
                 ", marks='" + marks + '\'' +
+                ", productCode='" + productCode + '\'' +
                 ", descr='" + descr + '\'' +
                 ", qty=" + qty +
                 ", price=" + price +

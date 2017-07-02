@@ -103,7 +103,11 @@ public class ShipmentCommentElasticsearchIndexLoader {
                 LOG.error(e.getMessage(), e);
             }
         }
-        return (List<ShipmentComment>) shipmentCommentElasticsearchRepository.save(data);
+        if (data.isEmpty()) {
+            return data;
+        } else {
+            return (List<ShipmentComment>) shipmentCommentElasticsearchRepository.save(data);
+        }
     }
 
     public void deleteAll() {

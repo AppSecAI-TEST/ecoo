@@ -22,14 +22,9 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
 
     @Id
     @org.springframework.data.annotation.Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Audited
-    private Integer primaryId;
-
     @Column(name = "shipment_id")
     @Audited
-    private Integer shipmentId;
+    private Integer primaryId;
 
     @Column(name = "notif_party_name")
     @Audited
@@ -67,6 +62,10 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
     @Audited
     private String notifyPartyEmail;
 
+    @Column(name = "pay_instruct")
+    @Audited
+    private String paymentInstruction;
+
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
@@ -91,14 +90,6 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
     @Override
     public void setPrimaryId(Integer primaryId) {
         this.primaryId = primaryId;
-    }
-
-    public Integer getShipmentId() {
-        return shipmentId;
-    }
-
-    public void setShipmentId(Integer shipmentId) {
-        this.shipmentId = shipmentId;
     }
 
     public String getNotifyPartyName() {
@@ -181,11 +172,18 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
         this.lines = lines;
     }
 
+    public String getPaymentInstruction() {
+        return paymentInstruction;
+    }
+
+    public void setPaymentInstruction(String paymentInstruction) {
+        this.paymentInstruction = paymentInstruction;
+    }
+
     @Override
     public String toString() {
         return "CommercialInvoice{" +
                 "primaryId=" + primaryId +
-                ", shipmentId=" + shipmentId +
                 ", notifyPartyName='" + notifyPartyName + '\'' +
                 ", notifyPartyBuilding='" + notifyPartyBuilding + '\'' +
                 ", notifyPartyStreet='" + notifyPartyStreet + '\'' +
@@ -195,6 +193,7 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
                 ", notifyPartyCountry='" + notifyPartyCountry + '\'' +
                 ", notifyPartyPhoneNo='" + notifyPartyPhoneNo + '\'' +
                 ", notifyPartyEmail='" + notifyPartyEmail + '\'' +
+                ", paymentInstruction='" + paymentInstruction + '\'' +
                 ", lines=" + lines +
                 '}';
     }

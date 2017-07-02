@@ -37,8 +37,8 @@ public class CommercialInvoiceResource extends BaseResource {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Collection<CommercialInvoice>> saveAll(@RequestBody Collection<CommercialInvoice> commercialInvoices) {
-        return ResponseEntity.ok(commercialInvoiceService.saveAll(commercialInvoices));
+    public ResponseEntity<CommercialInvoice> save(@RequestBody CommercialInvoice commercialInvoice) {
+        return ResponseEntity.ok(commercialInvoiceService.save(commercialInvoice));
     }
 
     @RequestMapping(value = "/line", method = RequestMethod.POST)

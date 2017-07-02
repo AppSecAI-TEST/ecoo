@@ -103,7 +103,11 @@ public class PackingListElasticsearchIndexLoader {
                 LOG.error(e.getMessage(), e);
             }
         }
-        return (List<PackingList>) packingListElasticsearchRepository.save(data);
+        if (data.isEmpty()) {
+            return data;
+        } else {
+            return (List<PackingList>) packingListElasticsearchRepository.save(data);
+        }
     }
 
     public void deleteAll() {
