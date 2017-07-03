@@ -42,6 +42,8 @@ public abstract class WorkflowRequest implements Serializable {
 
     private List<String> candidateGroups = new ArrayList<>();
 
+    private String comments;
+
     public abstract CamundaProcess getType();
 
     public final String getProcessInstanceId() {
@@ -100,6 +102,14 @@ public abstract class WorkflowRequest implements Serializable {
 
     public void setCandidateGroups(List<String> candidateGroups) {
         this.candidateGroups = candidateGroups;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     @Override

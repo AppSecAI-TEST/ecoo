@@ -1,12 +1,14 @@
 package ecoo.ws.user.rest;
 
-import ecoo.data.audit.Revision;
 import ecoo.data.ChamberUser;
+import ecoo.data.audit.Revision;
 import ecoo.service.ChamberUserService;
 import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 /**
  * @author Justin Rundle
@@ -21,6 +23,11 @@ public class ChamberUserResource extends BaseResource {
     @Autowired
     public ChamberUserResource(ChamberUserService chamberUserService) {
         this.chamberUserService = chamberUserService;
+    }
+
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<Collection<ChamberUser>> findByUser(@PathVariable Integer userId) {
+        return ResponseEntity.ok(chamberUserService.findByUser(userId));
     }
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)

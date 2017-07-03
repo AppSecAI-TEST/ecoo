@@ -64,6 +64,21 @@ public class UserResource extends BaseResource {
         return ResponseEntity.ok(workflowService.register(registerUserAccountRequest));
     }
 
+
+    @RequestMapping(value = "/register/validate", method = RequestMethod.POST)
+    public ResponseEntity<RegisterUserAccountRequest> validate(@RequestBody RegisterUserAccountRequest registerUserAccountRequest) {
+        registerUserAccountRequest.setComments(null);
+
+        try {
+            companyValidator.validate(registerUserAccountRequest.getCompany());
+            userValidator.validate(registerUserAccountRequest.getUser());
+
+        } catch (final Exception e) {
+            registerUserAccountRequest.setComments(e.getMessage());
+        }
+        return ResponseEntity.ok(registerUserAccountRequest);
+    }
+
     @RequestMapping(value = "/role/{roleName}", method = RequestMethod.GET)
     public ResponseEntity<Collection<User>> findByRole(@PathVariable String roleName) {
         final Role role = Role.valueOf(roleName);
