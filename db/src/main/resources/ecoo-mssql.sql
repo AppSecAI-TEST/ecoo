@@ -1610,7 +1610,17 @@ CONSTRAINT pk_incoterm_amount_type PRIMARY KEY CLUSTERED
 GO
 
 INSERT INTO incoterm_amount_type ("id", "descr") VALUES
-('X', 'xxxx');
+('EXW', 'EX WORKS'),
+('FCA', 'FREE CARRIER'),
+('FAS', 'FREE ALONGSIDE SHIP'),
+('FOB', 'FREE ON BOARD'),
+('CPT', 'CARRIAGE PAID TO'),
+('CIP', 'CARRIAGE AND INSURANCE'),
+('CFR', 'COST AND FREIGHT'),
+('CIF', 'COST INSTANCE AND FREIGHT'),
+('DAT', 'DELIVERED AT TERMINAL'),
+('DAP', 'DELIVERED AT PLACE'),
+('DDP', 'DELIVERED DUTY PAID');
 GO
 
 CREATE TABLE incoterm_amount_type_log (
@@ -1816,14 +1826,14 @@ GO
 ----------------------------------------------------------------------------------------------------------------
 CREATE TABLE [ecoo].[dbo].[doc_comm_inv](
 	[shipment_id] [int] NOT NULL,
-	[notif_party_name] [varchar](200) NOT NULL,	
+	[notif_party_name] [varchar](200) NULL,	
 	[notif_party_building] [varchar](100) NULL,
 	[notif_party_street] [varchar](100) NULL,
 	[notif_party_city] [varchar](100) NULL,
 	[notif_party_postcode] [varchar](10) NULL,
 	[notif_party_province] [varchar](100) NULL,
 	[notif_party_country] [varchar](100) NULL,
-	[notif_party_phone_no] [varchar](20) NOT NULL,
+	[notif_party_phone_no] [varchar](20) NULL,
 	[notif_party_email] [varchar](255) NULL,
 	[pay_instruct] [varchar](255) NULL,
 CONSTRAINT [pk_doc_comm_inv] PRIMARY KEY CLUSTERED ([shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
@@ -1843,7 +1853,7 @@ CREATE TABLE [dbo].[doc_comm_inv_log](
 	[notif_party_postcode] [varchar](10) NULL,
 	[notif_party_province] [varchar](100) NULL,
 	[notif_party_country] [varchar](100) NULL,
-	[notif_party_phone_no] [varchar](20) NOT NULL,
+	[notif_party_phone_no] [varchar](20) NULL,
 	[notif_party_email] [varchar](255) NULL,
 	[pay_instruct] [varchar](255) NULL,
 CONSTRAINT [pk_doc_comm_inv_log] PRIMARY KEY CLUSTERED ([rev] ASC, [shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
@@ -1953,14 +1963,13 @@ CREATE TABLE [ecoo].[dbo].[doc_coo_ln](
 	[parent_id] [int] NULL,
 	[marks] [varchar](50) NOT NULL,
 	[descr] [varchar](100) NOT NULL,
-	[origin] [varchar](2) NOT NULL,
+	[origin] [varchar](200) NOT NULL,
 	[qty] [tinyint] NOT NULL,
 	[price] [decimal](19,4) NOT NULL,
 CONSTRAINT [pk_doc_coo_ln] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE doc_coo_ln ADD CONSTRAINT [fk_doc_coo_ln_doc_coo] FOREIGN KEY ([parent_id]) REFERENCES [doc_coo] ([shipment_id]);
-ALTER TABLE doc_coo_ln ADD CONSTRAINT [fk_doc_coo_ln_country] FOREIGN KEY ([origin]) REFERENCES [country] ([id]);
 GO  
  
 
@@ -1971,7 +1980,7 @@ CREATE TABLE [dbo].[doc_coo_ln_log](
 	[parent_id] [int] NULL,
 	[marks] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
-	[origin] [varchar](2) NULL,
+	[origin] [varchar](200) NULL,
 	[qty] [tinyint] NULL,
 	[price] [decimal](19,4) NULL,
 CONSTRAINT [pk_doc_coo_ln_log] PRIMARY KEY CLUSTERED ([rev] ASC, [id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
