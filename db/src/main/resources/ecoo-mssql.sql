@@ -1659,13 +1659,16 @@ CREATE TABLE [ecoo].[dbo].[shipment](
 	[port_of_accept] [varchar](200) NULL,
 	[transport_type] [varchar](3) NOT NULL,
 	[currency] [varchar](3) NULL,
+	[approved_by] [int] NULL,
+	[date_approved] [datetime] NULL,
 CONSTRAINT [pk_shipment] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
-ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_chamber" FOREIGN KEY (chamber_id) REFERENCES chamber ("id");  
-ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_status" FOREIGN KEY ([status]) REFERENCES [shipment_status] ("id");
-ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_transport_type" FOREIGN KEY ([transport_type]) REFERENCES [transport_type] ("id");
-ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_currency" FOREIGN KEY (currency) REFERENCES currency ("id");
+ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_chamber" FOREIGN KEY (chamber_id) REFERENCES [chamber] ([id]);  
+ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_status" FOREIGN KEY ([status]) REFERENCES [shipment_status] ([id]);
+ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_transport_type" FOREIGN KEY ([transport_type]) REFERENCES [transport_type] ([id]);
+ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_currency" FOREIGN KEY (currency) REFERENCES [currency] ([id]);
+ALTER TABLE [shipment] ADD CONSTRAINT "fk_shipment_approved_by" FOREIGN KEY (approved_by) REFERENCES [user_acc] ([id]);
 
 CREATE TABLE [dbo].[shipment_log](
 	[rev] int NOT NULL,
@@ -1710,6 +1713,8 @@ CREATE TABLE [dbo].[shipment_log](
 	[port_of_accept] [varchar](200) NULL,
 	[transport_type] [varchar](3) NULL,
 	[currency] [varchar](3) NULL,
+	[approved_by] [int] NULL,
+	[date_approved] [datetime] NULL,
 CONSTRAINT [pk_shipment_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 

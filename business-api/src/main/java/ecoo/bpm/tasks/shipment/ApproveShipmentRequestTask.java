@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 /**
  * @author Justin Rundle
  * @since May 2017
@@ -38,6 +40,9 @@ public class ApproveShipmentRequestTask implements JavaDelegate {
 
         final Shipment shipment = request.getShipment();
         shipment.setStatus(ShipmentStatus.ApprovedAndPendingPayment.id());
+        shipment.setApprovedBy(request.getRequestingUser().getPrimaryId());
+        shipment.setDateApproved(new Date());
+
         shipmentService.save(shipment);
         log.info("Saving shipment... {}", shipment);
     }

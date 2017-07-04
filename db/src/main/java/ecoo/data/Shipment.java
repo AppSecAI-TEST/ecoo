@@ -183,6 +183,14 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Audited
     private String currency;
 
+    @Column(name = "approved_by")
+    @Audited
+    private Integer approvedBy;
+
+    @Column(name = "date_approved")
+    @Audited
+    private Date dateApproved;
+
     @JsonIgnore
     public boolean isInStatus(ShipmentStatus... status) {
         Assert.notNull(status);
@@ -527,6 +535,22 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.currency = currency;
     }
 
+    public Integer getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(Integer approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+
+    public Date getDateApproved() {
+        return dateApproved;
+    }
+
+    public void setDateApproved(Date dateApproved) {
+        this.dateApproved = dateApproved;
+    }
+
     @Override
     public String toString() {
         return "Shipment{" +
@@ -570,6 +594,8 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
                 ", portOfLoading='" + portOfLoading + '\'' +
                 ", portOfAcceptance='" + portOfAcceptance + '\'' +
                 ", currency='" + currency + '\'' +
+                ", approvedBy=" + approvedBy +
+                ", dateApproved=" + dateApproved +
                 '}';
     }
 }

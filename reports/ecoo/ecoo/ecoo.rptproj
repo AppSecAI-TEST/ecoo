@@ -18,6 +18,10 @@
       <Name>CertificateOfOrigin.rdl</Name>
       <FullPath>CertificateOfOrigin.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>CommercialInvoice.rdl</Name>
+      <FullPath>CommercialInvoice.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
