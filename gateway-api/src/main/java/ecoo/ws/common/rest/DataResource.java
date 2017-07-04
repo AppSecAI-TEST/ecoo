@@ -85,6 +85,16 @@ public class DataResource extends BaseResource {
         return ResponseEntity.ok(dataService.countries());
     }
 
+    @RequestMapping(value = "/countries/id/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Country> countriesById(@PathVariable String id) {
+        for (Country country : dataService.countries()) {
+            if (country.getPrimaryId().equalsIgnoreCase(id)) {
+                return ResponseEntity.ok(country);
+            }
+        }
+        return ResponseEntity.ok(null);
+    }
+
     @RequestMapping(value = "/documentTypes", method = RequestMethod.GET)
     public ResponseEntity<Collection<DocumentType>> documentTypes() {
         final Collection<DocumentType> data = new ArrayList<>();
