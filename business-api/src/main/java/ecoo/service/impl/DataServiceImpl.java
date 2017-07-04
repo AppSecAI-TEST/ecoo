@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Justin Rundle
@@ -27,18 +28,33 @@ public class DataServiceImpl implements DataService {
 
     private CurrencyDao currencyDao;
 
+    private AmountTypeDao amountTypeDao;
+
     @Autowired
     public DataServiceImpl(ProvinceDao provinceDao, CountryDao countryDao
             , TitleDao titleDao
             , MetricTypeDao metricTypeDao
             , TransportTypeDao transportTypeDao
-            , CurrencyDao currencyDao) {
+            , CurrencyDao currencyDao
+            , AmountTypeDao amountTypeDao) {
         this.provinceDao = provinceDao;
         this.countryDao = countryDao;
         this.titleDao = titleDao;
         this.metricTypeDao = metricTypeDao;
         this.transportTypeDao = transportTypeDao;
         this.currencyDao = currencyDao;
+        this.amountTypeDao = amountTypeDao;
+    }
+
+    /**
+     * Returns a list of all the currencies.
+     *
+     * @param schema The amount type schema.
+     * @return A list.
+     */
+    @Override
+    public List<AmountType> amountTypes(String schema) {
+        return amountTypeDao.findAmountTypesBySchema(schema);
     }
 
     /**

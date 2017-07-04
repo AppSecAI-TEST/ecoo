@@ -56,6 +56,15 @@ public class CommercialInvoiceResource extends BaseResource {
         return ResponseEntity.ok(commercialInvoiceService.delete(commercialInvoiceLine));
     }
 
+    @RequestMapping(value = "/lines/shipment/{shipmentId}", method = RequestMethod.DELETE)
+    public ResponseEntity<CommercialInvoice> permanentlyDeleteLinesByShipment(@PathVariable Integer shipmentId) {
+        final CommercialInvoice commercialInvoice = commercialInvoiceService.findById(shipmentId);
+        for (CommercialInvoiceLine commercialInvoiceLine : commercialInvoice.getLines()) {
+            commercialInvoiceService.delete(commercialInvoiceLine);
+        }
+        return ResponseEntity.ok(commercialInvoiceService.findById(shipmentId));
+    }
+
     @RequestMapping(value = "/createdBy/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Revision> findCreatedBy(@PathVariable Integer id) {
         final CommercialInvoice entity = commercialInvoiceService.findById(id);

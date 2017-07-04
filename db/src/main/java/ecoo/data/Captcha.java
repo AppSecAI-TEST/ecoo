@@ -10,6 +10,8 @@ import javax.persistence.*;
 @Table(name = "captcha")
 public class Captcha extends BaseModel<Integer> {
 
+    private static final long serialVersionUID = -7330276270826709151L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

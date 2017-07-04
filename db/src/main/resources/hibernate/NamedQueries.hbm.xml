@@ -3,6 +3,22 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
+    <sql-query name="FIND_CI_AMOUNTS_BY_SHIPMENT">
+        <return class="ecoo.data.CommercialInvoiceAmount"/>
+        <![CDATA[
+            select distinct c.* from dbo.doc_comm_inv_amount c with(nolock)
+            where c.shipment_id = :shipmentId
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_AMOUNT_TYPES_BY_SCHEMA">
+        <return class="ecoo.data.AmountType"/>
+        <![CDATA[
+            select distinct c.* from dbo.amount_type c with(nolock)
+            where c.amount_schema = :schema
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_CHAMBER_RATES_BY_CHAMBER_AND_MEMBER">
         <return class="ecoo.data.ChamberRate"/>
         <![CDATA[

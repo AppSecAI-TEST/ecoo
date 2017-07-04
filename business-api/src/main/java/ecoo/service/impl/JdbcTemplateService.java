@@ -84,6 +84,25 @@ public abstract class JdbcTemplateService<P, M> implements CrudService<P, M> {
     }
 
     /**
+     * Method to delete all the given entities.
+     *
+     * @param entities The entities to delete.
+     * @return The deleted entities.
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public Collection<M> deleteAll(Collection<M> entities) {
+        Assert.notNull(entities);
+
+        for (M entity : entities) {
+            beforeDelete(entity);
+        }
+
+        dao.deleteAll(entities);
+        return entities;
+    }
+
+    /**
      * Method called before save is called.
      *
      * @param entity The entity to save.

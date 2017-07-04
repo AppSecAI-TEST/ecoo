@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +27,11 @@ import java.util.stream.Collectors;
 public class DataResource extends BaseResource {
 
     private DataService dataService;
+
+    @RequestMapping(value = "/amountTypes/schema/{schema}", method = RequestMethod.GET)
+    public ResponseEntity<List<AmountType>> amountTypes(@PathVariable String schema) {
+        return ResponseEntity.ok(dataService.amountTypes(schema));
+    }
 
     @RequestMapping(value = "/currencies", method = RequestMethod.GET)
     public ResponseEntity<Collection<Currency>> currencies() {

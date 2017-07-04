@@ -146,6 +146,23 @@ public abstract class ElasticsearchTemplateService<P extends Serializable
     }
 
     /**
+     * Method to delete all the given entities.
+     *
+     * @param entities The entities to delete.
+     * @return The deleted entities.
+     */
+    @Override
+    public Collection<M> deleteAll(Collection<M> entities) {
+        for (M entity : entities) {
+            beforeDelete(entity);
+
+            dao.delete(entity);
+            repository.delete(entity);
+        }
+        return entities;
+    }
+
+    /**
      * Method to delete the given entity.
      *
      * @param entity The entity to deleted.

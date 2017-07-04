@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "doc_comm_inv_amount")
-public class CommercialInvoiceIncotermAmount extends BaseModel<Integer> implements Serializable {
+public class CommercialInvoiceAmount extends BaseModel<Integer> implements Serializable {
 
     private static final long serialVersionUID = 615985896272545568L;
 
@@ -26,9 +26,9 @@ public class CommercialInvoiceIncotermAmount extends BaseModel<Integer> implemen
     @Audited
     private Integer shipmentId;
 
-    @Column(name = "incoterm_amount_type")
+    @Column(name = "amount_type")
     @Audited
-    private String incotermAmountTypeId;
+    private String amountType;
 
     @Column(name = "amount")
     @Audited
@@ -62,12 +62,12 @@ public class CommercialInvoiceIncotermAmount extends BaseModel<Integer> implemen
         this.shipmentId = shipmentId;
     }
 
-    public String getIncotermAmountTypeId() {
-        return incotermAmountTypeId;
+    public String getAmountType() {
+        return amountType;
     }
 
-    public void setIncotermAmountTypeId(String incotermAmountTypeId) {
-        this.incotermAmountTypeId = incotermAmountTypeId;
+    public void setAmountType(String amountType) {
+        this.amountType = amountType;
     }
 
     public String getAmount() {
@@ -77,13 +77,13 @@ public class CommercialInvoiceIncotermAmount extends BaseModel<Integer> implemen
     public void setAmount(String amount) {
         this.amount = amount;
     }
-
+    
     @Override
     public String toString() {
-        return "CommercialInvoiceIncotermAmount{" +
+        return "CommercialInvoiceAmount{" +
                 "primaryId=" + primaryId +
                 ", shipmentId=" + shipmentId +
-                ", incotermAmountTypeId='" + incotermAmountTypeId + '\'' +
+                ", amountType='" + amountType + '\'' +
                 ", amount='" + amount + '\'' +
                 '}';
     }

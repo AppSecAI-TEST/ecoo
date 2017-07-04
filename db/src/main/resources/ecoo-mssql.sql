@@ -1600,43 +1600,6 @@ VALUES (1,'Running'),
 GO
 
 -- =====================================================================================
--- INCOTERMS
--- =====================================================================================
-CREATE TABLE [dbo].incoterm_amount_type(
-	[id] [varchar](3) NOT NULL,
-	[descr] [varchar](50) NOT NULL,
-CONSTRAINT pk_incoterm_amount_type PRIMARY KEY CLUSTERED 
-([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
-GO
-
-INSERT INTO incoterm_amount_type ("id", "descr") VALUES
-('EXW', 'EX WORKS'),
-('FCA', 'FREE CARRIER'),
-('FAS', 'FREE ALONGSIDE SHIP'),
-('FOB', 'FREE ON BOARD'),
-('CPT', 'CARRIAGE PAID TO'),
-('CIP', 'CARRIAGE AND INSURANCE'),
-('CFR', 'COST AND FREIGHT'),
-('CIF', 'COST INSTANCE AND FREIGHT'),
-('DAT', 'DELIVERED AT TERMINAL'),
-('DAP', 'DELIVERED AT PLACE'),
-('DDP', 'DELIVERED DUTY PAID');
-GO
-
-CREATE TABLE incoterm_amount_type_log (
-  "rev" int NOT NULL,
-  "revType" tinyint NOT NULL,
-	[id] [varchar](3) NOT NULL,
-	[descr] [varchar](50) NULL,
-CONSTRAINT pk_incoterm_amount_type_log PRIMARY KEY CLUSTERED 
-([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
-GO
-
-ALTER TABLE incoterm_amount_type_log ADD CONSTRAINT "fk_incoterm_amount_type_log_rev" FOREIGN KEY ("rev") REFERENCES "revision" ("id");  
-ALTER TABLE incoterm_amount_type_log ADD CONSTRAINT "fk_incoterm_amount_type_log_type" FOREIGN KEY ("revType") REFERENCES "rev_type" ("id");
-GO
-
--- =====================================================================================
 -- SHIPMENT
 -- =====================================================================================
 CREATE TABLE [dbo].shipment_status(
@@ -1902,16 +1865,82 @@ ALTER TABLE [dbo].[doc_comm_inv_ln_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_co
 ALTER TABLE [dbo].[doc_comm_inv_ln_log] CHECK CONSTRAINT [fk_doc_comm_inv_ln_log_rev_type]
 GO
 
+CREATE TABLE [ecoo].[dbo].[amount_schema](
+	[id] [varchar](3) NOT NULL,
+	[descr] [varchar](50) NOT NULL,
+CONSTRAINT [pk_amount_schema] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+INSERT INTO [amount_schema] ("id", "descr") VALUES
+('INC', 'INCOTERMS');
+GO
+
+CREATE TABLE [dbo].[amount_schema_log](
+	[rev] int NOT NULL,
+	[revType] tinyint NOT NULL,
+	[id] [varchar](3) NOT NULL,
+	[descr] [varchar](50) NULL,
+CONSTRAINT [pk_amount_schema_log] PRIMARY KEY CLUSTERED ([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[amount_schema_log]  WITH NOCHECK ADD  CONSTRAINT [fk_amount_schema_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])
+ALTER TABLE [dbo].[amount_schema_log] CHECK CONSTRAINT [fk_amount_schema_log_revision]
+
+ALTER TABLE [dbo].[amount_schema_log]  WITH NOCHECK ADD  CONSTRAINT [fk_amount_schema_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
+ALTER TABLE [dbo].[amount_schema_log] CHECK CONSTRAINT [fk_amount_schema_log_rev_type]
+GO
+
+CREATE TABLE [ecoo].[dbo].[amount_type](
+	[id] [varchar](3) NOT NULL,
+	[descr] [varchar](50) NOT NULL,
+	[amount_schema] [varchar](3) NOT NULL,
+CONSTRAINT [pk_amount_type] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[amount_type]  WITH NOCHECK ADD  CONSTRAINT [fk_amount_type_amount_schema] FOREIGN KEY([amount_schema]) REFERENCES [dbo].[amount_schema] ([id])
+ALTER TABLE [dbo].[amount_type] CHECK CONSTRAINT [fk_amount_type_amount_schema]
+GO
+
+INSERT INTO [amount_type] ("id", "descr", "amount_schema") VALUES
+('EXW', 'EX WORKS', 'INC'),
+('FCA', 'FREE CARRIER', 'INC'),
+('FAS', 'FREE ALONGSIDE SHIP', 'INC'),
+('FOB', 'FREE ON BOARD', 'INC'),
+('CPT', 'CARRIAGE PAID TO', 'INC'),
+('CIP', 'CARRIAGE AND INSURANCE', 'INC'),
+('CFR', 'COST AND FREIGHT', 'INC'),
+('CIF', 'COST INSTANCE AND FREIGHT', 'INC'),
+('DAT', 'DELIVERED AT TERMINAL', 'INC'),
+('DAP', 'DELIVERED AT PLACE', 'INC'),
+('DDP', 'DELIVERED DUTY PAID', 'INC');
+GO
+
+CREATE TABLE [dbo].[amount_type_log](
+	[rev] int NOT NULL,
+	[revType] tinyint NOT NULL,
+	[id] [varchar](3) NOT NULL,
+	[descr] [varchar](50) NULL,
+	[amount_schema] [varchar](3) NULL,
+CONSTRAINT [pk_amount_type_log] PRIMARY KEY CLUSTERED ([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[amount_type_log]  WITH NOCHECK ADD  CONSTRAINT [fk_amount_type_log_revision] FOREIGN KEY([rev]) REFERENCES [dbo].[revision] ([id])
+ALTER TABLE [dbo].[amount_type_log] CHECK CONSTRAINT [fk_amount_type_log_revision]
+
+ALTER TABLE [dbo].[amount_type_log]  WITH NOCHECK ADD  CONSTRAINT [fk_amount_type_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
+ALTER TABLE [dbo].[amount_type_log] CHECK CONSTRAINT [fk_amount_type_log_rev_type]
+GO
+
 CREATE TABLE [ecoo].[dbo].[doc_comm_inv_amount](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
-	[shipment_id] [int] NOT NULL,
-	[incoterm_amount_type] [varchar](3) NOT NULL,
+	[shipment_id] [int] NULL,
+	[amount_type] [varchar](3) NOT NULL,
 	[amount] [decimal](19,4) NOT NULL,
 CONSTRAINT [pk_doc_comm_inv_amount] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE [doc_comm_inv_amount] ADD CONSTRAINT "fk_doc_comm_inv_amount_doc_comm_inv" FOREIGN KEY ([shipment_id]) REFERENCES [doc_comm_inv] ([shipment_id]);
-ALTER TABLE [doc_comm_inv_amount] ADD CONSTRAINT "fk_doc_comm_inv_amount_incoterm_amount_type" FOREIGN KEY ([incoterm_amount_type]) REFERENCES [incoterm_amount_type] ([id]);
+ALTER TABLE [doc_comm_inv_amount] ADD CONSTRAINT "fk_doc_comm_inv_amount_amount_type" FOREIGN KEY ([amount_type]) REFERENCES [amount_type] ([id]);
 GO
 
 CREATE TABLE [dbo].[doc_comm_inv_amount_log](
@@ -1919,7 +1948,7 @@ CREATE TABLE [dbo].[doc_comm_inv_amount_log](
 	[revType] tinyint NOT NULL,
 	[id] [int] NOT NULL,
 	[shipment_id] [int] NULL,
-	[incoterm_amount_type] [varchar](3) NULL,
+	[amount_type] [varchar](3) NULL,
 	[amount] [decimal](19,4) NULL,
 CONSTRAINT [pk_doc_comm_inv_amount_log] PRIMARY KEY CLUSTERED ([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO

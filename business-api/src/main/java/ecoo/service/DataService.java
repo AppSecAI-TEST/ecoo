@@ -3,12 +3,21 @@ package ecoo.service;
 import ecoo.data.*;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Justin Rundle
  * @since April 2017
  */
 public interface DataService {
+
+    /**
+     * Returns a list of all the currencies.
+     *
+     * @param schema The amount type schema.
+     * @return A list.
+     */
+    List<AmountType> amountTypes(String schema);
 
     /**
      * Returns a list of all the currencies.
