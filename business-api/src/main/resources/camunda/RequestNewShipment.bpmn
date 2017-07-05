@@ -27,7 +27,7 @@
       <bpmn:incoming>Rejected</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03xwbn9</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="ApproveShipmentRequestTask" name="Approve Shipment Request" camunda:delegateExpression="${approveShipmentRequestTask}">
+    <bpmn:serviceTask id="ApproveShipmentRequestTask" name="Approve Shipment Request" camunda:asyncAfter="true" camunda:delegateExpression="${approveShipmentRequestTask}">
       <bpmn:incoming>Approved</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1bbtd1i</bpmn:outgoing>
     </bpmn:serviceTask>

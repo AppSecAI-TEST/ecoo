@@ -406,7 +406,8 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
         }
 
         taskService.createComment(task.getId(), request.getProcessInstanceId(), message);
-        taskService.complete(task.getId(), createVariables().putValue("action", request.getAction()));
+        taskService.complete(task.getId(), createVariables().putValue("action", request.getAction())
+                .putValue("actionedBy", requestingUser.getPrimaryId()));
 
         return response;
     }

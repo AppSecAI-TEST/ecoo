@@ -1,0 +1,64 @@
+package ecoo.command;
+
+import ecoo.data.Shipment;
+import ecoo.service.ReportService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author Justin Rundle
+ * @since July 2017
+ */
+@Component
+public class GenerateCooPdfCommand {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GenerateCooPdfCommand.class);
+
+    private ReportService reportService;
+
+    @Autowired
+    public GenerateCooPdfCommand(ReportService reportService) {
+        this.reportService = reportService;
+    }
+
+    public File execute(Shipment shipment) throws IOException {
+        final Map<String, String> reportParameters = new HashMap<>();
+        reportParameters.put("shipmentId", shipment.getPrimaryId().toString());
+
+        final byte[] content = reportService.execute("/ECOO/CertificateOfOrigin"
+                , reportParameters);
+
+        // C:\Users\Justin\.lg\docs\invoices\1
+        final String path = "C:\\Users\\Justin\\.ecoo\\temp\\coo";
+        final File targetDir = new File(path);
+        if (!targetDir.exists() && targetDir.mkdirs()) {
+            LOG.info(String.format("Directory %s created.", targetDir.getAbsolutePath()));
+        }
+
+        final String fileName = "coo-" + shipment.getPrimaryId() + ".pdf";
+        final File pdf = new File(targetDir.getAbsolutePath(), fileName);
+
+        BufferedOutputStream stream = null;
+        try {
+            stream = new BufferedOutputStream(new FileOutputStream(pdf));
+            FileCopyUtils.copy(content, stream);
+
+        } catch (final IOException e) {
+            LOG.error(e.getMessage(), e);
+            throw e;
+        } finally {
+            if (stream != null) stream.close();
+        }
+        return pdf;
+    }
+}

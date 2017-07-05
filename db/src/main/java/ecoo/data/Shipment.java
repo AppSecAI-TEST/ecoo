@@ -183,6 +183,14 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
     @Audited
     private String currency;
 
+    @Column(name = "requested_by")
+    @Audited
+    private Integer requestedBy;
+
+    @Column(name = "date_requested")
+    @Audited
+    private Date dateRequested;
+
     @Column(name = "approved_by")
     @Audited
     private Integer approvedBy;
@@ -535,6 +543,22 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
         this.currency = currency;
     }
 
+    public Integer getRequestedBy() {
+        return requestedBy;
+    }
+
+    public void setRequestedBy(Integer requestedBy) {
+        this.requestedBy = requestedBy;
+    }
+
+    public Date getDateRequested() {
+        return dateRequested;
+    }
+
+    public void setDateRequested(Date dateRequested) {
+        this.dateRequested = dateRequested;
+    }
+
     public Integer getApprovedBy() {
         return approvedBy;
     }
@@ -594,6 +618,8 @@ public class Shipment extends BaseModel<Integer> implements Serializable {
                 ", portOfLoading='" + portOfLoading + '\'' +
                 ", portOfAcceptance='" + portOfAcceptance + '\'' +
                 ", currency='" + currency + '\'' +
+                ", requestedBy=" + requestedBy +
+                ", dateRequested=" + dateRequested +
                 ", approvedBy=" + approvedBy +
                 ", dateApproved=" + dateApproved +
                 '}';

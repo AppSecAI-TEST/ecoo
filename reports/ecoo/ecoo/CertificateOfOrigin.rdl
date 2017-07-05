@@ -1286,11 +1286,11 @@
           </Textbox>
           <Image Name="signature">
             <Source>Database</Source>
-            <Value>=First(Fields!encoded_image.Value, "imageSrc")</Value>
+            <Value>=First(Fields!req_signature.Value, "shipment")</Value>
             <MIMEType>image/png</MIMEType>
             <Sizing>Fit</Sizing>
             <Top>1.75252cm</Top>
-            <Left>8.50524cm</Left>
+            <Left>8.49929cm</Left>
             <Height>1.48594cm</Height>
             <Width>6.9644cm</Width>
             <ZIndex>2</ZIndex>
@@ -1368,7 +1368,7 @@
           </Textbox>
           <Image Name="signature2">
             <Source>Database</Source>
-            <Value>=First(Fields!encoded_image.Value, "imageSrc")</Value>
+            <Value>=First(Fields!app_signature.Value, "shipment")</Value>
             <MIMEType>image/png</MIMEType>
             <Sizing>Fit</Sizing>
             <Top>1.75252cm</Top>
@@ -1451,59 +1451,6 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Rectangle Name="Rectangle2">
-            <ReportItems>
-              <Textbox Name="Textbox1">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!name.Value, "chamber")</Value>
-                        <Style>
-                          <FontFamily>Franklin Gothic Medium</FontFamily>
-                          <FontSize>14pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style>
-                      <TextAlign>Center</TextAlign>
-                    </Style>
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox1</rd:DefaultName>
-                <Top>0.27962cm</Top>
-                <Left>0cm</Left>
-                <Height>0.87781cm</Height>
-                <Width>4.52796cm</Width>
-                <Style>
-                  <Border>
-                    <Style>None</Style>
-                  </Border>
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-            </ReportItems>
-            <KeepTogether>true</KeepTogether>
-            <Top>1.59818cm</Top>
-            <Left>5.65544cm</Left>
-            <Height>1.34558cm</Height>
-            <Width>4.52796cm</Width>
-            <ZIndex>8</ZIndex>
-            <Style>
-              <Border>
-                <Color>Red</Color>
-                <Style>Solid</Style>
-                <Width>3pt</Width>
-              </Border>
-            </Style>
-          </Rectangle>
         </ReportItems>
         <KeepTogether>true</KeepTogether>
         <Top>10.34436cm</Top>
@@ -2134,30 +2081,6 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="imageSrc">
-      <Query>
-        <DataSourceName>ecoo</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@userSignatureId">
-            <Value>=Parameters!userSignatureId.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>select top 1 s.encoded_image,u.display_name from user_signature s with(nolock)
-	inner join dbo.user_acc u with(nolock) on u.id = s.user_id
-where s.id = @userSignatureId</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-      <Fields>
-        <Field Name="encoded_image">
-          <DataField>encoded_image</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="display_name">
-          <DataField>display_name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
     <DataSet Name="shipment">
       <Query>
         <DataSourceName>ecoo</DataSourceName>
@@ -2202,6 +2125,9 @@ where s.id = @userSignatureId</CommandText>
 	,t.descr mode_of_transport	
 	,c.remarks
 	
+	,r.encoded_image req_signature
+	,approvedBy.encoded_image app_signature
+	
 FROM shipment s WITH(NOLOCK)
 	LEFT OUTER JOIN country consignee_country WITH(NOLOCK)
 		ON consignee_country.id = s.consignee_country
@@ -2211,6 +2137,13 @@ FROM shipment s WITH(NOLOCK)
 		ON t.id = s.transport_type
 	LEFT OUTER JOIN doc_coo c WITH(NOLOCK) 
 		ON c.shipment_id = s.id
+		
+	LEFT OUTER JOIN user_signature r with(nolock)
+		ON r.user_id = s.requested_by
+		
+	LEFT OUTER JOIN user_signature approvedBy with(nolock)
+		ON approvedBy.user_id = s.approved_by
+	
 WHERE s.id = @shipmentId </CommandText>
       </Query>
       <Fields>
@@ -2264,6 +2197,14 @@ WHERE s.id = @shipmentId </CommandText>
         </Field>
         <Field Name="port_of_discharge">
           <DataField>port_of_discharge</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="req_signature">
+          <DataField>req_signature</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="app_signature">
+          <DataField>app_signature</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -2365,19 +2306,6 @@ where s.id = @shipmentId</CommandText>
     </DataSet>
   </DataSets>
   <ReportParameters>
-    <ReportParameter Name="userSignatureId">
-      <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>1</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>User Signature ID</Prompt>
-      <UsedInQuery>True</UsedInQuery>
-      <cl:ComponentMetadata xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition">
-        <cl:HideUpdateNotifications>true</cl:HideUpdateNotifications>
-      </cl:ComponentMetadata>
-    </ReportParameter>
     <ReportParameter Name="shipmentId">
       <DataType>Integer</DataType>
       <DefaultValue>

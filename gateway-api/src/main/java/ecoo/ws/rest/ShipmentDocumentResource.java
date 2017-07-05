@@ -2,12 +2,16 @@
 
 package ecoo.ws.rest;
 
+import ecoo.command.CompressFileSetCommand;
 import ecoo.data.ShipmentDocument;
 import ecoo.data.audit.Revision;
 import ecoo.service.ShipmentDocumentService;
+import ecoo.ws.common.command.DownloadFileCommand;
 import ecoo.ws.common.command.DownloadShipmentDocument;
 import ecoo.ws.common.rest.BaseResource;
 import ecoo.ws.user.rest.json.CreateShipmentDocumentRequest;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +36,23 @@ public class ShipmentDocumentResource extends BaseResource {
 
     private ShipmentDocumentService shipmentDocumentService;
 
+    private CompressFileSetCommand compressFileSetCommand;
+
     @Autowired
-    public ShipmentDocumentResource(ShipmentDocumentService shipmentDocumentService) {
+    public ShipmentDocumentResource(ShipmentDocumentService shipmentDocumentService, CompressFileSetCommand compressFileSetCommand) {
         this.shipmentDocumentService = shipmentDocumentService;
+        this.compressFileSetCommand = compressFileSetCommand;
     }
+
+    @SuppressWarnings("unused")
+    @RequestMapping(value = "/shipment/{shipmentId}/download", method = RequestMethod.GET)
+    public void compressAndDownload(HttpServletRequest request, HttpServletResponse response, @PathVariable Integer shipmentId) throws IOException, ZipException {
+        final ZipFile zipFile = compressFileSetCommand.execute(shipmentId);
+
+        final DownloadFileCommand downloadFileCommand = new DownloadFileCommand();
+        downloadFileCommand.execute(response, request.getServletContext(), zipFile.getFile().getAbsolutePath());
+    }
+
 
     @SuppressWarnings("unused")
     @RequestMapping(value = "/id/{id}/download", method = RequestMethod.GET)

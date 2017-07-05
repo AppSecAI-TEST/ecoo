@@ -36,8 +36,10 @@ public class MarkShipmentAsPendingApprovalTask implements JavaDelegate {
                 getVariable(TaskVariables.REQUEST.variableName());
 
         final Shipment shipment = request.getShipment();
+
         shipment.setProcessInstanceId(delegateExecution.getProcessInstanceId());
         shipment.setStatus(ShipmentStatus.SubmittedAndPendingChamberApproval.id());
+
         shipmentService.save(shipment);
         log.info("Saving shipment... {}", shipment);
     }

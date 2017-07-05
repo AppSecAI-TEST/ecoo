@@ -2,22 +2,24 @@ package ecoo.bpm.tasks.shipment;
 
 import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.entity.NewShipmentRequest;
+import ecoo.command.GenerateCooPdfCommand;
 import ecoo.data.Shipment;
-import ecoo.service.ReportService;
+import ecoo.data.ShipmentDocument;
+import ecoo.data.ShipmentDocumentType;
+import ecoo.service.ShipmentDocumentService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
 
-import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.FileInputStream;
+import java.net.URLConnection;
+import java.util.Base64;
+import java.util.Date;
 
 /**
  * @author Justin Rundle
@@ -29,13 +31,17 @@ public class GenerateCertificateOfOriginTask implements JavaDelegate {
 
     private final Logger log = LoggerFactory.getLogger(GenerateCertificateOfOriginTask.class);
 
-    private ReportService reportService;
+    private GenerateCooPdfCommand generateCooPdfCommand;
+
+    private ShipmentDocumentService shipmentDocumentService;
 
     @Autowired
-    public GenerateCertificateOfOriginTask(ReportService reportService) {
-        this.reportService = reportService;
+    public GenerateCertificateOfOriginTask(GenerateCooPdfCommand generateCooPdfCommand, ShipmentDocumentService shipmentDocumentService) {
+        this.generateCooPdfCommand = generateCooPdfCommand;
+        this.shipmentDocumentService = shipmentDocumentService;
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void execute(final DelegateExecution delegateExecution) throws Exception {
         log.info("Called");
@@ -45,40 +51,43 @@ public class GenerateCertificateOfOriginTask implements JavaDelegate {
 
         final Shipment shipment = request.getShipment();
 
-        final File invoicePdf = callAndSaveSSRSReport(shipment);
+        final File invoicePdf = generateCooPdfCommand.execute(shipment);
         log.info("Certificate Of Origin pdf created @ {}", invoicePdf.getAbsolutePath());
-    }
 
+        final ShipmentDocument shipmentDocument = new ShipmentDocument();
+        shipmentDocument.setDateCreated(new Date());
 
-    private File callAndSaveSSRSReport(Shipment shipment) throws IOException {
-        final Map<String, String> reportParameters = new HashMap<>();
-        reportParameters.put("userSignatureId", "1");
-        reportParameters.put("shipmentId", shipment.getPrimaryId().toString());
+        shipmentDocument.setShipmentId(shipment.getPrimaryId());
+        shipmentDocument.setDocumentType(ShipmentDocumentType.Type.ElectronicCertificateOfOrigin.id());
 
-        final byte[] content = reportService.execute("/ECOO/CertificateOfOrigin"
-                , reportParameters);
+        final File srcFile = new File(invoicePdf.getAbsolutePath());
+        shipmentDocument.setFileName(srcFile.getName());
 
-        // C:\Users\Justin\.lg\docs\invoices\1
-        final String path = "C:\\Users\\Justin\\.ecoo\\temp\\coo";
-        final File targetDir = new File(path);
-        if (!targetDir.exists() && targetDir.mkdirs()) {
-            log.info(String.format("Directory %s created.", targetDir.getAbsolutePath()));
-        }
-
-        final String fileName = "coo-" + shipment.getPrimaryId() + ".pdf";
-        final File pdf = new File(targetDir.getAbsolutePath(), fileName);
-
-        BufferedOutputStream stream = null;
+        FileInputStream fis = null;
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            stream = new BufferedOutputStream(new FileOutputStream(pdf));
-            FileCopyUtils.copy(content, stream);
+            fis = new FileInputStream(srcFile);
 
-        } catch (final IOException e) {
-            log.error(e.getMessage(), e);
-            throw e;
+            byte[] buffer = new byte[102400];
+            int n;
+            while (-1 != (n = fis.read(buffer))) {
+                out.write(buffer, 0, n);
+            }
+            shipmentDocument.setData(Base64.getEncoder().encodeToString(out.toByteArray()));
         } finally {
-            if (stream != null) stream.close();
+            out.close();
+            if (fis != null) fis.close();
         }
-        return pdf;
+
+        String mimeType = URLConnection.guessContentTypeFromName(srcFile.getAbsolutePath());
+        if (mimeType == null) {
+            mimeType = "unknown";
+        }
+        shipmentDocument.setMimeType(mimeType);
+
+        final long kilobytes = srcFile.length() / 1024;
+        shipmentDocument.setSizeInKb(kilobytes);
+
+        shipmentDocumentService.save(shipmentDocument);
     }
 }
