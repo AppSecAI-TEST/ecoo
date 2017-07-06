@@ -8,6 +8,7 @@ import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
 import ecoo.service.ShipmentCommentService;
 import ecoo.service.ShipmentService;
+import ecoo.service.UserService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -31,10 +32,13 @@ public class MarkShipmentAsNeedsWorkTask implements JavaDelegate {
 
     private ShipmentCommentService shipmentCommentService;
 
+    private UserService userService;
+
     @Autowired
-    public MarkShipmentAsNeedsWorkTask(ShipmentService shipmentService, ShipmentCommentService shipmentCommentService) {
+    public MarkShipmentAsNeedsWorkTask(ShipmentService shipmentService, ShipmentCommentService shipmentCommentService, UserService userService) {
         this.shipmentService = shipmentService;
         this.shipmentCommentService = shipmentCommentService;
+        this.userService = userService;
     }
 
     @Override
@@ -48,8 +52,11 @@ public class MarkShipmentAsNeedsWorkTask implements JavaDelegate {
 
         saveShipment(shipment);
 
+        final Integer actionedById = (Integer) delegateExecution.getVariable("actionedBy");
+        final User actionedBy = userService.findById(actionedById);
+
         final String comment = (String) delegateExecution.getVariable("comment");
-        addComment(shipment, request.getRequestingUser(), comment);
+        addComment(shipment, actionedBy, comment);
     }
 
     private void saveShipment(Shipment shipment) {
