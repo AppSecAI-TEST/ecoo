@@ -1,12 +1,13 @@
 package ecoo.command;
 
 import ecoo.data.Shipment;
+import ecoo.service.FeatureService;
 import ecoo.service.ReportService;
+import ecoo.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -26,9 +27,12 @@ public class GenerateCooPdfCommand {
 
     private ReportService reportService;
 
+    private FeatureService featureService;
+
     @Autowired
-    public GenerateCooPdfCommand(ReportService reportService) {
+    public GenerateCooPdfCommand(ReportService reportService, FeatureService featureService) {
         this.reportService = reportService;
+        this.featureService = featureService;
     }
 
     public File execute(Shipment shipment) throws IOException {
@@ -38,8 +42,8 @@ public class GenerateCooPdfCommand {
         final byte[] content = reportService.execute("/ECOO/CertificateOfOrigin"
                 , reportParameters);
 
-        // C:\Users\Justin\.lg\docs\invoices\1
-        final String path = "C:\\Users\\Justin\\.ecoo\\temp\\coo";
+        // C:\Users\Justin\.ecoo\temp\coo
+        final String path = FileUtils.resolveDir(featureService.tempDirectory()) + "coo";
         final File targetDir = new File(path);
         if (!targetDir.exists() && targetDir.mkdirs()) {
             LOG.info(String.format("Directory %s created.", targetDir.getAbsolutePath()));
@@ -51,7 +55,7 @@ public class GenerateCooPdfCommand {
         BufferedOutputStream stream = null;
         try {
             stream = new BufferedOutputStream(new FileOutputStream(pdf));
-            FileCopyUtils.copy(content, stream);
+            stream.write(content);
 
         } catch (final IOException e) {
             LOG.error(e.getMessage(), e);

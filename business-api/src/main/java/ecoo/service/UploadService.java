@@ -157,7 +157,7 @@ public interface UploadService extends CrudService<Integer, Upload> {
      * @param requestingUser the user adding the import
      * @throws IOException If io error occurs.
      */
-    boolean addUpload(Upload upload, User requestingUser) throws IOException;
+    Upload addUpload(Upload upload, User requestingUser) throws IOException;
 
     /**
      * Returns an import type model based on the given primary id.

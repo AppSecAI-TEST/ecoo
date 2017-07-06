@@ -1,6 +1,7 @@
 package ecoo.service.impl;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import ecoo.command.ProcessCommercialInvoiceUploadCommand;
 import ecoo.dao.*;
 import ecoo.data.User;
 import ecoo.data.upload.*;
@@ -23,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +50,8 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
 
     private FeatureService featureService;
 
+    private ProcessCommercialInvoiceUploadCommand processCommercialInvoiceUploadCommand;
+
     @Autowired
     public UploadServiceImpl(UploadDao uploadDao
             , RequiredFieldMappingDao requiredFieldMappingDao
@@ -55,7 +59,8 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
             , UploadDataDao uploadDataDao
             , UploadStatusDao uploadStatusDao
             , UploadTypeDao uploadTypeDao
-            , FeatureService featureService) {
+            , FeatureService featureService
+            , ProcessCommercialInvoiceUploadCommand processCommercialInvoiceUploadCommand) {
         super(uploadDao);
         this.uploadDao = uploadDao;
         this.requiredFieldMappingDao = requiredFieldMappingDao;
@@ -64,6 +69,7 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
         this.uploadStatusDao = uploadStatusDao;
         this.uploadTypeDao = uploadTypeDao;
         this.featureService = featureService;
+        this.processCommercialInvoiceUploadCommand = processCommercialInvoiceUploadCommand;
     }
 
     /**
@@ -88,7 +94,11 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
     @Override
     public void update(UploadData uploadData, UploadStatus.Status status, String message) {
         uploadData.setStatus(status.getPrimaryId());
-        uploadData.setComments(message);
+        if (message != null && message.length() > UploadData.PROPERTY_COMMENT_LENGTH) {
+            uploadData.setComments(message.substring(0, UploadData.PROPERTY_COMMENT_LENGTH));
+        } else {
+            uploadData.setComments(message);
+        }
         uploadDataDao.save(uploadData);
     }
 
@@ -106,17 +116,13 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
             anUpload.setStartTime(new Date());
             updateStatus(anUpload, UploadStatus.Status.Running);
 
-            // FIXME:
-//            switch (anUpload.getUploadType()) {
-//                case Claim:
-//                    submitUploadToQueue(anUpload, requestingUser, claimUploadJmsTemplate, claimUploadQueue);
-//                    break;
-//                case Product:
-//                    processProductUpload(anUpload, requestingUser);
-//                    break;
-//                default:
-//                    throw new IllegalArgumentException(String.format("Upload type %s not supported.", anUpload.getUploadType()));
-//            }
+            switch (anUpload.getUploadType()) {
+                case COMMERCIAL_INVOICE:
+                    processCommercialInvoiceUpload(anUpload);
+                    break;
+                default:
+                    throw new IllegalArgumentException(String.format("Upload type %s not supported.", anUpload.getUploadType()));
+            }
 
         } catch (final Exception e) {
             LOG.error(e.getMessage(), e);
@@ -124,6 +130,70 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
         }
     }
 
+
+    private void processCommercialInvoiceUpload(final Upload anUpload) {
+        final Collection<UploadData> data = uploadDataDao.findUploadDataByStatus(anUpload
+                , UploadStatus.Status.ParsingSuccessful
+                , UploadStatus.Status.ParsingFailed
+                , UploadStatus.Status.UploadFailed
+                , UploadStatus.Status.UploadSuccessful
+                , UploadStatus.Status.UploadPartial);
+        final int totalSize = data.size();
+
+        final ExecutorService executor = Executors.newFixedThreadPool(5);
+        final Collection<Future<UploadData>> futures = new ArrayList<>();
+
+        for (UploadData uploadData : data) {
+            final Callable<UploadData> call = () -> {
+                try {
+                    processCommercialInvoiceUploadCommand.execute(anUpload,
+                            (CommercialInvoiceUploadData) uploadData);
+
+                    uploadData.setStatus(UploadStatus.Status.UploadSuccessful.getPrimaryId());
+                    save(uploadData);
+                } catch (final Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    update(uploadData, UploadStatus.Status.ImportFailed, e.getMessage());
+                }
+                return uploadData;
+            };
+            futures.add(executor.submit(call));
+        }
+
+        double processedCount;
+        final Iterator<Future<UploadData>> iterator = futures.iterator();
+        final Collection<UploadData> completed = new ArrayList<>();
+        while (iterator.hasNext()) {
+            try {
+                completed.add(iterator.next().get());
+                processedCount = completed.size();
+
+                final double percentage = Math.floor((processedCount / (double) totalSize) * 100d);
+                final String message = String.format("Processed %s of %s commercial invoice lines (%s%%)"
+                        , (int) processedCount, totalSize, percentage);
+
+                anUpload.setComment(message);
+                update(anUpload);
+
+                LOG.info(message);
+
+            } catch (final InterruptedException | ExecutionException e) {
+                LOG.error(e.getMessage(), e);
+            } finally {
+                iterator.remove();
+            }
+        }
+
+        executor.shutdown();
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            markUploadAsCompleted(anUpload);
+
+        } catch (InterruptedException e) {
+            anUpload.setComment(e.getMessage());
+            updateStatus(anUpload, UploadStatus.Status.UploadFailed);
+        }
+    }
 
     @SuppressWarnings("Duplicates")
     private void markUploadAsCompleted(final Upload anUpload) {
@@ -413,7 +483,7 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
      */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public boolean addUpload(Upload upload, User requestingUser) throws IOException {
+    public Upload addUpload(Upload upload, User requestingUser) throws IOException {
         if (!upload.isNew()) {
             throw new DataIntegrityViolationException("cannot add an existing upload.");
         }
@@ -443,7 +513,7 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
             LOG.error(t.getMessage(), t);
             updateStatus(upload, UploadStatus.Status.ImportFailed);
         }
-        return true;
+        return upload;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

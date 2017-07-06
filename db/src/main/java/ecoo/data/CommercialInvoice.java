@@ -66,7 +66,6 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
     @Audited
     private String paymentInstruction;
 
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})

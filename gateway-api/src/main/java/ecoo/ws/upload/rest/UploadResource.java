@@ -43,14 +43,13 @@ public class UploadResource extends BaseResource {
 
     private ImportToImportListRowConverter importToImportListRowConverter;
 
-    private NewUploadRequestToImportConverter newUploadRequestToImportConverter;
 
     @Autowired
-    public UploadResource(UploadService importService, FeatureService featureService, ImportToImportListRowConverter importToImportListRowConverter, NewUploadRequestToImportConverter newUploadRequestToImportConverter) {
+    public UploadResource(UploadService importService, FeatureService featureService
+            , ImportToImportListRowConverter importToImportListRowConverter) {
         this.importService = importService;
         this.featureService = featureService;
         this.importToImportListRowConverter = importToImportListRowConverter;
-        this.newUploadRequestToImportConverter = newUploadRequestToImportConverter;
     }
 
     @SuppressWarnings("unused")
@@ -118,14 +117,16 @@ public class UploadResource extends BaseResource {
     @RequestMapping(value = "/add", method = RequestMethod.POST
             , consumes = MediaType.APPLICATION_JSON_VALUE
             , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Upload> addUpload(@RequestBody NewUploadRequest request) throws IOException {
+    public ResponseEntity<Integer> addUpload(@RequestBody NewUploadRequest request) throws IOException {
         Assert.notNull(request);
 
+        final NewUploadRequestToImportConverter newUploadRequestToImportConverter = new NewUploadRequestToImportConverter();
         final Upload aUpload = newUploadRequestToImportConverter.convert(request);
+
         importService.save(aUpload.getMapping(), currentUser());
         importService.addUpload(aUpload, currentUser());
 
-        return ResponseEntity.ok(aUpload);
+        return ResponseEntity.ok(aUpload.getPrimaryId());
     }
 
 
@@ -187,15 +188,13 @@ public class UploadResource extends BaseResource {
         Assert.hasLength(uploadTypeId);
 
         final UploadType.Type uploadType = UploadType.Type.getTypeByPrimaryId(uploadTypeId);
-//        switch (uploadType) {
-//            case Claim:
-//                return ResponseEntity.ok(new ClaimUpload().getRequiredFields());
-//            case Product:
-//                return ResponseEntity.ok(new ProductUpload().getRequiredFields());
-//            default:
-        throw new DataIntegrityViolationException(String.format("No upload class "
-                + "defined for upload type \"%s\".", uploadType.name()));
-//        }
+        switch (uploadType) {
+            case COMMERCIAL_INVOICE:
+                return ResponseEntity.ok(new CommercialInvoiceUpload().getRequiredFields());
+            default:
+                throw new DataIntegrityViolationException(String.format("No upload class "
+                        + "defined for upload type \"%s\".", uploadType.name()));
+        }
     }
 
     @RequestMapping(value = "/requiredFieldMappings/uploadType/{uploadType}", method = RequestMethod.GET)

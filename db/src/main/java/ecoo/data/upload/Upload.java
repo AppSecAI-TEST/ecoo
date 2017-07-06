@@ -54,6 +54,9 @@ public abstract class Upload extends BaseModel<Integer> implements RequiredUploa
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "shipment_id")
+    private Integer shipmentId;
+
     @Transient
     private CsvFile csvFile;
 
@@ -346,6 +349,14 @@ public abstract class Upload extends BaseModel<Integer> implements RequiredUploa
         this.previewUploadFile = previewUploadFile;
     }
 
+    public Integer getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setShipmentId(Integer shipmentId) {
+        this.shipmentId = shipmentId;
+    }
+
     @Override
     public String toString() {
         return "Upload{" +
@@ -356,6 +367,7 @@ public abstract class Upload extends BaseModel<Integer> implements RequiredUploa
                 ", endTime=" + endTime +
                 ", status=" + status +
                 ", comment='" + comment + '\'' +
+                ", shipmentId=" + shipmentId +
                 ", csvFile=" + csvFile +
                 ", originalUploadFile=" + originalUploadFile +
                 ", previewUploadFile=" + previewUploadFile +

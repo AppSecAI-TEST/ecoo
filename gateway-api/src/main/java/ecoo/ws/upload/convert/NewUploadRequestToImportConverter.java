@@ -1,23 +1,20 @@
 package ecoo.ws.upload.convert;
 
-import ecoo.data.upload.RequiredFieldMapping;
-import ecoo.data.upload.RequiredFieldMappingItem;
-import ecoo.data.upload.Upload;
+import ecoo.data.upload.*;
 import ecoo.ws.upload.json.NewUploadRequest;
 import io.jsonwebtoken.lang.Assert;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Justin Rundle
- * @since April 2017
+ * @since July 2017
  */
-@Component
 public class NewUploadRequestToImportConverter implements Converter<NewUploadRequest, Upload> {
 
     @Override
@@ -29,24 +26,32 @@ public class NewUploadRequestToImportConverter implements Converter<NewUploadReq
             throw new IllegalArgumentException(String.format("File %s doest not exist.", csvFileToUpload.getAbsolutePath()));
         }
 
-//        final UploadType.Type uploadType = UploadType.Type.getTypeByPrimaryId(newUploadRequest.getUploadTypeId().toString());
+        final UploadType.Type uploadType = UploadType.Type.getTypeByPrimaryId(newUploadRequest.getUploadTypeId());
 
-        // FIXME: Need to add create Upload
-//        final Upload anImport = createUpload(uploadType);
-//
-//        anImport.setStatus(UploadStatus.Status.Ready.getPrimaryId());
-//        anImport.setOriginalUploadFile(csvFileToUpload);
-//        try {
-//            anImport.setCsvFileToUpload(new CsvFile(csvFileToUpload));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        anImport.setMapping(newUploadRequest.getRequiredField());
-//
-//        return anImport;
+        final Upload anImport = createUpload(uploadType);
+        anImport.setShipmentId(newUploadRequest.getShipmentId());
 
-        throw new UnsupportedOperationException("TODO");
+        anImport.setStatus(UploadStatus.Status.Ready.getPrimaryId());
+        anImport.setOriginalUploadFile(csvFileToUpload);
+        try {
+            anImport.setCsvFileToUpload(new CsvFile(csvFileToUpload));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        anImport.setMapping(newUploadRequest.getRequiredField());
+
+        return anImport;
+    }
+
+    private Upload createUpload(UploadType.Type uploadType) {
+        switch (uploadType) {
+            case COMMERCIAL_INVOICE:
+                return new CommercialInvoiceUpload();
+            default:
+                throw new DataIntegrityViolationException(String.format("No upload class "
+                        + "defined for upload type \"%s\".", uploadType.name()));
+        }
     }
 
 

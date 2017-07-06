@@ -13,6 +13,8 @@ public abstract class UploadData extends BaseModel<Integer> {
 
     private static final long serialVersionUID = 2388786592803369143L;
 
+    public static int PROPERTY_COMMENT_LENGTH = 500;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

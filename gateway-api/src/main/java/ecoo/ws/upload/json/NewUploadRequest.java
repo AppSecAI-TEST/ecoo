@@ -12,6 +12,8 @@ public class NewUploadRequest {
 
     private String uploadTypeId;
 
+    private Integer shipmentId;
+
     private PreviewCsvFile previewCsvFile;
 
     private RequiredFieldMapping requiredField;
@@ -25,6 +27,14 @@ public class NewUploadRequest {
 
     public void setUploadTypeId(String uploadTypeId) {
         this.uploadTypeId = uploadTypeId;
+    }
+
+    public Integer getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setShipmentId(Integer shipmentId) {
+        this.shipmentId = shipmentId;
     }
 
     public PreviewCsvFile getPreviewCsvFile() {
@@ -47,6 +57,7 @@ public class NewUploadRequest {
     public String toString() {
         return "NewUploadRequest{" +
                 "uploadTypeId=" + uploadTypeId +
+                ", shipmentId=" + shipmentId +
                 ", previewCsvFile=" + previewCsvFile +
                 ", requiredField=" + requiredField +
                 '}';

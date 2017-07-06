@@ -16,30 +16,30 @@ public class UploadType extends BaseModel<String> {
     private static final long serialVersionUID = 1809987591875854813L;
 
     public enum Type {
-        Example("C"
-                , "claims.xml"
-                , "dbo.upload_csv_claims"
-                , "dbo.upload_parse_claims"
-                , "dbo.upload_claim_data"
-                , null //new ClaimUploadDataRowMapper()
-                , null // ClaimUploadData.class
-                , "claims.csv"
-                , "d.nat_id_no, d.passport_no, d.product_code"
-                , "Claims");
+        COMMERCIAL_INVOICE("CI"
+                , "commercial_invoice.xml"
+                , "dbo.upload_csv_commercial_invoice"
+                , "dbo.upload_parse_commercial_invoice"
+                , "dbo.upload_commercial_invoice_data"
+                , new CommercialInvoiceUploadDataRowMapper()
+                , CommercialInvoiceUploadData.class
+                , "commercial_invoice.csv"
+                , "d.product_code, d.marks"
+                , "Commercial Invoice");
 
         private String primaryId;
         private String xmlFormatFileName;
         private String uploadStoredProcName;
-        private String parseStoredProcName;
         private String tableName;
         private Class<?> dataClass;
         private UploadDataRowMapper rowMapper;
         private String defaultImportFileName;
         private String orderBy;
         private String description;
+        private String parseStoredProcName;
 
-        Type(String primaryId, String xmlFormatFileName, String uploadStoredProcName,
-             String parseStoredProcName, String tableName, UploadDataRowMapper rowMapper, Class<?> dataClass, String defaultImportFileName,
+        Type(String primaryId, String xmlFormatFileName, String uploadStoredProcName, String parseStoredProcName, String tableName
+                , UploadDataRowMapper rowMapper, Class<?> dataClass, String defaultImportFileName,
              String orderBy, String description) {
             this.primaryId = primaryId;
             this.xmlFormatFileName = xmlFormatFileName;

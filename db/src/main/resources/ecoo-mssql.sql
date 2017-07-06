@@ -1452,153 +1452,6 @@ ALTER TABLE "feature_log"
   ADD CONSTRAINT "fk_feature_log_rev_type" FOREIGN KEY ("revType") REFERENCES "rev_type" ("id");
 
 
-
--- =====================================================================================
--- UPLOAD
--- =====================================================================================
-CREATE TABLE [dbo].[upload_type](
-	[id] [varchar](3) NOT NULL,
-	[name] [varchar](50) NOT NULL,
-	last_upload_date [datetime] NULL,
- CONSTRAINT [pk_upload_type] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY],
- CONSTRAINT [UC_upload_type] UNIQUE NONCLUSTERED 
-(
-	[Name] ASC
-)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-
-CREATE TABLE [dbo].[upload_status](
-	[id] [tinyint] NOT NULL,
-	[descr] [varchar](30) NOT NULL,
- CONSTRAINT [pk_upload_status] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-SET ANSI_PADDING OFF
-GO
-
-CREATE TABLE [dbo].[upload_map](
-	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
-	upload_type_id [varchar](3) NOT NULL,
-	name [varchar](100) NOT NULL,
-	has_heading [bit] NOT NULL,
- CONSTRAINT [pk_upload_map] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].upload_map ADD CONSTRAINT ux_upload_map_001 UNIQUE NONCLUSTERED ([upload_type_id] ASC,[name] ASC)
-WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
-GO
-
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
-CREATE TABLE [dbo].[upload_map_detail](
-	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
-	map_id [int] NOT NULL,
-	csv_column_index [int] NULL,
-	table_column_name [varchar](50) NULL,
- CONSTRAINT [pk_upload_map_detail] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[upload_map_detail]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_map_detail_upload_map] FOREIGN KEY(map_id)
-REFERENCES [dbo].[upload_map] ([id])
-ON DELETE CASCADE
-GO
-
-ALTER TABLE [dbo].[upload_map_detail] CHECK CONSTRAINT [fk_upload_map_detail_upload_map]
-GO
-
-CREATE TABLE [dbo].[upload](
-	id [bigint] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
-	file_name [varchar](255) NOT NULL,
-	upload_type [varchar](3) NOT NULL,
-	map_id [int] NULL,
-	start_time [datetime] NULL,
-	end_time [datetime] NULL,
-	status [tinyint] NOT NULL,
-	comment [varchar](1024) NULL,
- CONSTRAINT [pk_upload] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-ALTER TABLE [dbo].[upload]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_upload_map] FOREIGN KEY(map_id)
-REFERENCES [dbo].[upload_map] (id)
-GO
-
-ALTER TABLE [dbo].[upload] CHECK CONSTRAINT [fk_upload_upload_map]
-GO
-
-ALTER TABLE [dbo].[upload]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_upload_status] FOREIGN KEY([status])
-REFERENCES [dbo].[upload_status] (id)
-GO
-
-ALTER TABLE [dbo].[upload] CHECK CONSTRAINT [fk_upload_upload_status]
-GO
-
-ALTER TABLE [dbo].[upload]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_upload_type] FOREIGN KEY(upload_type)
-REFERENCES [dbo].[upload_type] (id)
-GO
-
-ALTER TABLE [dbo].[upload] CHECK CONSTRAINT [fk_upload_upload_type]
-GO
-
-INSERT INTO [ecoo].[dbo].[upload_type]
-           ([id]
-           ,[name]
-           ,[last_upload_date])
-VALUES('E','Example',NULL)
-GO
-
-INSERT INTO [ecoo].[dbo].[upload_status]
-           ([id]
-           ,[descr])
-VALUES (1,'Running'),
-(2,'Upload Failed'),
-(3,'Upload Successful'),
-(4,'Upload Partial'),
-(5,'Parsing Successful'),
-(6,'Parsing Partial'),
-(7,'Parsing Failed'),
-(8,'Ready'),
-(9,'Marked As New'),
-(10,'Marked As Ignore'),
-(11,'Exported'),
-(12,'Importing'),
-(13,'Import Failed'),
-(14,'Imported'),
-(15,'Exporting'),
-(16,'Scheduled'),
-(17,'Queued')
-GO
-
 -- =====================================================================================
 -- SHIPMENT
 -- =====================================================================================
@@ -2072,6 +1925,432 @@ ALTER TABLE [dbo].[doc_pack_list_log] CHECK CONSTRAINT [fk_doc_pack_list_log_rev
 
 ALTER TABLE [dbo].[doc_pack_list_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_pack_list_log_rev_type] FOREIGN KEY([revType]) REFERENCES [dbo].[rev_type] ([id])
 ALTER TABLE [dbo].[doc_pack_list_log] CHECK CONSTRAINT [fk_doc_pack_list_log_rev_type]
+GO
+
+
+-- =====================================================================================
+-- UPLOAD
+-- =====================================================================================
+CREATE TABLE [dbo].[upload_type](
+	[id] [varchar](3) NOT NULL,
+	[name] [varchar](50) NOT NULL,
+	last_upload_date [datetime] NULL,
+ CONSTRAINT [pk_upload_type] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY],
+ CONSTRAINT [UC_upload_type] UNIQUE NONCLUSTERED 
+(
+	[Name] ASC
+)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+CREATE TABLE [dbo].[upload_status](
+	[id] [tinyint] NOT NULL,
+	[descr] [varchar](30) NOT NULL,
+ CONSTRAINT [pk_upload_status] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+CREATE TABLE [dbo].[upload_map](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	upload_type_id [varchar](3) NOT NULL,
+	name [varchar](100) NOT NULL,
+	has_heading [bit] NOT NULL,
+ CONSTRAINT [pk_upload_map] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].upload_map ADD CONSTRAINT ux_upload_map_001 UNIQUE NONCLUSTERED ([upload_type_id] ASC,[name] ASC)
+WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[upload_map_detail](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	map_id [int] NOT NULL,
+	csv_column_index [int] NULL,
+	table_column_name [varchar](50) NULL,
+ CONSTRAINT [pk_upload_map_detail] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[upload_map_detail]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_map_detail_upload_map] FOREIGN KEY(map_id)
+REFERENCES [dbo].[upload_map] ([id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[upload_map_detail] CHECK CONSTRAINT [fk_upload_map_detail_upload_map]
+GO
+
+CREATE TABLE [dbo].[upload](
+	[id] [bigint] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[file_name] [varchar](255) NOT NULL,
+	[upload_type] [varchar](3) NOT NULL,
+	[map_id] [int] NULL,
+	[start_time] [datetime] NULL,
+	[end_time] [datetime] NULL,
+	[status] [tinyint] NOT NULL,
+	[comment] [varchar](1024) NULL,
+	[shipment_id] [int] NULL,
+ CONSTRAINT [pk_upload] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[upload]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_upload_map] FOREIGN KEY(map_id) REFERENCES [dbo].[upload_map] (id)
+ALTER TABLE [dbo].[upload] CHECK CONSTRAINT [fk_upload_upload_map]
+
+ALTER TABLE [dbo].[upload]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_upload_status] FOREIGN KEY([status]) REFERENCES [dbo].[upload_status] (id)
+ALTER TABLE [dbo].[upload] CHECK CONSTRAINT [fk_upload_upload_status]
+
+ALTER TABLE [dbo].[upload]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_upload_type] FOREIGN KEY(upload_type) REFERENCES [dbo].[upload_type] (id)
+ALTER TABLE [dbo].[upload] CHECK CONSTRAINT [fk_upload_upload_type]
+
+ALTER TABLE [dbo].[upload]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_shipment] FOREIGN KEY(shipment_id) REFERENCES [dbo].[shipment] (id)
+ALTER TABLE [dbo].[upload] CHECK CONSTRAINT [fk_upload_shipment]
+GO
+
+INSERT INTO [ecoo].[dbo].[upload_type]
+           ([id]
+           ,[name]
+           ,[last_upload_date])
+VALUES('CI','COMMERCIAL INVOICE',NULL),
+('COO','CERTIFICATE OF ORIGIN',NULL)
+GO
+
+INSERT INTO [ecoo].[dbo].[upload_status]
+           ([id]
+           ,[descr])
+VALUES (1,'Running'),
+(2,'Upload Failed'),
+(3,'Upload Successful'),
+(4,'Upload Partial'),
+(5,'Parsing Successful'),
+(6,'Parsing Partial'),
+(7,'Parsing Failed'),
+(8,'Ready'),
+(9,'Marked As New'),
+(10,'Marked As Ignore'),
+(11,'Exported'),
+(12,'Importing'),
+(13,'Import Failed'),
+(14,'Imported'),
+(15,'Exporting'),
+(16,'Scheduled'),
+(17,'Queued')
+GO
+
+CREATE TABLE [dbo].[upload_commercial_invoice_data](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[upload_id] [bigint] NOT NULL,
+	[marks] [varchar](100) NULL,
+	[product_code] [varchar](100) NULL,
+	[descr] [varchar](100) NULL,
+	[qty] [varchar](100) NULL,
+	[price] [varchar](100) NULL,
+	[amount] [varchar](100) NULL,
+	[status] [tinyint] NULL,
+	[comments] [varchar](100) NULL
+ CONSTRAINT [pk_upload_commercial_invoice_data] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 40) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[upload_commercial_invoice_data]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_commercial_invoice_data_upload] FOREIGN KEY([upload_id])
+REFERENCES [dbo].[upload] ([id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[upload_commercial_invoice_data] CHECK CONSTRAINT [fk_upload_commercial_invoice_data_upload]
+GO
+
+ALTER TABLE [dbo].[upload_commercial_invoice_data]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_commercial_invoice_data_uploadstatus] FOREIGN KEY([status])
+REFERENCES [dbo].[upload_status] ([id])
+GO
+
+ALTER TABLE [dbo].[upload_commercial_invoice_data] CHECK CONSTRAINT [fk_upload_commercial_invoice_data_uploadstatus]
+GO
+
+
+CREATE PROCEDURE [dbo].[upload_csv_commercial_invoice]
+	@bulkFile VARCHAR(MAX), -- CSV file with data
+	@parseFile VARCHAR(MAX),-- File used to parse the csv file
+	@uploadId BIGINT -- UploadId who this upload is for.
+
+AS
+	SET NOCOUNT ON
+
+	DECLARE 
+		@bulkStatement VARCHAR(MAX)
+
+BEGIN
+	-- Truncate the upload data table to reset refrence if table is empty
+	IF(SELECT COUNT(*) FROM dbo.upload_commercial_invoice_data) = 0
+	BEGIN
+		TRUNCATE TABLE dbo.upload_commercial_invoice_data
+	END
+	
+	SET @bulkStatement = 'INSERT INTO dbo.upload_commercial_invoice_data(upload_id
+		,marks
+		,product_code
+		,descr
+		,qty
+		,price
+		,amount
+		,status)
+	SELECT ' + CONVERT(VARCHAR, @uploadId) + ',
+		SUBSTRING(ISNULL(marks,''''),0,100),
+		SUBSTRING(ISNULL(product_code,''''),0,100),
+		SUBSTRING(ISNULL(descr,''''),0,100),
+		SUBSTRING(ISNULL(qty,''''),0,100),
+		SUBSTRING(ISNULL(price,''''),0,100),
+		SUBSTRING(ISNULL(amount,''''),0,100),
+		status
+	FROM  OPENROWSET(BULK ''' + @bulkFile + ''',
+		FORMATFILE = ''' + @parseFile + '''
+	) as import'
+	EXEC (@bulkStatement)
+END
+GO
+
+CREATE PROCEDURE [dbo].[upload_parse_commercial_invoice]
+	@uploadId BIGINT -- UploadId who this upload is for.
+AS
+	SET NOCOUNT ON
+
+	DECLARE 
+		@countParsingFailed INT,
+		@countOther INT,
+		@countUploaded INT,
+		@countParsed INT
+BEGIN
+	-- Set status from "Parsing Failed" to "Ready"
+	UPDATE dbo.upload_commercial_invoice_data SET status = 8
+		,comments = NULL 
+	WHERE upload_id = @uploadId
+	AND status IN(
+		 5 -- Parsing Successful
+		,6 -- Parsing Partial
+		,7 -- Parsing Failed
+	)
+
+	----------------------------------------------------------------
+	-- Validate marks
+	----------------------------------------------------------------
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Marks is required.'
+		,status = 7
+		WHERE (marks IS NULL OR LEN(LTRIM(RTRIM(marks))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Marks too long, expected <50> was: <'+ CONVERT(VARCHAR,LEN(marks)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(marks))) > 50
+	AND upload_id = @uploadId
+	AND status = 8
+
+	----------------------------------------------------------------
+	-- Validate product_code
+	----------------------------------------------------------------	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Product Code is required.'
+		,status = 7
+		WHERE (product_code IS NULL OR LEN(LTRIM(RTRIM(product_code))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Product Code too long, expected <50> was: <'+ CONVERT(VARCHAR,LEN(product_code)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(product_code))) > 50
+	AND upload_id = @uploadId
+	AND status = 8
+
+	----------------------------------------------------------------
+	-- Validate descr
+	----------------------------------------------------------------
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Description is required.'
+		,status = 7
+		WHERE (descr IS NULL OR LEN(LTRIM(RTRIM(descr))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Description too long, expected <100> was: <'+ CONVERT(VARCHAR,LEN(descr)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(descr))) > 100
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	----------------------------------------------------------------
+	-- Validate qty
+	----------------------------------------------------------------
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Quantity is required.'
+		,status = 7
+		WHERE (qty IS NULL OR LEN(LTRIM(RTRIM(qty))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Quantity too long, expected <3> was: <'+ CONVERT(VARCHAR,LEN(qty)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(qty))) > 3
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Quantity must be a number.'
+		,status = 7
+	WHERE ISNUMERIC(qty) = 0 -- 0 = not numeric
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Quantity must be greater than zero.'
+		,status = 7
+	WHERE CONVERT(FLOAT,qty) <= .0 
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	----------------------------------------------------------------
+	-- Validate Price
+	----------------------------------------------------------------
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Price is required.'
+		,status = 7
+		WHERE (price IS NULL OR LEN(LTRIM(RTRIM(price))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Price too long, expected <10> was: <'+ CONVERT(VARCHAR,LEN(price)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(price))) > 10
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Price must be a number.'
+		,status = 7
+	WHERE ISNUMERIC(price) = 0 -- 0 = not numeric
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Price must be greater than zero.'
+		,status = 7
+	WHERE CONVERT(FLOAT,price) <= .0 
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	----------------------------------------------------------------
+	-- Validate Amount
+	----------------------------------------------------------------
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Amount is required.'
+		,status = 7
+		WHERE (amount IS NULL OR LEN(LTRIM(RTRIM(amount))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Amount too long, expected <10> was: <'+ CONVERT(VARCHAR,LEN(amount)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(amount))) > 10
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Amount must be a number.'
+		,status = 7
+	WHERE ISNUMERIC(amount) = 0 -- 0 = not numeric
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_commercial_invoice_data SET 
+		 comments = 'Amount must be greater than zero.'
+		,status = 7
+	WHERE CONVERT(FLOAT,amount) <= .0 
+	AND upload_id = @uploadId
+	AND status = 8
+	
+		
+	-- BEGIN: Update status.
+		UPDATE dbo.upload_commercial_invoice_data SET Status = 5 -- "Parsing Successful"
+			WHERE 
+				upload_id = @uploadId
+			AND 
+				Status = 8 -- "Ready"
+
+		SET @countParsingFailed = (SELECT COUNT(*) FROM dbo.upload_commercial_invoice_data
+				WHERE upload_id = @uploadId AND Status = 7)
+
+		SET @countOther = (SELECT COUNT(*) FROM dbo.upload_commercial_invoice_data
+				WHERE upload_id = @uploadId AND Status in (9,10,11))
+
+		SET @countUploaded = (SELECT COUNT(*) FROM dbo.upload_commercial_invoice_data
+				WHERE upload_id = @uploadId AND Status = 3)
+		
+		SET @countParsed = (SELECT COUNT(*) FROM dbo.upload_commercial_invoice_data
+				WHERE upload_id = @uploadId AND Status = 5)
+
+
+		IF (@countParsingFailed = 0 AND @countOther = 0 AND @countUploaded = 0 AND @countParsed <> 0)
+	   		-- Update status to "Parsing Successful".
+	   		UPDATE dbo.Upload SET Status = 5 WHERE ID = @uploadId	
+		
+		ELSE IF (@countParsingFailed = 0 and @countOther <> 0 and @countParsed <> 0)
+			-- Update status to "Parsing Partial" if no record in error AND 
+			-- one or more exported records AND there are other successfully parsed records.
+	   		UPDATE dbo.Upload SET Status = 6 WHERE ID = @uploadId	
+
+		ELSE IF (@countParsingFailed = 0 AND @countUploaded <> 0 AND @countParsed = 0 AND @countOther = 0)
+			-- Update status to "Upload Successful".
+	   		UPDATE dbo.Upload SET Status = 3 WHERE ID = @uploadId
+
+		ELSE IF (@countParsingFailed = 0 AND @countUploaded <> 0 AND @countParsed = 0 AND @countOther <> 0)
+			-- Update status to "Upload Partial"
+			UPDATE dbo.Upload SET Status = 4 WHERE ID = @uploadId	
+		ELSE 
+			-- Update status to "Parsing Failed"
+			UPDATE dbo.Upload SET Status = 7 WHERE ID = @uploadId
+	-- BEGIN: Update status.
+END
 GO
 
 ----------------------------------------------------------------------------------------------------------------
