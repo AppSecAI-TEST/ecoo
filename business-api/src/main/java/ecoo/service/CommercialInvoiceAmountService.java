@@ -11,7 +11,6 @@ import java.util.List;
 public interface CommercialInvoiceAmountService extends CrudService<Integer, CommercialInvoiceAmount>
         , AuditedModelAware<CommercialInvoiceAmount> {
 
-
     /**
      * Returns the list of amounts for the given shipment.
      *

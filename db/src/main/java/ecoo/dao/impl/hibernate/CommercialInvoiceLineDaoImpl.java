@@ -6,6 +6,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
+
+import java.util.List;
 
 /**
  * @author Justin Rundle
@@ -19,5 +22,19 @@ public class CommercialInvoiceLineDaoImpl extends BaseAuditLogDaoImpl<Integer, C
     @Autowired
     public CommercialInvoiceLineDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, CommercialInvoiceLine.class);
+    }
+
+    /**
+     * Returns the list of lines for the given shipment.
+     *
+     * @param shipmentId The pk of the shipment.
+     * @return A list.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<CommercialInvoiceLine> findByShipment(Integer shipmentId) {
+        Assert.notNull(shipmentId, "The variable shipmentId cannot be null.");
+        return (List<CommercialInvoiceLine>) getHibernateTemplate().findByNamedQueryAndNamedParam(
+                "FIND_CI_LINES_BY_SHIPMENT", "shipmentId", shipmentId);
     }
 }

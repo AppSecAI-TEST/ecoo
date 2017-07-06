@@ -1,4 +1,4 @@
-package ecoo.dao;
+package ecoo.service;
 
 import ecoo.data.CommercialInvoiceLine;
 
@@ -8,7 +8,9 @@ import java.util.List;
  * @author Justin Rundle
  * @since July 2017
  */
-public interface CommercialInvoiceLineDao extends AuditLogDao<Integer, CommercialInvoiceLine> {
+public interface CommercialInvoiceLineService extends CrudService<Integer, CommercialInvoiceLine>
+        , AuditedModelAware<CommercialInvoiceLine> {
+
     /**
      * Returns the list of lines for the given shipment.
      *
@@ -16,4 +18,5 @@ public interface CommercialInvoiceLineDao extends AuditLogDao<Integer, Commercia
      * @return A list.
      */
     List<CommercialInvoiceLine> findByShipment(Integer shipmentId);
+
 }

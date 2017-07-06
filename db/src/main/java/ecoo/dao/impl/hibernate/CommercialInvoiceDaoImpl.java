@@ -19,15 +19,4 @@ public class CommercialInvoiceDaoImpl extends BaseAuditLogDaoImpl<Integer, Comme
     public CommercialInvoiceDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, CommercialInvoice.class);
     }
-
-    @Override
-    protected boolean afterSave(CommercialInvoice model) {
-        if(model.getLines() != null) {
-            model.getLines().forEach(commercialInvoiceLine -> {
-                commercialInvoiceLine.setParentId(model.getPrimaryId());
-                getHibernateTemplate().merge(commercialInvoiceLine);
-            });
-        }
-        return true;
-    }
 }

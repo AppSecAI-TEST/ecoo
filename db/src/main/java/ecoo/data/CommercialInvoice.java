@@ -1,13 +1,13 @@
 package ecoo.data;
 
-import org.hibernate.annotations.Cascade;
 import org.hibernate.envers.Audited;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Justin Rundle
@@ -65,11 +65,6 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
     @Column(name = "pay_instruct")
     @Audited
     private String paymentInstruction;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "parent_id")
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
-    private List<CommercialInvoiceLine> lines = new ArrayList<>();
 
     /**
      * Returns the unique identifier of the object.
@@ -163,14 +158,6 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
         this.notifyPartyEmail = notifyPartyEmail;
     }
 
-    public List<CommercialInvoiceLine> getLines() {
-        return lines;
-    }
-
-    public void setLines(List<CommercialInvoiceLine> lines) {
-        this.lines = lines;
-    }
-
     public String getPaymentInstruction() {
         return paymentInstruction;
     }
@@ -193,7 +180,6 @@ public class CommercialInvoice extends BaseModel<Integer> implements Serializabl
                 ", notifyPartyPhoneNo='" + notifyPartyPhoneNo + '\'' +
                 ", notifyPartyEmail='" + notifyPartyEmail + '\'' +
                 ", paymentInstruction='" + paymentInstruction + '\'' +
-                ", lines=" + lines +
                 '}';
     }
 }

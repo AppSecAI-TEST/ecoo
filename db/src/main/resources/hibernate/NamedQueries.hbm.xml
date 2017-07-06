@@ -3,6 +3,14 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
+    <sql-query name="FIND_CI_LINES_BY_SHIPMENT">
+        <return class="ecoo.data.CommercialInvoiceLine"/>
+        <![CDATA[
+            select distinct c.* from dbo.doc_comm_inv_ln c with(nolock)
+            where c.parent_id = :shipmentId
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_CI_AMOUNTS_BY_SHIPMENT">
         <return class="ecoo.data.CommercialInvoiceAmount"/>
         <![CDATA[

@@ -85,7 +85,7 @@ public class UploadResource extends BaseResource {
             queuedUploads.add(aUpload);
             importService.submitToUploadQueue(aUpload, currentUser());
         }
-        return ResponseEntity.ok(new ProcessUploadsResponse(queuedUploads, scheduledUploads));
+        return ResponseEntity.ok(new ProcessUploadsResponse(uploadIds));
     }
 
 //    @RequestMapping(value = "/id/{id}/data/claims", method = RequestMethod.GET)

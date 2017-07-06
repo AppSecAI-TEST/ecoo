@@ -4,6 +4,7 @@ import ecoo.data.CommercialInvoice;
 import ecoo.data.CommercialInvoiceLine;
 import ecoo.data.upload.CommercialInvoiceUploadData;
 import ecoo.data.upload.Upload;
+import ecoo.service.CommercialInvoiceLineService;
 import ecoo.service.CommercialInvoiceService;
 import org.elasticsearch.common.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,9 +26,12 @@ public class ProcessCommercialInvoiceUploadCommand {
 
     private CommercialInvoiceService commercialInvoiceService;
 
+    private CommercialInvoiceLineService commercialInvoiceLineService;
+
     @Autowired
-    public ProcessCommercialInvoiceUploadCommand(CommercialInvoiceService commercialInvoiceService) {
+    public ProcessCommercialInvoiceUploadCommand(CommercialInvoiceService commercialInvoiceService, CommercialInvoiceLineService commercialInvoiceLineService) {
         this.commercialInvoiceService = commercialInvoiceService;
+        this.commercialInvoiceLineService = commercialInvoiceLineService;
     }
 
     public void execute(Upload anUpload, CommercialInvoiceUploadData data) {
@@ -49,7 +53,7 @@ public class ProcessCommercialInvoiceUploadCommand {
         commercialInvoiceLine.setAmount(new BigDecimal(data.getAmount()));
 
         LOG.info(commercialInvoiceLine.toString());
-        commercialInvoiceService.save(commercialInvoiceLine);
+        commercialInvoiceLineService.save(commercialInvoiceLine);
     }
 
     private String clean(String word) {
