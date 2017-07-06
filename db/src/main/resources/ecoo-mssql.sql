@@ -1978,15 +1978,6 @@ ALTER TABLE [dbo].upload_map ADD CONSTRAINT ux_upload_map_001 UNIQUE NONCLUSTERE
 WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
 GO
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
 CREATE TABLE [dbo].[upload_map_detail](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	map_id [int] NOT NULL,
@@ -2005,6 +1996,18 @@ ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[upload_map_detail] CHECK CONSTRAINT [fk_upload_map_detail_upload_map]
+GO
+
+
+INSERT INTO upload_map VALUES('CI','DEFAULT',1)
+GO
+
+INSERT INTO upload_map_detail VALUES(1,0,'marks'),
+(1,1,'product_code'),
+(1,2,'descr'),
+(1,3,'qty'),
+(1,4,'price'),
+(1,5,'amount')
 GO
 
 CREATE TABLE [dbo].[upload](
@@ -2078,7 +2081,7 @@ CREATE TABLE [dbo].[upload_commercial_invoice_data](
 	[price] [varchar](100) NULL,
 	[amount] [varchar](100) NULL,
 	[status] [tinyint] NULL,
-	[comments] [varchar](100) NULL
+	[comments] [varchar](500) NULL
  CONSTRAINT [pk_upload_commercial_invoice_data] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 40) ON [PRIMARY]
 ) ON [PRIMARY]
 
