@@ -1,6 +1,7 @@
 package ecoo.bpm.entity;
 
 import ecoo.data.Company;
+import ecoo.data.ShipmentStatus;
 
 /**
  * @author Justin Rundle
@@ -31,21 +32,25 @@ public class WorkflowRequestDescriptionBuilder {
                         , registerUserAccountRequest.getChamber().getName());
             case NewShipmentRequest:
                 final NewShipmentRequest newShipmentRequest = (NewShipmentRequest) workflowRequest;
-
-                final Company company = newShipmentRequest.getRequestingUser().getCompany();
-                if (company == null) {
-                    return String.format("%s is requesting approval for shipment %s with exporter reference %s."
-                            , newShipmentRequest.getRequestingUser().getDisplayName()
-                            , newShipmentRequest.getShipment().getPrimaryId()
-                            , newShipmentRequest.getShipment().getExporterReference());
+                if (newShipmentRequest.getShipment().isInStatus(ShipmentStatus.SubmittedAndPendingChamberApproval)) {
+                    final Company company = newShipmentRequest.getRequestingUser().getCompany();
+                    if (company == null) {
+                        return String.format("%s is requesting approval for shipment %s with exporter reference %s."
+                                , newShipmentRequest.getRequestingUser().getDisplayName()
+                                , newShipmentRequest.getShipment().getPrimaryId()
+                                , newShipmentRequest.getShipment().getExporterReference());
+                    } else {
+                        return String.format("%s from %s is requesting approval for shipment %s with exporter reference %s."
+                                , newShipmentRequest.getRequestingUser().getDisplayName()
+                                , company.getName()
+                                , newShipmentRequest.getShipment().getPrimaryId()
+                                , newShipmentRequest.getShipment().getExporterReference());
+                    }
                 } else {
-                    return String.format("%s from %s is requesting approval for shipment %s with exporter reference %s."
-                            , newShipmentRequest.getRequestingUser().getDisplayName()
-                            , company.getName()
+                    return String.format("More work is required for shipment %s with exporter reference %s."
                             , newShipmentRequest.getShipment().getPrimaryId()
                             , newShipmentRequest.getShipment().getExporterReference());
                 }
-
             default:
                 throw new UnsupportedOperationException(String.format("Process type %s not supported.", workflowRequest.getType()));
         }
