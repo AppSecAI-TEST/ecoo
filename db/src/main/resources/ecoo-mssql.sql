@@ -538,7 +538,7 @@ GO
 
 INSERT INTO "currency" ("id", "descr", "symbol") VALUES
 ('USD', 'US DOLLAR','$'),
-('GBP', 'BRITISH POUND','£'),
+('GBP', 'BRITISH POUND','ï¿½'),
 ('ZAR', 'SOUTH AFRICAN RAND','R');
 GO
 
@@ -937,8 +937,9 @@ GO
 CREATE TABLE "signature" (
   "id" int IDENTITY(1,1) NOT NULL,
   "personal_ref_value" varchar(50) NULL,
-  "first_name" varchar(100) NOT NULL,
-  "last_name" varchar(100) NOT NULL,
+  "first_name" varchar(200) NOT NULL,
+  "last_name" varchar(200) NOT NULL,
+  "company_name" varchar(200) NOT NULL,
   "encoded_image" nvarchar(max) NOT NULL,
   "date_created" datetime NOT NULL,
   "user_signature_id" int NULL,
@@ -951,8 +952,9 @@ CREATE TABLE "signature_log" (
   "revType" tinyint NOT NULL,
   "id" int NOT NULL,
   "personal_ref_value" varchar(50) NULL,
-  "first_name" varchar(100) NULL,
-  "last_name" varchar(100) NULL,
+  "first_name" varchar(200) NULL,
+  "last_name" varchar(200) NULL,
+  "company_name" varchar(200) NULL,
   "encoded_image" nvarchar(max) NULL,
   "date_created" datetime NULL,
   "user_signature_id" int NULL,

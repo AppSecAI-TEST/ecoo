@@ -45,6 +45,8 @@ public class SignatureResource extends BaseResource {
                 "value is required or cannot be blank.");
         Assert.hasText(request.getLastName(), "System cannot complete request. The last name " +
                 "value is required or cannot be blank.");
+        Assert.hasText(request.getCompanyName(), "System cannot complete request. The company name " +
+                "value is required or cannot be blank.");
         Assert.hasText(request.getBase64Payload(), "System cannot complete request. The base64 payload " +
                 "value is required or cannot be blank.");
 
@@ -63,6 +65,7 @@ public class SignatureResource extends BaseResource {
         signature.setPersonalRefValue(request.getPersonalReference());
         signature.setFirstName(request.getFirsName());
         signature.setLastName(request.getLastName());
+        signature.setCompanyName(request.getCompanyName());
         signature.setEncodedImage(request.getBase64Payload());
 
         signatureService.save(signature);

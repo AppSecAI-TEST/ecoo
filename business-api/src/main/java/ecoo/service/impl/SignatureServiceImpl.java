@@ -3,6 +3,7 @@ package ecoo.service.impl;
 import ecoo.dao.SignatureDao;
 import ecoo.data.Signature;
 import ecoo.service.SignatureService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -44,9 +45,19 @@ public class SignatureServiceImpl extends AuditTemplate<Integer, Signature, Sign
      */
     @Override
     protected void beforeSave(Signature entity) {
+        entity.setPersonalRefValue(clean(entity.getPersonalRefValue()));
+        entity.setFirstName(clean(entity.getFirstName()));
+        entity.setLastName(clean(entity.getLastName()));
+        entity.setCompanyName(clean(entity.getCompanyName()));
+
         if (entity.isNew()) {
             entity.setDateCreated(new Date());
             entity.setUserSignatureId(null);
         }
+    }
+
+    private String clean(String word) {
+        word = StringUtils.trimToNull(word);
+        return word == null ? null : StringUtils.trim(word).toUpperCase();
     }
 }

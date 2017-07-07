@@ -35,6 +35,10 @@ public class Signature extends BaseModel<Integer> {
     @Audited
     private String lastName;
 
+    @Column(name = "company_name")
+    @Audited
+    private String companyName;
+
     @Column(name = "encoded_image")
     @Audited
     private String encodedImage;
@@ -92,6 +96,14 @@ public class Signature extends BaseModel<Integer> {
         this.lastName = lastName;
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     public String getEncodedImage() {
         return encodedImage;
     }
@@ -125,6 +137,7 @@ public class Signature extends BaseModel<Integer> {
                 ", personalRefValue='" + personalRefValue + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", companyName='" + companyName + '\'' +
                 ", encodedImage='" + encodedImage + '\'' +
                 ", dateCreated=" + dateCreated +
                 ", userSignatureId=" + userSignatureId +

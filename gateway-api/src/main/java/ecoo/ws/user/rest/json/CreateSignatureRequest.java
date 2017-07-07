@@ -12,6 +12,8 @@ public class CreateSignatureRequest {
 
     private String lastName;
 
+    private String companyName;
+
     private String base64Payload;
 
     public String getPersonalReference() {
@@ -38,6 +40,14 @@ public class CreateSignatureRequest {
         this.lastName = lastName;
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     public String getBase64Payload() {
         return base64Payload;
     }
@@ -52,6 +62,7 @@ public class CreateSignatureRequest {
                 "personalReference='" + personalReference + '\'' +
                 ", firsName='" + firsName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", companyName='" + companyName + '\'' +
                 ", base64Payload='" + base64Payload + '\'' +
                 '}';
     }
