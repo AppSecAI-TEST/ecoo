@@ -764,7 +764,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!qty.Value</Value>
+                              <Value>=System.Math.ROUND(Fields!qty.Value,2)</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
                                 <FontSize>6pt</FontSize>
@@ -799,7 +799,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!price.Value</Value>
+                              <Value>=System.Math.ROUND(Fields!price.Value,2)</Value>
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
                                 <FontSize>6pt</FontSize>
@@ -2093,29 +2093,10 @@
 	  s.id certificate_number 
 	, s.export_ref
 	, s.buyer_ref
-	, CASE WHEN exporter_name IS NULL THEN '' ELSE exporter_name END	  
-	+ CASE WHEN exporter_building IS NULL THEN '' ELSE ', ' + exporter_building END
-	+ CASE WHEN exporter_street IS NULL THEN '' ELSE ', ' + exporter_street END
-	+ CASE WHEN exporter_city IS NULL THEN '' ELSE ', ' + exporter_city END
-	+ CASE WHEN exporter_province IS NULL THEN '' ELSE ', ' + exporter_province END 
-	+ CASE WHEN exporter_postcode IS NULL THEN '' ELSE ' ' + exporter_postcode END 
-	+ CASE WHEN exporter_country IS NULL THEN '' ELSE ', ' + exporter_country END exporter
 	
-	, CASE WHEN consignee_name IS NULL THEN '' ELSE consignee_name END	  
-	+ CASE WHEN consignee_building IS NULL THEN '' ELSE ', ' + consignee_building END
-	+ CASE WHEN consignee_street IS NULL THEN '' ELSE ', ' + consignee_street END
-	+ CASE WHEN consignee_city IS NULL THEN '' ELSE ', ' + consignee_city END
-	+ CASE WHEN consignee_province IS NULL THEN '' ELSE ', ' + consignee_province END 
-	+ CASE WHEN consignee_postcode IS NULL THEN '' ELSE ' ' + consignee_postcode END 
-	+ CASE WHEN consignee_country IS NULL THEN '' ELSE ', ' + consignee_country END consignee
-
-	, CASE WHEN buyer_name IS NULL THEN '' ELSE buyer_name END	
-	+ CASE WHEN buyer_building IS NULL THEN '' ELSE ', ' + buyer_building END
-	+ CASE WHEN buyer_street IS NULL THEN '' ELSE ', ' + buyer_street END
-	+ CASE WHEN buyer_city IS NULL THEN '' ELSE ', ' + buyer_city END
-	+ CASE WHEN buyer_province IS NULL THEN '' ELSE ', ' + buyer_province END 
-	+ CASE WHEN buyer_postcode IS NULL THEN '' ELSE ' ' + buyer_postcode END 
-	+ CASE WHEN buyer_country IS NULL THEN '' ELSE ', ' + buyer_country END buyer
+	, dbo.SqueezeAddress(exporter_name, exporter_building, exporter_street, exporter_city, exporter_province, exporter_postcode, exporter_country, NULL, NULL) exporter
+	, dbo.SqueezeAddress(consignee_name, consignee_building, consignee_street, consignee_city, consignee_province, consignee_postcode, consignee_country, NULL, NULL) consignee
+	, dbo.SqueezeAddress(buyer_name, buyer_building, buyer_street, buyer_city, buyer_province, buyer_postcode, buyer_country, NULL, NULL) buyer
 
 	,CASE WHEN consignee_country IS NULL THEN '' ELSE consignee_country END country_of_destination
 	,s.currency

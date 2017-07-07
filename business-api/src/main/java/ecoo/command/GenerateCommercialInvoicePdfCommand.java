@@ -21,16 +21,16 @@ import java.util.Map;
  * @since July 2017
  */
 @Component
-public class GenerateCooPdfCommand {
+public class GenerateCommercialInvoicePdfCommand {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GenerateCooPdfCommand.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GenerateCommercialInvoicePdfCommand.class);
 
     private ReportService reportService;
 
     private FeatureService featureService;
 
     @Autowired
-    public GenerateCooPdfCommand(ReportService reportService, FeatureService featureService) {
+    public GenerateCommercialInvoicePdfCommand(ReportService reportService, FeatureService featureService) {
         this.reportService = reportService;
         this.featureService = featureService;
     }
@@ -39,7 +39,7 @@ public class GenerateCooPdfCommand {
         final Map<String, String> reportParameters = new HashMap<>();
         reportParameters.put("shipmentId", shipment.getPrimaryId().toString());
 
-        final byte[] content = reportService.execute("/ECOO/CertificateOfOrigin"
+        final byte[] content = reportService.execute("/ECOO/CommercialInvoice"
                 , reportParameters);
 
         // C:\Users\Justin\.ecoo\temp\coo
@@ -49,7 +49,7 @@ public class GenerateCooPdfCommand {
             LOG.info(String.format("Directory %s created.", targetDir.getAbsolutePath()));
         }
 
-        final String fileName = "CertificateOfOrigin-" + shipment.getPrimaryId() + ".pdf";
+        final String fileName = "CommercialInvoice-" + shipment.getPrimaryId() + ".pdf";
         final File pdf = new File(targetDir.getAbsolutePath(), fileName);
 
         BufferedOutputStream stream = null;

@@ -9,9 +9,9 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0p7kr5c" sourceRef="ReceiveShipmentRequest" targetRef="ValidateShipmentRequestTask" />
     <bpmn:endEvent id="CompletedShipmentRequest" name="Completed Shipment Request">
-      <bpmn:incoming>SequenceFlow_1ynpgg9</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_03xwbn9</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_1xasrkz</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_11mjhv4</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1tb5any</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0zfdf0a</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0o9zj08" sourceRef="ValidateShipmentRequestTask" targetRef="MarkShipmentAsPendingApprovalTask" />
     <bpmn:serviceTask id="ValidateShipmentRequestTask" name="Validate Shipment Request" camunda:delegateExpression="${validateShipmentRequestTask}">
@@ -25,7 +25,7 @@
     </bpmn:serviceTask>
     <bpmn:serviceTask id="RejectShipmentRequestTask" name="Reject Shipment Request" camunda:delegateExpression="${rejectShipmentRequestTask}">
       <bpmn:incoming>Rejected</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_03xwbn9</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0zfdf0a</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="ApproveShipmentRequestTask" name="Approve Shipment Request" camunda:asyncAfter="true" camunda:delegateExpression="${approveShipmentRequestTask}">
       <bpmn:incoming>Approved</bpmn:incoming>
@@ -54,17 +54,22 @@
     </bpmn:userTask>
     <bpmn:serviceTask id="MarkShipmentAsNeedsWorkTask" name="Mark Shipment As Needs Work" camunda:delegateExpression="${markShipmentAsNeedsWorkTask}">
       <bpmn:incoming>SequenceFlow_00hro5g</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1xasrkz</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1tb5any</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_00hro5g" name="Need Work" sourceRef="ExclusiveGateway_0rmrr5b" targetRef="MarkShipmentAsNeedsWorkTask">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${action == "NEEDS_WORK"}]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1ynpgg9" sourceRef="GenerateCertificateOfOriginTask" targetRef="CompletedShipmentRequest" />
-    <bpmn:sequenceFlow id="SequenceFlow_03xwbn9" sourceRef="RejectShipmentRequestTask" targetRef="CompletedShipmentRequest" />
-    <bpmn:sequenceFlow id="SequenceFlow_1xasrkz" sourceRef="MarkShipmentAsNeedsWorkTask" targetRef="CompletedShipmentRequest" />
     <bpmn:serviceTask id="GenerateCertificateOfOriginTask" name="Generate Certificate Of Origin" camunda:delegateExpression="${generateCertificateOfOriginTask}">
       <bpmn:incoming>SequenceFlow_1bbtd1i</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1ynpgg9</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_06j20lm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_06j20lm" sourceRef="GenerateCertificateOfOriginTask" targetRef="GenerateCommercialInvoiceTask" />
+    <bpmn:sequenceFlow id="SequenceFlow_11mjhv4" sourceRef="GenerateCommercialInvoiceTask" targetRef="CompletedShipmentRequest" />
+    <bpmn:sequenceFlow id="SequenceFlow_1tb5any" sourceRef="MarkShipmentAsNeedsWorkTask" targetRef="CompletedShipmentRequest" />
+    <bpmn:sequenceFlow id="SequenceFlow_0zfdf0a" sourceRef="RejectShipmentRequestTask" targetRef="CompletedShipmentRequest" />
+    <bpmn:serviceTask id="GenerateCommercialInvoiceTask" name="Generate Commercial Invoice" camunda:delegateExpression="${generateCommercialInvoiceTask}">
+      <bpmn:incoming>SequenceFlow_06j20lm</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11mjhv4</bpmn:outgoing>
     </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -83,9 +88,9 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_0ahpj89_di" bpmnElement="CompletedShipmentRequest">
-        <dc:Bounds x="982" y="102" width="36" height="36" />
+        <dc:Bounds x="1071" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="955" y="148" width="90" height="20" />
+          <dc:Bounds x="1044" y="148" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0o9zj08_di" bpmnElement="SequenceFlow_0o9zj08">
@@ -163,33 +168,43 @@
           <dc:Bounds x="344.05882352941177" y="234" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1ynpgg9_di" bpmnElement="SequenceFlow_1ynpgg9">
-        <di:waypoint xsi:type="dc:Point" x="719" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="982" y="120" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="805.5" y="95" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_03xwbn9_di" bpmnElement="SequenceFlow_03xwbn9">
-        <di:waypoint xsi:type="dc:Point" x="567" y="-39" />
-        <di:waypoint xsi:type="dc:Point" x="775" y="-39" />
-        <di:waypoint xsi:type="dc:Point" x="775" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="982" y="120" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="745" y="30.5" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1xasrkz_di" bpmnElement="SequenceFlow_1xasrkz">
-        <di:waypoint xsi:type="dc:Point" x="567" y="261" />
-        <di:waypoint xsi:type="dc:Point" x="775" y="261" />
-        <di:waypoint xsi:type="dc:Point" x="775" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="982" y="120" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="745" y="180.5" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_015ltsu_di" bpmnElement="GenerateCertificateOfOriginTask">
         <dc:Bounds x="619" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_06j20lm_di" bpmnElement="SequenceFlow_06j20lm">
+        <di:waypoint xsi:type="dc:Point" x="719" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="765" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="697" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_11mjhv4_di" bpmnElement="SequenceFlow_11mjhv4">
+        <di:waypoint xsi:type="dc:Point" x="865" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="1071" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="923" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1tb5any_di" bpmnElement="SequenceFlow_1tb5any">
+        <di:waypoint xsi:type="dc:Point" x="567" y="261" />
+        <di:waypoint xsi:type="dc:Point" x="924" y="261" />
+        <di:waypoint xsi:type="dc:Point" x="924" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="1071" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="894" y="180.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0zfdf0a_di" bpmnElement="SequenceFlow_0zfdf0a">
+        <di:waypoint xsi:type="dc:Point" x="567" y="-39" />
+        <di:waypoint xsi:type="dc:Point" x="928" y="-39" />
+        <di:waypoint xsi:type="dc:Point" x="928" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="1071" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="898" y="30.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1ljfzh6_di" bpmnElement="GenerateCommercialInvoiceTask">
+        <dc:Bounds x="765" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -2356,6 +2356,69 @@ BEGIN
 END
 GO
 
+CREATE FUNCTION [dbo].[SqueezeAddress](@name [varchar](200),	
+	@building [varchar](100),
+	@street [varchar](100),
+	@city [varchar](100),
+	@postcode [varchar](100),
+	@province [varchar](10),
+	@country [varchar](100),
+	@phone_no [varchar](100),
+	@email [varchar](255))
+RETURNS VARCHAR(MAX)
+AS
+BEGIN	
+	DECLARE @word varchar(max)
+	
+	SET @word = ''
+	
+	IF(@name IS NOT NULL) SET @word = @word + @name
+	IF(@building IS NOT NULL) BEGIN
+		IF(LEN(@word) > 0) SET @word = @word + ', '
+		SET @word = @word + @building
+	END
+	
+	IF(@street IS NOT NULL) BEGIN
+		IF(LEN(@word) > 0 AND RIGHT(RTRIM(@word),1) <> ',') SET @word = @word + ', '
+		SET @word = @word + @street
+	END
+	
+	IF(@city IS NOT NULL) BEGIN
+		IF(LEN(@word) > 0 AND RIGHT(RTRIM(@word),1) <> ',') SET @word = @word + ', '
+		SET @word = @word + @city
+	END
+	
+	IF(@postcode IS NOT NULL) BEGIN
+		IF(LEN(@word) > 0 AND RIGHT(RTRIM(@word),1) <> ',') SET @word = @word + ', '
+		SET @word = @word + @postcode
+	END
+	
+	IF(@province IS NOT NULL) BEGIN
+		IF(LEN(@word) > 0 AND RIGHT(RTRIM(@word),1) <> ',') SET @word = @word + ', '
+		SET @word = @word + @province
+	END
+	
+	IF(@country IS NOT NULL) BEGIN
+		IF(LEN(@word) > 0 AND RIGHT(RTRIM(@word),1) <> ',') SET @word = @word + ', '
+		SET @word = @word + @country
+	END
+	
+	IF(@phone_no IS NOT NULL) BEGIN
+		IF(LEN(@word) > 0 AND RIGHT(RTRIM(@word),1) <> ',') SET @word = @word + ', '
+		SET @word = @word + @phone_no
+	END
+	
+	IF(@email IS NOT NULL) BEGIN
+		IF(LEN(@word) > 0 AND RIGHT(RTRIM(@word),1) <> ',') SET @word = @word + ', '
+		SET @word = @word + @email
+	END
+		
+	RETURN @word
+END
+
+GO
+
+
 ----------------------------------------------------------------------------------------------------------------
 -- POPULATE AUDIT TABLES
 ----------------------------------------------------------------------------------------------------------------
