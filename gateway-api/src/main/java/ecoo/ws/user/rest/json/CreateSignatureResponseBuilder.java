@@ -8,6 +8,7 @@ public final class CreateSignatureResponseBuilder {
     private String personalReference;
     private String firsName;
     private String lastName;
+    private String companyName;
     private String base64Payload;
     private boolean successfulInd;
 
@@ -33,6 +34,11 @@ public final class CreateSignatureResponseBuilder {
         return this;
     }
 
+    public CreateSignatureResponseBuilder withCompanyName(String companyName) {
+        this.companyName = companyName;
+        return this;
+    }
+
     public CreateSignatureResponseBuilder withBase64Payload(String base64Payload) {
         this.base64Payload = base64Payload;
         return this;
@@ -48,6 +54,7 @@ public final class CreateSignatureResponseBuilder {
         createSignatureResponse.setPersonalReference(personalReference);
         createSignatureResponse.setFirsName(firsName);
         createSignatureResponse.setLastName(lastName);
+        createSignatureResponse.setCompanyName(companyName);
         createSignatureResponse.setBase64Payload(base64Payload);
         createSignatureResponse.setSuccessfulInd(successfulInd);
         return createSignatureResponse;

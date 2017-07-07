@@ -531,14 +531,14 @@ GO
 CREATE TABLE [dbo].[currency](
 	[id] [varchar](3) NOT NULL,
 	[descr] [varchar](50) NOT NULL,
-	[symbol] [varchar](1) NOT NULL,
+	[symbol] [nvarchar](1) NOT NULL,
 CONSTRAINT [pk_currency] PRIMARY KEY CLUSTERED 
 ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 INSERT INTO "currency" ("id", "descr", "symbol") VALUES
 ('USD', 'US DOLLAR','$'),
-('GBP', 'BRITISH POUND','�'),
+('GBP', 'BRITISH POUND','£'),
 ('ZAR', 'SOUTH AFRICAN RAND','R');
 GO
 
@@ -547,7 +547,7 @@ CREATE TABLE "currency_log" (
   "revType" tinyint NOT NULL,
 	[id] [varchar](3) NOT NULL,
 	[descr] [varchar](50) NULL,
-	[symbol] [varchar](1) NULL,
+	[symbol] [nvarchar](1) NULL,
 CONSTRAINT pk_currency_log PRIMARY KEY CLUSTERED 
 ([rev] ASC,[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO

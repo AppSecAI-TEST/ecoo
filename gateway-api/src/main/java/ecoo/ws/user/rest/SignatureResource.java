@@ -74,6 +74,7 @@ public class SignatureResource extends BaseResource {
                 .withPersonalReference(request.getPersonalReference())
                 .withFirsName(request.getFirsName())
                 .withLastName(request.getLastName())
+                .withCompanyName(request.getCompanyName())
                 .withBase64Payload(request.getBase64Payload())
                 .withSuccessfulInd(true)
                 .build());
