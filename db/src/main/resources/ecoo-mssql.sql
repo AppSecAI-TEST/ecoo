@@ -833,7 +833,6 @@ CREATE TABLE "company_doc_log" (
   "company_id" int NULL,
   "doc_type" varchar(3) NULL,
   "file_name" [varchar](255) NULL,
-  "encoded_image" nvarchar(max) NULL,
   "mime_type" varchar(20) NULL,
   "size_in_kb" smallint NULL,
   "date_created" datetime NULL,
@@ -1202,7 +1201,6 @@ CREATE TABLE [dbo].[user_signature_log](
 	[revType] tinyint NOT NULL,
 	[id] [int] NOT NULL,
 	[user_id] int NULL,
-  "encoded_image" nvarchar(max) NULL,
   "eff_from_date" datetime NULL,
   "eff_to_date" datetime NULL,
  CONSTRAINT [pk_user_signature_log] PRIMARY KEY CLUSTERED 
@@ -1637,7 +1635,6 @@ CREATE TABLE [dbo].[shipment_doc_log](
 	[shipment_id] [int] NULL,
 	[doc_type] [varchar](3) NULL,
 	[file_name] [varchar](255) NULL,
-	[data] nvarchar(max) NULL,
 	[mime_type] varchar(20) NULL,
 	[size_in_kb] smallint NULL,
 	[date_created] datetime NULL,
@@ -1702,7 +1699,7 @@ CREATE TABLE [ecoo].[dbo].[doc_comm_inv_ln](
 	[marks] [varchar](50) NOT NULL,
 	[product_code] [varchar](50) NOT NULL,
 	[descr] [varchar](100) NOT NULL,
-	[qty] [int] NOT NULL,
+	[qty] [decimal](19,4)  NOT NULL,
 	[price] [decimal](19,4) NOT NULL,
 	[amount] [decimal](19,4) NOT NULL,
 CONSTRAINT [pk_doc_comm_inv_ln] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
@@ -1719,7 +1716,7 @@ CREATE TABLE [dbo].[doc_comm_inv_ln_log](
 	[marks] [varchar](50) NULL,
 	[product_code] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
-	[qty] [int] NULL,
+	[qty] [decimal](19,4) NULL,
 	[price] [decimal](19,4) NULL,
 	[amount] [decimal](19,4) NULL,
 CONSTRAINT [pk_doc_comm_inv_ln_log] PRIMARY KEY CLUSTERED ([rev] ASC,	[id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
@@ -1860,7 +1857,7 @@ CREATE TABLE [ecoo].[dbo].[doc_coo_ln](
 	[marks] [varchar](50) NOT NULL,
 	[descr] [varchar](100) NOT NULL,
 	[origin] [varchar](200) NOT NULL,
-	[qty] [tinyint] NOT NULL,
+	[qty] [decimal](19,4)  NOT NULL,
 	[price] [decimal](19,4) NOT NULL,
 CONSTRAINT [pk_doc_coo_ln] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
@@ -1877,7 +1874,7 @@ CREATE TABLE [dbo].[doc_coo_ln_log](
 	[marks] [varchar](50) NULL,
 	[descr] [varchar](100) NULL,
 	[origin] [varchar](200) NULL,
-	[qty] [tinyint] NULL,
+	[qty] [decimal](19,4) NULL,
 	[price] [decimal](19,4) NULL,
 CONSTRAINT [pk_doc_coo_ln_log] PRIMARY KEY CLUSTERED ([rev] ASC, [id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO

@@ -29,7 +29,6 @@ public class UserSignature extends BaseModel<Integer> {
     private Integer userId;
 
     @Column(name = "encoded_image")
-    @Audited
     private String encodedImage;
 
     @Column(name = "eff_from_date")

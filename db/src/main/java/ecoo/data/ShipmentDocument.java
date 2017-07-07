@@ -36,7 +36,6 @@ public class ShipmentDocument extends BaseModel<Integer> implements Serializable
     private String fileName;
 
     @Column(name = "data")
-    @Audited
     private String data;
 
     @Column(name = "mime_type")

@@ -36,7 +36,6 @@ public class CompanyDocument extends BaseModel<Integer> implements Serializable 
     private String fileName;
 
     @Column(name = "encoded_image")
-    @Audited
     private String encodedImage;
 
     @Column(name = "mime_type")
