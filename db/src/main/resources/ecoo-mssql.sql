@@ -901,7 +901,7 @@ INSERT INTO "feature" ("id", "name", "value", "descr") VALUES
 (1, 'SMTP_SERVER', 'mail.ecoo.co.za', 'The SMTP server either host name or IP address'),
 (2, 'SMTP_USERNAME', 'smartadmin@ecoo.co.za', 'The SMTP server username'),
 (3, 'SMTP_PWD', 'Hen007007!', 'The SMTP server password'),
-(4, 'SMTP_DEBUG', 'true', 'Show SMTP connection logs'),
+(4, 'SMTP_DEBUG', 'false', 'Show SMTP connection logs'),
 (5, 'SMTP_PORT', '25', 'The SMTP server port'),
 (6, 'NON_PRODUCTION_EMAIL', 'justin@s-squared.co.za', 'The target email address for non-production deployments'),
 (7, 'OUTGOING_EMAIL', 'no-reply@ecoo.co.za', 'The email address used when sending emails out from the application'),
