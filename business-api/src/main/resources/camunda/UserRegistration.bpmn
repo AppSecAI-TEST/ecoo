@@ -9,7 +9,7 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0p7kr5c" sourceRef="ReceiveRegisterUserRequest" targetRef="MarkCompanyAsPendingApprovalTask" />
     <bpmn:serviceTask id="MarkUserAccountAsPendingApprovalTask" name="Mark User Account As Pending Approval" camunda:delegateExpression="${markUserAccountAsPendingApprovalTask}">
-      <bpmn:incoming>SequenceFlow_0h34fnl</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0uvmup2</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_08fdnn1</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:userTask id="VerifyUserAccountRequest" name="Verify User Account Request">
@@ -24,7 +24,6 @@
       <bpmn:incoming>SequenceFlow_0brcos7</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0p2kftd" sourceRef="RejectUserAccountRequest" targetRef="Task_0iqfyyc" />
-    <bpmn:sequenceFlow id="SequenceFlow_16yvzvu" sourceRef="SendActivationEmailTask" targetRef="CompleteUserAccountActivation" />
     <bpmn:exclusiveGateway id="UserAccountApproved" name="User Account Approved?">
       <bpmn:incoming>SequenceFlow_0y55ev9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1w39fi9</bpmn:outgoing>
@@ -41,12 +40,8 @@
       <bpmn:incoming>SequenceFlow_0njtk01</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_17levmb</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="SendActivationEmailTask" name="Send Activation Email" camunda:delegateExpression="${sendActivationEmailTask}">
-      <bpmn:incoming>SequenceFlow_160a4zb</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_16yvzvu</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:serviceTask id="CompleteUserAccountActivation" name="Activate Account" camunda:delegateExpression="${completeUserAccountActivationTask}">
-      <bpmn:incoming>SequenceFlow_16yvzvu</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_160a4zb</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0brcos7</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="RejectUserAccountRequest" name="Reject User Account Request" camunda:delegateExpression="${rejectUserAccountRequestTask}">
@@ -60,33 +55,36 @@
     <bpmn:sequenceFlow id="SequenceFlow_17levmb" sourceRef="ApproveUserAccountRequestTask" targetRef="RemoveAssociatedSignatureTask" />
     <bpmn:sequenceFlow id="SequenceFlow_08fdnn1" sourceRef="MarkUserAccountAsPendingApprovalTask" targetRef="VerifyUserAccountRequest" />
     <bpmn:sequenceFlow id="SequenceFlow_1qc7sna" sourceRef="Task_0iqfyyc" targetRef="EndEvent_0ahpj89" />
-    <bpmn:sequenceFlow id="SequenceFlow_0h34fnl" sourceRef="MarkCompanyAsPendingApprovalTask" targetRef="MarkUserAccountAsPendingApprovalTask" />
     <bpmn:serviceTask id="MarkCompanyAsPendingApprovalTask" name="Mark Company As Pending Approval" camunda:delegateExpression="${markCompanyAsPendingApprovalTask}">
       <bpmn:incoming>SequenceFlow_0p7kr5c</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0h34fnl</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0qbetkq</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="RemoveAssociatedSignatureTask" name="Remove Associated Signature" camunda:asyncBefore="true" camunda:delegateExpression="${removeAssociatedSignatureTask}">
       <bpmn:incoming>SequenceFlow_17levmb</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_160a4zb</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_0brcos7" sourceRef="CompleteUserAccountActivation" targetRef="EndEvent_0ahpj89" />
-    <bpmn:sequenceFlow id="SequenceFlow_160a4zb" sourceRef="RemoveAssociatedSignatureTask" targetRef="SendActivationEmailTask" />
+    <bpmn:sequenceFlow id="SequenceFlow_160a4zb" sourceRef="RemoveAssociatedSignatureTask" targetRef="CompleteUserAccountActivation" />
+    <bpmn:sequenceFlow id="SequenceFlow_0qbetkq" sourceRef="MarkCompanyAsPendingApprovalTask" targetRef="SendWelcomeEmailTask" />
+    <bpmn:sequenceFlow id="SequenceFlow_0uvmup2" sourceRef="SendWelcomeEmailTask" targetRef="MarkUserAccountAsPendingApprovalTask" />
+    <bpmn:serviceTask id="SendWelcomeEmailTask" name="Send Welcome Email" camunda:delegateExpression="${sendWelcomeEmailTask}">
+      <bpmn:incoming>SequenceFlow_0qbetkq</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0uvmup2</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="UserRegistration">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="ReceiveRegisterUserRequest">
-        <dc:Bounds x="-223" y="102" width="36" height="36" />
+        <dc:Bounds x="-323" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-250" y="138" width="90" height="20" />
+          <dc:Bounds x="-350" y="138" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0p7kr5c_di" bpmnElement="SequenceFlow_0p7kr5c">
-        <di:waypoint xsi:type="dc:Point" x="-187" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="-107" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="-107" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="-35" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="-287" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="-226" y="120" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-137" y="110" width="90" height="20" />
+          <dc:Bounds x="-301.5" y="95" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1vszbj2_di" bpmnElement="MarkUserAccountAsPendingApprovalTask">
@@ -108,13 +106,6 @@
         <di:waypoint xsi:type="dc:Point" x="1048" y="-44" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="865" y="-54" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_16yvzvu_di" bpmnElement="SequenceFlow_16yvzvu">
-        <di:waypoint xsi:type="dc:Point" x="1148" y="282" />
-        <di:waypoint xsi:type="dc:Point" x="1268" y="282" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1163" y="257" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ExclusiveGateway_1i9bgko_di" bpmnElement="UserAccountApproved" isMarkerVisible="true">
@@ -146,9 +137,6 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_0l2gwlc_di" bpmnElement="ApproveUserAccountRequestTask">
         <dc:Bounds x="641" y="242" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_0z0higs_di" bpmnElement="SendActivationEmailTask">
-        <dc:Bounds x="1048" y="242" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1oyj4tb_di" bpmnElement="CompleteUserAccountActivation">
         <dc:Bounds x="1268" y="242" width="100" height="80" />
@@ -182,15 +170,8 @@
           <dc:Bounds x="1324" y="28" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0h34fnl_di" bpmnElement="SequenceFlow_0h34fnl">
-        <di:waypoint xsi:type="dc:Point" x="65" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="181" y="120" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="78" y="95" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1dt0grh_di" bpmnElement="MarkCompanyAsPendingApprovalTask">
-        <dc:Bounds x="-35" y="80" width="100" height="80" />
+        <dc:Bounds x="-226" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_0x8hd7i_di" bpmnElement="RemoveAssociatedSignatureTask">
         <dc:Bounds x="816" y="242" width="100" height="80" />
@@ -208,11 +189,28 @@
         <di:waypoint xsi:type="dc:Point" x="916" y="282" />
         <di:waypoint xsi:type="dc:Point" x="982" y="282" />
         <di:waypoint xsi:type="dc:Point" x="982" y="282" />
-        <di:waypoint xsi:type="dc:Point" x="1048" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="1268" y="282" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="952" y="272" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0qbetkq_di" bpmnElement="SequenceFlow_0qbetkq">
+        <di:waypoint xsi:type="dc:Point" x="-126" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="-23" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-119.5" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0uvmup2_di" bpmnElement="SequenceFlow_0uvmup2">
+        <di:waypoint xsi:type="dc:Point" x="77" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="181" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="84" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1sglogv_di" bpmnElement="SendWelcomeEmailTask">
+        <dc:Bounds x="-23" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

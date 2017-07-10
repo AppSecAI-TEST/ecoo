@@ -1,5 +1,6 @@
 package ecoo.service.impl;
 
+import ecoo.data.Chamber;
 import ecoo.data.Feature;
 import ecoo.data.User;
 import ecoo.service.FeatureService;
@@ -47,12 +48,14 @@ public final class NotificationServiceImpl implements NotificationService {
      * Method used to send an email to confirm the new user was successfully imported in the system.
      *
      * @param newUser The newly imported user.
+     * @param chamber The chamber the application is sent to.
      * @return The message.
      * @throws IllegalArgumentException If newUser is null.
      */
     @Override
-    public MimeMessage createNewUserConfirmationEmail(User newUser) throws UnsupportedEncodingException, AddressException {
+    public MimeMessage createNewUserConfirmationEmail(User newUser, Chamber chamber) throws UnsupportedEncodingException, AddressException {
         Assert.notNull(newUser, "The variable newUser cannot be null.");
+        Assert.notNull(chamber, "The variable chamber cannot be null.");
 
         final Feature nonProductionEmail = featureService.findByName(Feature.Type.NON_PRODUCTION_EMAIL);
         final Collection<InternetAddress> intendedRecipients = determineRecipient(newUser, nonProductionEmail);
@@ -64,14 +67,16 @@ public final class NotificationServiceImpl implements NotificationService {
             final String subject = "Confirmation E-Mail";
             message.setSubject(subject);
 
-            final Feature outgoingEmail = featureService.findByName(Feature.Type.OUTGOING_EMAIL);
+            final Feature outgoingEmail = featureService.findByName(Feature.Type.SMTP_USERNAME);
             final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
-            final Feature gatewayUrl = featureService.findByName(Feature.Type.GATEWAY_URL);
+            final Feature shortcut = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
 
             final Map<String, Object> model = new HashMap<>();
             model.put("outgoingEmail", outgoingEmail.getValue());
             model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
-            model.put("gatewayUrl", gatewayUrl);
+            model.put("shortcut", shortcut.getValue());
+            model.put("displayName", newUser.getDisplayName());
+            model.put("chamberName", chamber.getName());
 
             final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
                     "velocity/NewUserNotificationTemplate.vm", DEFAULT_ENCODING, model);

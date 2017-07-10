@@ -36,7 +36,8 @@ public class NotificationResource extends BaseResource {
     @RequestMapping(value = "/send/user/{userId}", method = RequestMethod.GET)
     public ResponseEntity<Boolean> sendTestEmail(@PathVariable Integer userId) throws UnsupportedEncodingException, AddressException {
         final User recipient = userService.findById(userId);
-        final MimeMessage newUserConfirmationEmail = notificationService.createNewUserConfirmationEmail(recipient);
+        
+        final MimeMessage newUserConfirmationEmail = notificationService.createNewUserConfirmationEmail(recipient,null);
         notificationService.send(newUserConfirmationEmail);
 
         return ResponseEntity.ok(true);
