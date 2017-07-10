@@ -69,12 +69,14 @@ public final class NotificationServiceImpl implements NotificationService {
 
             final Feature outgoingEmail = featureService.findByName(Feature.Type.SMTP_USERNAME);
             final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
-            final Feature shortcut = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
+            final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
+
+            final String applicationLoginUrl = applicationRootUrl.getValue() + "/#/login";
 
             final Map<String, Object> model = new HashMap<>();
             model.put("outgoingEmail", outgoingEmail.getValue());
             model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
-            model.put("shortcut", shortcut.getValue());
+            model.put("applicationLoginUrl", applicationLoginUrl);
             model.put("displayName", newUser.getDisplayName());
             model.put("chamberName", chamber.getName());
 
