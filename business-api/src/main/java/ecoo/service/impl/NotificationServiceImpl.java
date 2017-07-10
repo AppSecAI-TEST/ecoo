@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.Assert;
 
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -149,11 +146,38 @@ public final class NotificationServiceImpl implements NotificationService {
         } else {
             LOG.info(String.format("SMTP server set to %s >> send email.", smtpServer.getValue()));
 
+            final Feature smtpUser = featureService.findByName(Feature.Type.SMTP_USERNAME);
+            Assert.notNull(smtpUser, "SMTP_USERNAME not found.");
+            Assert.hasText(smtpUser.getValue(), "SMTP_USERNAME not found.");
+
+            final Feature smtpPwd = featureService.findByName(Feature.Type.SMTP_PWD);
+            Assert.notNull(smtpPwd, "SMTP_PWD not found.");
+            Assert.hasText(smtpPwd.getValue(), "SMTP_PWD not found.");
+
+            final Feature smtpDebug = featureService.findByName(Feature.Type.SMTP_DEBUG);
+            Assert.notNull(smtpDebug, "SMTP_DEBUG not found.");
+            Assert.hasText(smtpDebug.getValue(), "SMTP_DEBUG not found.");
+
+            final Feature smtpPort = featureService.findByName(Feature.Type.SMTP_PORT);
+            Assert.notNull(smtpPort, "SMTP_PORT not found.");
+            Assert.hasText(smtpPort.getValue(), "SMTP_PORT not found.");
+
             final Properties properties = new Properties();
             properties.setProperty("mail.transport.protocol", "smtp");
             properties.setProperty("mail.host", smtpServer.getValue());
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.starttls.enable", "true");
+            properties.put("mail.debug", smtpDebug.getValue());
+            properties.put("mail.smtp.port", smtpPort.getValue());
 
-            final Session session = Session.getDefaultInstance(properties);
+            LOG.info(String.format("Using... {username=%s, password=%s}", smtpUser.getValue(), smtpPwd.getValue()));
+
+            final Session session = Session.getInstance(properties,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(smtpUser.getValue(), smtpPwd.getValue());
+                        }
+                    });
             try {
                 final StringBuilder recipients = new StringBuilder();
                 for (Address a : mimeMessage.getRecipients(Message.RecipientType.TO)) {
@@ -170,8 +194,8 @@ public final class NotificationServiceImpl implements NotificationService {
                 final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
 
                 final String serverName = InetAddress.getLocalHost().getHostName();
-                Address sender = new InternetAddress(serverName + "@ecoo.co.za",
-                        outgoingDisplayName.getValue());
+                Address sender = new InternetAddress(smtpUser.getValue(), outgoingDisplayName.getValue()
+                        + " (" + serverName + ")");
                 mimeMessage.setFrom(sender);
 
                 String messageId = mimeMessage.getMessageID();
