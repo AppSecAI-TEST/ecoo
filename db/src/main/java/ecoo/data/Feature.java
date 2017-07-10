@@ -15,66 +15,7 @@ public final class Feature extends BaseModel<Integer> {
     private static final long serialVersionUID = 7272335525501016490L;
 
     public enum Type {
-        /**
-         * The application home directory.
-         */
-        APP_HOME
-
-        /**
-         * The SMTP server host name.
-         */
-        , SMTP_SERVER
-
-
-        /**
-         * The string representation of the Scheduler web service url.
-         */
-        , SCHEDULER_API_URL
-
-        /**
-         * The string representation of the Kibana UI.
-         */
-        , KIBANA_URL
-
-        /**
-         * The string representation of the SPIV Gateway API URL.
-         */
-        , GATEWAY_API_URL
-
-        /**
-         * The string representation of the workflow web service API URL.
-         */
-        , WORKFLOW_API_URL
-
-        /**
-         * The person responsible for action user related workflow requests.
-         */
-        , BPM_USER_ASSIGNEE
-
-        /**
-         * The person responsible for action incentive related workflow requests.
-         */
-        , BPM_INCENTIVE_ASSIGNEE
-
-        /**
-         * The person responsible for action claim related workflow requests
-         */
-        , BPM_CLAIM_ASSIGNEE
-
-        /**
-         * The company registration name that reflects on the bank file
-         */
-        , COMPANY_NAME
-
-        /**
-         * The company bank account number on the bank file
-         */
-        , COMPANY_BANK_ACC_NUMBER
-
-        /**
-         * The company branch code on the bank file
-         */
-        , COMPANY_BANK_BRANCH
+        APP_HOME, SMTP_SERVER, NON_PRODUCTION_EMAIL, OUTGOING_EMAIL, OUTGOING_DISPLAY_NAME
     }
 
     @Id
