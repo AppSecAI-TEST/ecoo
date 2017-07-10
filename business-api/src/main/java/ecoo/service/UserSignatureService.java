@@ -1,5 +1,6 @@
 package ecoo.service;
 
+import ecoo.data.Signature;
 import ecoo.data.UserSignature;
 
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.List;
  */
 public interface UserSignatureService extends CrudService<Integer, UserSignature>, AuditedModelAware<UserSignature> {
 
+    UserSignature assign(Integer userId, Signature signature);
+
     /**
      * Returns the list of user addresses for the given user.
      *
@@ -17,5 +20,4 @@ public interface UserSignatureService extends CrudService<Integer, UserSignature
      * @return A list.
      */
     List<UserSignature> findByUser(Integer userId);
-
 }

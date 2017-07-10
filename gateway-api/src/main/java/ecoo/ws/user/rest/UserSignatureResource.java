@@ -1,7 +1,8 @@
 package ecoo.ws.user.rest;
 
-import ecoo.data.audit.Revision;
+import ecoo.data.Signature;
 import ecoo.data.UserSignature;
+import ecoo.data.audit.Revision;
 import ecoo.service.UserSignatureService;
 import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,12 @@ public class UserSignatureResource extends BaseResource {
     @Autowired
     public UserSignatureResource(UserSignatureService userSignatureService) {
         this.userSignatureService = userSignatureService;
+    }
+
+    @RequestMapping(value = "/user/{userId}/assign", method = RequestMethod.POST)
+    public ResponseEntity<Boolean> assign(@PathVariable Integer userId, @RequestBody Signature signature) {
+        userSignatureService.assign(userId, signature);
+        return ResponseEntity.ok(true);
     }
 
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)

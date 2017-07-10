@@ -153,6 +153,15 @@
 	  	]]>
     </sql-query>
 
+    <sql-query name="FIND_USER_SIGNATURES_BY_USER_AND_EFFECTIVE_DATE">
+        <return class="ecoo.data.UserSignature"/>
+        <![CDATA[
+            select * from dbo.user_signature with(nolock)
+            where user_id = :userId
+            and (:effectiveDate between eff_from_date and eff_to_date)
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_USER_SIGNATURES_BY_USER">
         <return class="ecoo.data.UserSignature"/>
         <![CDATA[
