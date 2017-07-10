@@ -46,6 +46,12 @@ public class UserResource extends BaseResource {
         this.companyValidator = companyValidator;
     }
 
+    @RequestMapping(value = "/activate/activationSerialNumber/{activationSerialNumber}", method = RequestMethod.GET)
+    public ResponseEntity<User> activate(@PathVariable String activationSerialNumber) {
+        Assert.hasText(activationSerialNumber, "The variable activationSerialNumber cannot be null.");
+        return ResponseEntity.ok(userService.activate(activationSerialNumber));
+    }
+
     @RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
     public ResponseEntity<ForgotPasswordResponse> requestPasswordReset(@RequestBody ForgotPasswordRequest request) {
         return ResponseEntity.ok(workflowService.forgetPassword(request));

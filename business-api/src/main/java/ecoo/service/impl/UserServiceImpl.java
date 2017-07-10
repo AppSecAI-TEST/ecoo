@@ -65,6 +65,41 @@ public class UserServiceImpl extends ElasticsearchAuditTemplate<Integer
     }
 
     /**
+     * Method to activate the user.
+     *
+     * @param activationSerialNumber The unique serial number.
+     * @return The activated user.
+     */
+    @Transactional
+    @Override
+    public User activate(String activationSerialNumber) {
+        // TODO:
+        // findByMobileNumber()
+        return null;
+    }
+
+    /**
+     * Returns the user for the given activation serial number.
+     *
+     * @param activationSerialNumber The unique serial number.
+     * @return The user or null.
+     */
+    @Override
+    public User findByActivationSerialNumber(String activationSerialNumber) {
+        final List<User> users = userElasticsearchRepository.findUsersByActivationSerialNumber(activationSerialNumber);
+        if (users == null || users.isEmpty()) {
+            final User user = userDao.findByActivationSerialNumber(activationSerialNumber);
+            if (user == null) {
+                return null;
+            } else {
+                userElasticsearchRepository.save(user);
+                return user;
+            }
+        }
+        return users.iterator().next();
+    }
+
+    /**
      * Returns the list of users for the given company.
      *
      * @param companyId The company pk to evaluate.

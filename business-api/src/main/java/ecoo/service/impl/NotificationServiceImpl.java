@@ -66,10 +66,15 @@ public final class NotificationServiceImpl implements NotificationService {
 
             final Feature outgoingEmail = featureService.findByName(Feature.Type.OUTGOING_EMAIL);
             final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
+            final Feature gatewayUrl = featureService.findByName(Feature.Type.GATEWAY_URL);
+
+            final String confirmationUrl = gatewayUrl + "/api/users/activate/activationSerialNumber/"
+                    + newUser.getActivationSerialNumber();
 
             final Map<String, Object> model = new HashMap<>();
             model.put("outgoingEmail", outgoingEmail.getValue());
             model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
+            model.put("confirmationUrl", confirmationUrl);
 
             final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
                     "velocity/NewUserNotificationTemplate.vm", DEFAULT_ENCODING, model);

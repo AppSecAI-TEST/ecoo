@@ -180,4 +180,22 @@ public class UserDaoImpl extends BaseAuditLogDaoImpl<Integer, User> implements U
         }
         return (User) data.iterator().next();
     }
+
+    /**
+     * Returns the user for the given activation serial number.
+     *
+     * @param activationSerialNumber The unique serial number.
+     * @return The user or null.
+     */
+    @Override
+    public User findByActivationSerialNumber(String activationSerialNumber) {
+        final DetachedCriteria detachedCriteria = DetachedCriteria.forClass(User.class, "user");
+        detachedCriteria.add(Restrictions.eq("user.activationSerialNumber", activationSerialNumber));
+
+        final List<?> data = getHibernateTemplate().findByCriteria(detachedCriteria);
+        if (data == null || data.isEmpty()) {
+            return null;
+        }
+        return (User) data.iterator().next();
+    }
 }

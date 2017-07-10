@@ -18,6 +18,5 @@ public class SendRejectedEmailTask implements JavaDelegate {
     @Override
     public void execute(final DelegateExecution delegateExecution) throws Exception {
         log.info("Called");
-        // TODO: Need to think about this and implement.
     }
 }

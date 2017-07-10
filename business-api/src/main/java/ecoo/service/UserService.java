@@ -19,6 +19,22 @@ import java.util.List;
 public interface UserService extends CrudService<Integer, User>, UserDetailsService, AuditedModelAware<User> {
 
     /**
+     * Method to activate the user.
+     *
+     * @param activationSerialNumber The unique serial number.
+     * @return The activated user.
+     */
+    User activate(String activationSerialNumber);
+
+    /**
+     * Returns the user for the given activation serial number.
+     *
+     * @param activationSerialNumber The unique serial number.
+     * @return The user or null.
+     */
+    User findByActivationSerialNumber(String activationSerialNumber);
+
+    /**
      * Returns the list of users for the given company.
      *
      * @param companyId The company pk to evaluate.

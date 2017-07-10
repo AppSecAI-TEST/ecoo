@@ -77,4 +77,12 @@ public interface UserDao extends AuditLogDao<Integer, User> {
      * @return The user or null.
      */
     User findByMobileNumber(String mobileNumber);
+
+    /**
+     * Returns the user for the given activation serial number.
+     *
+     * @param activationSerialNumber The unique serial number.
+     * @return The user or null.
+     */
+    User findByActivationSerialNumber(String activationSerialNumber);
 }

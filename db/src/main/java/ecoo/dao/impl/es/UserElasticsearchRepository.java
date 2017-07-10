@@ -13,6 +13,8 @@ import java.util.List;
 @Repository(value = "userElasticsearchRepository")
 public interface UserElasticsearchRepository extends ElasticsearchRepository<User, Integer> {
 
+    List<User> findUsersByActivationSerialNumber(String activationSerialNumber);
+
     List<User> findUsersByPrimaryEmailAddress(String primaryEmailAddress);
 
     List<User> findUsersByMobileNumber(String mobileNumber);
