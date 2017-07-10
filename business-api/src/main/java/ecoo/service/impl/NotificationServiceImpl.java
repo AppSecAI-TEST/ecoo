@@ -20,6 +20,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.util.*;
 
 /**
@@ -192,6 +193,7 @@ public final class NotificationServiceImpl implements NotificationService {
 
                 final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
 
+                //final String serverName = InetAddress.getLocalHost().getHostName();
                 Address sender = new InternetAddress(smtpUser.getValue(), outgoingDisplayName.getValue());
                 mimeMessage.setFrom(sender);
 
