@@ -47,7 +47,7 @@
     </bpmn:serviceTask>
     <bpmn:serviceTask id="CompleteUserAccountActivation" name="Activate Account" camunda:delegateExpression="${completeUserAccountActivationTask}">
       <bpmn:incoming>SequenceFlow_0gpp9c4</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0gwmbpt</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0xfaux4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0brcos7</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="RejectUserAccountRequest" name="Reject User Account Request" camunda:delegateExpression="${rejectUserAccountRequestTask}">
@@ -60,7 +60,7 @@
     </bpmn:serviceTask>
     <bpmn:userTask id="ConfirmUserAccountActivation" name="Confirm User Account Activation">
       <bpmn:incoming>SequenceFlow_16yvzvu</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0gwmbpt</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0xfaux4</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_02bc89a" name="What is the source of the request?">
       <bpmn:incoming>SequenceFlow_0k70lox</bpmn:incoming>
@@ -74,7 +74,6 @@
     <bpmn:sequenceFlow id="SequenceFlow_0gpp9c4" name="Admin" sourceRef="ExclusiveGateway_02bc89a" targetRef="CompleteUserAccountActivation">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${adminSource}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0gwmbpt" sourceRef="ConfirmUserAccountActivation" targetRef="CompleteUserAccountActivation" />
     <bpmn:sequenceFlow id="SequenceFlow_08fdnn1" sourceRef="MarkUserAccountAsPendingApprovalTask" targetRef="VerifyUserAccountRequest" />
     <bpmn:sequenceFlow id="SequenceFlow_1qc7sna" sourceRef="Task_0iqfyyc" targetRef="EndEvent_0ahpj89" />
     <bpmn:sequenceFlow id="SequenceFlow_0h34fnl" sourceRef="MarkCompanyAsPendingApprovalTask" targetRef="MarkUserAccountAsPendingApprovalTask" />
@@ -88,6 +87,7 @@
       <bpmn:outgoing>SequenceFlow_0k70lox</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_0brcos7" sourceRef="CompleteUserAccountActivation" targetRef="EndEvent_0ahpj89" />
+    <bpmn:sequenceFlow id="SequenceFlow_0xfaux4" sourceRef="ConfirmUserAccountActivation" targetRef="CompleteUserAccountActivation" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="UserRegistration">
@@ -207,15 +207,6 @@
           <dc:Bounds x="1071.8546139881623" y="427" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0gwmbpt_di" bpmnElement="SequenceFlow_0gwmbpt">
-        <di:waypoint xsi:type="dc:Point" x="1380" y="282" />
-        <di:waypoint xsi:type="dc:Point" x="1357" y="282" />
-        <di:waypoint xsi:type="dc:Point" x="1357" y="456" />
-        <di:waypoint xsi:type="dc:Point" x="1380" y="456" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1327" y="359" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_08fdnn1_di" bpmnElement="SequenceFlow_08fdnn1">
         <di:waypoint xsi:type="dc:Point" x="281" y="120" />
         <di:waypoint xsi:type="dc:Point" x="403" y="120" />
@@ -259,6 +250,13 @@
         <di:waypoint xsi:type="dc:Point" x="1735" y="120" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1578" y="278" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0xfaux4_di" bpmnElement="SequenceFlow_0xfaux4">
+        <di:waypoint xsi:type="dc:Point" x="1430" y="322" />
+        <di:waypoint xsi:type="dc:Point" x="1430" y="416" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1400" y="359" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
