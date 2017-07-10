@@ -181,11 +181,11 @@
 				<table class="breadcrumb" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td>
-							<a href="http://afjhb1fpcgwp01">Interface Application</a>
+							<a href="$gatewayUrl">ECOO Smart Admin</a>
 						</td>
 					</tr>
 				</table>
-				<em>Welcome to Interface</em>
+				<em>Welcome to ECOO Smart Admin</em>
 			</td>
 		</tr>
 	</table>	
@@ -193,11 +193,10 @@
     <table class="content" cellspacing="0" cellpadding="0" border="0">
    		<tr>		
    			<td class="descriptiontext" style="color:black;">	
-    		Welcome to Interface. This e-mail serves as confirmation that you now have access to <a href="http://afjhb1fpcgwp01">Interface Application</a>.
-    		<br /><br />If you happen to experience any problems or have any questions, please email <a href="mailto:$outgoingEmail">Interface Administration</a>.
+    		Welcome to ECOO Smart Admin. This e-mail serves as confirmation that you now have access to <a href="http://afjhb1fpcgwp01">ECOO Smart Admin Portal</a>.
+    		<br /><br />If you happen to experience any problems or have any questions, please email <a href="mailto:$outgoingEmail">ECOO Smart Admin Administration</a>.
     		</td>
    		</tr>
-   		
 
    		<tr>
     		<td class="descriptiontext">Electronically generated on behalf of:<br />$outgoingDisplayName</td>
