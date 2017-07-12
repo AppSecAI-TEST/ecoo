@@ -28,7 +28,7 @@ public class CommercialInvoiceAmount extends BaseModel<Integer> implements Seria
 
     @Column(name = "amount_type")
     @Audited
-    private String amountType;
+    private Integer amountType;
 
     @Column(name = "amount")
     @Audited
@@ -62,11 +62,11 @@ public class CommercialInvoiceAmount extends BaseModel<Integer> implements Seria
         this.shipmentId = shipmentId;
     }
 
-    public String getAmountType() {
+    public Integer getAmountType() {
         return amountType;
     }
 
-    public void setAmountType(String amountType) {
+    public void setAmountType(Integer amountType) {
         this.amountType = amountType;
     }
 
@@ -77,13 +77,13 @@ public class CommercialInvoiceAmount extends BaseModel<Integer> implements Seria
     public void setAmount(String amount) {
         this.amount = amount;
     }
-    
+
     @Override
     public String toString() {
         return "CommercialInvoiceAmount{" +
                 "primaryId=" + primaryId +
                 ", shipmentId=" + shipmentId +
-                ", amountType='" + amountType + '\'' +
+                ", amountType=" + amountType +
                 ", amount='" + amount + '\'' +
                 '}';
     }

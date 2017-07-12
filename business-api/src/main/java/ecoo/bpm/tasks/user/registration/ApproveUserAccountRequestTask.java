@@ -68,19 +68,8 @@ public class ApproveUserAccountRequestTask implements JavaDelegate {
         final User approvedUser = approveUser(user, request.getChamber()
                 , request.getMember().equalsIgnoreCase("Y"));
         request.setUser(approvedUser);
-
-        final Company company = request.getCompany();
-        final Company approvedCompany = approveCompany(approvedUser, company);
     }
 
-    private Company approveCompany(User user, Company company) {
-        company.setStatus(CompanyStatus.Approved.id());
-        companyService.save(company);
-
-        companySignatoryService.addSignatory(user, company.getPrimaryId());
-
-        return companyService.findById(company.getPrimaryId());
-    }
 
     private User approveUser(User user, Chamber chamber, boolean member) {
         user.setStatus(UserStatus.Approved.id());

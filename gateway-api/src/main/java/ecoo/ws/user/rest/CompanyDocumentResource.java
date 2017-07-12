@@ -54,6 +54,12 @@ public class CompanyDocumentResource extends BaseResource {
         return ResponseEntity.ok(companyDocumentService.findByCompany(companyId));
     }
 
+    @RequestMapping(value = "/companyId/{companyId}/type/{type}", method = RequestMethod.GET)
+    public ResponseEntity<CompanyDocument> findByCompanyAndType(@PathVariable Integer companyId
+            , @PathVariable String type) {
+        return ResponseEntity.ok(companyDocumentService.findByCompanyAndType(companyId, type));
+    }
+
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<CompanyDocument> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(companyDocumentService.findById(id));

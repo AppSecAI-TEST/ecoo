@@ -1,6 +1,7 @@
 package ecoo.bpm.entity;
 
 import ecoo.data.Company;
+import ecoo.data.CompanyStatus;
 import ecoo.data.ShipmentStatus;
 
 /**
@@ -26,10 +27,22 @@ public class WorkflowRequestDescriptionBuilder {
         switch (workflowRequest.getType()) {
             case UserRegistration:
                 final RegisterUserAccountRequest registerUserAccountRequest = (RegisterUserAccountRequest) workflowRequest;
-                return String.format("New user %s from %s is requesting access to %s."
-                        , registerUserAccountRequest.getUser().getDisplayName()
-                        , registerUserAccountRequest.getCompany().getName()
-                        , registerUserAccountRequest.getChamber().getName());
+                final Company newCompany = ((RegisterUserAccountRequest) workflowRequest).getCompany();
+                if (newCompany.isInStatus(CompanyStatus.PendingDocumentation)) {
+                    return String.format("Proof of company documents are required for company %s."
+                            , registerUserAccountRequest.getCompany().getName());
+
+                } else if (newCompany.isInStatus(CompanyStatus.PendingApproval)) {
+                    return String.format("User %s is requesting new company %s."
+                            , registerUserAccountRequest.getUser().getDisplayName()
+                            , registerUserAccountRequest.getCompany().getName());
+
+                } else {
+                    return String.format("User %s from %s is requesting membership to %s."
+                            , registerUserAccountRequest.getUser().getDisplayName()
+                            , registerUserAccountRequest.getCompany().getName()
+                            , registerUserAccountRequest.getChamber().getName());
+                }
             case NewShipmentRequest:
                 final NewShipmentRequest newShipmentRequest = (NewShipmentRequest) workflowRequest;
                 if (newShipmentRequest.getShipment().isInStatus(ShipmentStatus.SubmittedAndPendingChamberApproval)) {

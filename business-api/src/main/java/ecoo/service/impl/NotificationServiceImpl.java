@@ -1,12 +1,17 @@
 package ecoo.service.impl;
 
+import ecoo.bpm.constants.TaskVariables;
+import ecoo.bpm.entity.WorkflowRequest;
 import ecoo.data.Chamber;
 import ecoo.data.Feature;
 import ecoo.data.User;
 import ecoo.service.FeatureService;
 import ecoo.service.NotificationService;
+import ecoo.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
+import org.camunda.bpm.engine.delegate.DelegateTask;
+import org.camunda.bpm.engine.task.IdentityLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +43,75 @@ public final class NotificationServiceImpl implements NotificationService {
 
     private FeatureService featureService;
 
+    private UserService userService;
+
     @Autowired
-    public NotificationServiceImpl(VelocityEngine velocityEngine, FeatureService featureService) {
+    public NotificationServiceImpl(VelocityEngine velocityEngine, FeatureService featureService, UserService userService) {
         this.velocityEngine = velocityEngine;
         this.featureService = featureService;
+        this.userService = userService;
+    }
+
+    /**
+     * Method used to send an email to notify user(s) of BPM task assignment.
+     *
+     * @param delegateTask The Camunda delegage task.
+     * @return The message.
+     */
+    @Override
+    public MimeMessage createTaskAssignmentNotification(DelegateTask delegateTask) throws UnsupportedEncodingException, AddressException {
+        Assert.notNull(delegateTask, "The variable delegateTask cannot be null.");
+
+        final WorkflowRequest workflowRequest = (WorkflowRequest) delegateTask.getVariable(TaskVariables.REQUEST.variableName());
+        Assert.notNull(workflowRequest, "The variable workflowRequest cannot be null.");
+
+        final Set<User> suggestedRecipients = new HashSet<>();
+
+        final String assignee = delegateTask.getAssignee();
+        if (StringUtils.isNotBlank(assignee)) {
+            final User assigneeUser = userService.findByUsername(assignee);
+            suggestedRecipients.add(assigneeUser);
+        } else {
+            final Collection<User> allUsers = userService.findAll();
+            for (final IdentityLink identityLink : delegateTask.getCandidates()) {
+                final String groupId = identityLink.getGroupId();
+                LOG.info("Looking for users in group {}.", groupId);
+                if (StringUtils.isNotBlank(groupId)) {
+                    for (User user : allUsers) {
+                        if (user.getGroupIdentities().contains(groupId)) {
+                            suggestedRecipients.add(user);
+                        }
+                    }
+                }
+            }
+        }
+        LOG.info("Found a total of {} users to notify.", suggestedRecipients.size());
+
+        final Feature nonProductionEmail = featureService.findByName(Feature.Type.NON_PRODUCTION_EMAIL);
+        final Collection<InternetAddress> intendedRecipients = determineRecipient(suggestedRecipients, nonProductionEmail);
+
+        return createMimeMessage0((MimeMessage mimeMessage) -> {
+            final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+            message.setTo(intendedRecipients.toArray(new InternetAddress[intendedRecipients.size()]));
+
+            final String subject = "Task Assignment - Process #" + workflowRequest.getProcessInstanceId();
+            message.setSubject(subject);
+
+            final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
+            final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
+
+            final String applicationLoginUrl = applicationRootUrl.getValue() + "/#/login";
+
+            final Map<String, Object> model = new HashMap<>();
+            model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
+            model.put("applicationLoginUrl", applicationLoginUrl);
+            model.put("processInstanceId", workflowRequest.getProcessInstanceId());
+            model.put("comments", workflowRequest.getComments());
+
+            final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
+                    "velocity/TaskAssignmentNotificationTemplate.vm", DEFAULT_ENCODING, model);
+            message.setText(text, true);
+        });
     }
 
     /**
@@ -53,12 +123,16 @@ public final class NotificationServiceImpl implements NotificationService {
      * @throws IllegalArgumentException If newUser is null.
      */
     @Override
-    public MimeMessage createNewUserConfirmationEmail(User newUser, Chamber chamber) throws UnsupportedEncodingException, AddressException {
+    public MimeMessage createNewUserConfirmationEmail(User newUser, Chamber chamber) throws
+            UnsupportedEncodingException, AddressException {
         Assert.notNull(newUser, "The variable newUser cannot be null.");
         Assert.notNull(chamber, "The variable chamber cannot be null.");
 
+        final Set<User> suggestedRecipients = new HashSet<>();
+        suggestedRecipients.add(newUser);
+
         final Feature nonProductionEmail = featureService.findByName(Feature.Type.NON_PRODUCTION_EMAIL);
-        final Collection<InternetAddress> intendedRecipients = determineRecipient(newUser, nonProductionEmail);
+        final Collection<InternetAddress> intendedRecipients = determineRecipient(suggestedRecipients, nonProductionEmail);
 
         return createMimeMessage0((MimeMessage mimeMessage) -> {
             final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
@@ -67,18 +141,17 @@ public final class NotificationServiceImpl implements NotificationService {
             final String subject = "Confirmation E-Mail";
             message.setSubject(subject);
 
-            final Feature outgoingEmail = featureService.findByName(Feature.Type.SMTP_USERNAME);
             final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
             final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
 
             final String applicationLoginUrl = applicationRootUrl.getValue() + "/#/login";
 
             final Map<String, Object> model = new HashMap<>();
-            model.put("outgoingEmail", outgoingEmail.getValue());
             model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
             model.put("applicationLoginUrl", applicationLoginUrl);
             model.put("displayName", newUser.getDisplayName());
             model.put("chamberName", chamber.getName());
+            model.put("chamberEmail", chamber.getEmail());
 
             final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
                     "velocity/NewUserNotificationTemplate.vm", DEFAULT_ENCODING, model);
@@ -86,14 +159,17 @@ public final class NotificationServiceImpl implements NotificationService {
         });
     }
 
-    private Collection<InternetAddress> determineRecipient(User recipient, Feature nonProductionEmail) throws AddressException, UnsupportedEncodingException {
+    private Collection<InternetAddress> determineRecipient(Set<User> suggestedRecipients, Feature nonProductionEmail) throws
+            AddressException, UnsupportedEncodingException {
         final Collection<InternetAddress> intendedRecipients = new ArrayList<>();
         // Only send email to the intended users if the email is an exception email OR if we are
         // running in the production environment. If the non production email is blank then the
         // email will be email to the intended recipient.
         if (StringUtils.isBlank(nonProductionEmail.getValue())) {
-            intendedRecipients.add(new InternetAddress(recipient.getPrimaryEmailAddress(), recipient
-                    .getDisplayName()));
+            for (User recipient : suggestedRecipients) {
+                intendedRecipients.add(new InternetAddress(recipient.getPrimaryEmailAddress(), recipient
+                        .getDisplayName()));
+            }
         } else {
             intendedRecipients.add(new InternetAddress(nonProductionEmail.getValue()));
         }

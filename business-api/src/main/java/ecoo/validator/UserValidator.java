@@ -28,6 +28,16 @@ public class UserValidator {
         assertCommunicationPreferences(user);
         assertUniqueUsername(user);
         assertUniquePersonalReference(user);
+        assertPersonalReferenceType(user);
+    }
+
+    private void assertPersonalReferenceType(User user) {
+        final String personalReferenceType = StringUtils.trimToNull(user.getPersonalReferenceType());
+        final String personalReferenceValue = StringUtils.trimToEmpty(user.getPersonalReferenceValue());
+        if (personalReferenceType != null && personalReferenceType.equalsIgnoreCase("RSA")) {
+            final SouthAfricanIdentityNumberValidator validator = new SouthAfricanIdentityNumberValidator();
+            validator.validate(personalReferenceValue);
+        }
     }
 
     private void assertCommunicationPreferences(User user) {

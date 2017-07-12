@@ -185,7 +185,7 @@
 						</td>
 					</tr>
 				</table>
-				<em>Welcome $displayName</em>
+				<em>Task Assignment Notification - Process #$processInstanceId</em>
 			</td>
 		</tr>
 	</table>	
@@ -193,9 +193,8 @@
     <table class="content" cellspacing="0" cellpadding="0" border="0">
    		<tr>		
    			<td class="descriptiontext" style="color:black;">	
-    			Welcome to ECOO Smart Admin. This e-mail serves as confirmation that you now have access to <a href="$applicationLoginUrl">ECOO Smart Admin Portal</a>.
-				<br /><br />Your application has been sent to the <b>$chamberName</b> for approval.
-                <br /><br />If you happen to experience any problems or have any questions, please email <a href="mailto:$chamberEmail">$chamberName</a>.
+    			Please note the following task has been assigned to you:
+				<br /><a href="$applicationLoginUrl">$applicationLoginUrl</a>
     		</td>
    		</tr>
 

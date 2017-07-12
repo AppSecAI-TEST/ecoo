@@ -16,14 +16,11 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Repository(value = "amountTypeDao")
-public class AmountTypeDaoImpl extends BaseAuditLogDaoImpl<String, AmountType> implements AmountTypeDao {
-
-    private AmountTypeDao amountTypeDao;
+public class AmountTypeDaoImpl extends BaseAuditLogDaoImpl<Integer, AmountType> implements AmountTypeDao {
 
     @Autowired
     public AmountTypeDaoImpl(@Qualifier("ecooSessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory, AmountType.class);
-        this.amountTypeDao = amountTypeDao;
     }
 
     @SuppressWarnings("unchecked")

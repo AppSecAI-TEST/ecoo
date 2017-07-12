@@ -8,14 +8,17 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "amount_type")
-public class AmountType extends BaseModel<String> {
+public class AmountType extends BaseModel<Integer> {
 
     private static final long serialVersionUID = -849125304465931221L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private String primaryId;
+    private Integer primaryId;
+
+    @Column(name = "code")
+    private String code;
 
     @Column(name = "descr")
     private String description;
@@ -29,24 +32,22 @@ public class AmountType extends BaseModel<String> {
     public AmountType() {
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see za.co.aforbes.fpc.db.model.BaseModel#getPrimaryId()
-     */
     @Override
-    public final String getPrimaryId() {
+    public final Integer getPrimaryId() {
         return primaryId;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see za.co.aforbes.fpc.db.model.BaseModel#setPrimaryId(java.lang.Object)
-     */
     @Override
-    public final void setPrimaryId(String primaryId) {
+    public final void setPrimaryId(Integer primaryId) {
         this.primaryId = primaryId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDescription() {
@@ -69,6 +70,7 @@ public class AmountType extends BaseModel<String> {
     public String toString() {
         return "AmountType{" +
                 "primaryId='" + primaryId + '\'' +
+                ", code='" + code + '\'' +
                 ", description='" + description + '\'' +
                 ", schema='" + schema + '\'' +
                 '}';
