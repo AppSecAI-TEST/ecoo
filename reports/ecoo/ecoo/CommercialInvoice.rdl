@@ -197,12 +197,12 @@
           </Textbox>
           <Image Name="chamber_logo">
             <Source>Database</Source>
-            <Value>=First(Fields!logo_src.Value, "chamber")</Value>
+            <Value>=First(Fields!logo_src.Value, "company")</Value>
             <MIMEType>image/png</MIMEType>
             <Sizing>Fit</Sizing>
             <Top>0.66464cm</Top>
-            <Left>0.13155cm</Left>
-            <Height>1.52968cm</Height>
+            <Left>0.10833cm</Left>
+            <Height>2.07649cm</Height>
             <Width>7.54277cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -218,7 +218,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!name.Value, "chamber")</Value>
+                    <Value>=First(Fields!name.Value, "company")</Value>
                     <Style>
                       <FontFamily>Calibri</FontFamily>
                       <FontSize>6pt</FontSize>
@@ -231,7 +231,7 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>0.88335in</Top>
+            <Top>1.12085in</Top>
             <Left>0.05179in</Left>
             <Height>0.25cm</Height>
             <Width>2.96959in</Width>
@@ -245,7 +245,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!line_1.Value, "chamber")</Value>
+                    <Value>=First(Fields!company.Value, "company")</Value>
                     <Style>
                       <FontFamily>Calibri</FontFamily>
                       <FontSize>6pt</FontSize>
@@ -258,92 +258,11 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>0.98177in</Top>
+            <Top>1.21927in</Top>
             <Left>0.05179in</Left>
             <Height>0.25cm</Height>
             <Width>2.96959in</Width>
             <ZIndex>3</ZIndex>
-            <Style />
-          </Textbox>
-          <Textbox Name="chamber_line_2">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!line_2.Value, "chamber")</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>6pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>1.08158in</Top>
-            <Left>0.05179in</Left>
-            <Height>0.25cm</Height>
-            <Width>2.96959in</Width>
-            <ZIndex>4</ZIndex>
-            <Style />
-          </Textbox>
-          <Textbox Name="chamber_tel">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!telephone.Value, "chamber")</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>6pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>1.18463in</Top>
-            <Left>0.0518in</Left>
-            <Height>0.25cm</Height>
-            <Width>2.96958in</Width>
-            <ZIndex>5</ZIndex>
-            <Style />
-          </Textbox>
-          <Textbox Name="chamber_email">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!email.Value, "chamber")</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>6pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>1.2923in</Top>
-            <Left>0.0518in</Left>
-            <Height>0.25cm</Height>
-            <Width>2.96957in</Width>
-            <ZIndex>6</ZIndex>
             <Style />
           </Textbox>
         </ReportItems>
@@ -770,6 +689,7 @@
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
                                 <FontSize>6pt</FontSize>
+                                <Format>#,0.00</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -805,6 +725,7 @@
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
                                 <FontSize>6pt</FontSize>
+                                <Format>#,0.00</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -825,7 +746,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -1223,243 +1143,27 @@
       </Rectangle>
       <Rectangle Name="Rectangle22">
         <ReportItems>
-          <Textbox Name="Textbox36">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>I the undersigned, being an authorised representative of the Exporter and on the basis of controls carried out and based on the rules of origin of the country of destination and that of the International Chamber of Commerce, that all goods listed originate in that country as stated.  I further declare that I will provide the Customs authorities of the importing country with the necessary proof for the purposes of verifying the authenticity of this certificate.</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>5pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox36</rd:DefaultName>
-            <Top>0cm</Top>
-            <Left>0.14366cm</Left>
-            <Height>1.73929cm</Height>
-            <Width>7.09384cm</Width>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="chamber_declaration">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>="The undersigned as authorised by " &amp; First (Fields!name.Value, "chamber") &amp; " hereby declare that on the basis of the information and statements provided, and to the best of their knowledge that all the goods were obtained, produced or manufactured in the designated country of origin."</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>5pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>0cm</Top>
-            <Left>8.50524cm</Left>
-            <Height>1.22688cm</Height>
-            <Width>6.9644cm</Width>
-            <ZIndex>1</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Image Name="signature">
             <Source>Database</Source>
             <Value>=First(Fields!req_signature.Value, "shipment")</Value>
             <MIMEType>image/png</MIMEType>
             <Sizing>Fit</Sizing>
-            <Top>1.75252cm</Top>
-            <Left>8.49929cm</Left>
+            <Top>0cm</Top>
+            <Left>0.16799cm</Left>
             <Height>1.48594cm</Height>
-            <Width>6.9644cm</Width>
-            <ZIndex>2</ZIndex>
+            <Width>6.78363cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
             </Style>
           </Image>
-          <Textbox Name="Textbox46">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Signature:</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>5pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox36</rd:DefaultName>
-            <Top>1.40327cm</Top>
-            <Left>8.50524cm</Left>
-            <Height>0.33073cm</Height>
-            <Width>6.96436cm</Width>
-            <ZIndex>3</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox47">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Signature of Authorised Signatory</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>5pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox36</rd:DefaultName>
-            <Top>3.24198cm</Top>
-            <Left>0.14366cm</Left>
-            <Height>0.37042cm</Height>
-            <Width>7.09384cm</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Image Name="signature2">
-            <Source>Database</Source>
-            <Value>=First(Fields!app_signature.Value, "shipment")</Value>
-            <MIMEType>image/png</MIMEType>
-            <Sizing>Fit</Sizing>
-            <Top>1.75252cm</Top>
-            <Left>0.14366cm</Left>
-            <Height>1.48594cm</Height>
-            <Width>7.09384cm</Width>
-            <ZIndex>5</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-            </Style>
-          </Image>
-          <Textbox Name="Textbox48">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Date:</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>5pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox36</rd:DefaultName>
-            <Top>3.24198cm</Top>
-            <Left>8.49929cm</Left>
-            <Height>0.37042cm</Height>
-            <Width>0.60834cm</Width>
-            <ZIndex>6</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox49">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!date_submitted.Value, "shipment")</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>5pt</FontSize>
-                      <Format>yyyy-MM-dd</Format>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox36</rd:DefaultName>
-            <Top>3.23846cm</Top>
-            <Left>9.10763cm</Left>
-            <Height>0.37042cm</Height>
-            <Width>6.36197cm</Width>
-            <ZIndex>7</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
         </ReportItems>
         <KeepTogether>true</KeepTogether>
-        <Top>12.56686cm</Top>
-        <Left>0.05407cm</Left>
-        <Height>3.64415cm</Height>
-        <Width>15.59314cm</Width>
+        <Top>13.73142cm</Top>
+        <Left>8.45308cm</Left>
+        <Height>1.48594cm</Height>
+        <Width>7.19414cm</Width>
         <ZIndex>8</ZIndex>
         <Style>
           <Border>
@@ -2100,6 +1804,7 @@
                   <FontFamily>Calibri</FontFamily>
                   <FontSize>6pt</FontSize>
                   <FontWeight>Normal</FontWeight>
+                  <Format>#,0.00</Format>
                 </Style>
               </TextRun>
             </TextRuns>
@@ -2114,7 +1819,11 @@
         <Height>0.15542in</Height>
         <Width>1.05051in</Width>
         <ZIndex>17</ZIndex>
-        <Style />
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
       </Textbox>
       <Tablix Name="table2">
         <TablixBody>
@@ -2178,6 +1887,7 @@
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
                                 <FontSize>6pt</FontSize>
+                                <Format>#,0.00</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2240,7 +1950,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>="Incoterms Subtotal (" &amp; First(Fields!currency.Value, "shipment") &amp; "):"</Value>
+                <Value>="Incoterms ® 2010 Subtotal (" &amp; First(Fields!currency.Value, "shipment") &amp; "):"</Value>
                 <Style>
                   <FontFamily>Calibri</FontFamily>
                   <FontSize>6pt</FontSize>
@@ -2273,6 +1983,7 @@
                   <FontFamily>Calibri</FontFamily>
                   <FontSize>6pt</FontSize>
                   <FontWeight>Normal</FontWeight>
+                  <Format>#,0.00</Format>
                 </Style>
               </TextRun>
             </TextRuns>
@@ -2287,7 +1998,11 @@
         <Height>0.15542in</Height>
         <Width>1.05051in</Width>
         <ZIndex>20</ZIndex>
-        <Style />
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
       </Textbox>
       <Textbox Name="id10">
         <CanGrow>true</CanGrow>
@@ -2329,6 +2044,7 @@
                   <FontFamily>Calibri</FontFamily>
                   <FontSize>6pt</FontSize>
                   <FontWeight>Normal</FontWeight>
+                  <Format>#,0.00</Format>
                 </Style>
               </TextRun>
             </TextRuns>
@@ -2343,10 +2059,116 @@
         <Height>0.15542in</Height>
         <Width>1.05051in</Width>
         <ZIndex>22</ZIndex>
-        <Style />
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox46">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Signature:</Value>
+                <Style>
+                  <FontFamily>Calibri</FontFamily>
+                  <FontSize>5pt</FontSize>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox36</rd:DefaultName>
+        <Top>13.25958cm</Top>
+        <Left>8.45308cm</Left>
+        <Height>0.33073cm</Height>
+        <Width>6.96436cm</Width>
+        <ZIndex>23</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox48">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Date:</Value>
+                <Style>
+                  <FontFamily>Calibri</FontFamily>
+                  <FontSize>5pt</FontSize>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox36</rd:DefaultName>
+        <Top>15.28791cm</Top>
+        <Left>8.43439cm</Left>
+        <Height>0.37042cm</Height>
+        <Width>0.60834cm</Width>
+        <ZIndex>24</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox49">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!date_submitted.Value, "shipment")</Value>
+                <Style>
+                  <FontFamily>Calibri</FontFamily>
+                  <FontSize>5pt</FontSize>
+                  <Format>yyyy-MM-dd</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox36</rd:DefaultName>
+        <Top>15.28439cm</Top>
+        <Left>9.04273cm</Left>
+        <Height>0.37042cm</Height>
+        <Width>6.36197cm</Width>
+        <ZIndex>25</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
       </Textbox>
     </ReportItems>
-    <Height>16.34283cm</Height>
+    <Height>15.74904cm</Height>
     <Style />
   </Body>
   <Width>15.74831cm</Width>
@@ -2363,8 +2185,11 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="ecoo">
-      <DataSourceReference>ecoo</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=localhost</ConnectString>
+      </ConnectionProperties>
+      <rd:SecurityType>DataBase</rd:SecurityType>
       <rd:DataSourceID>676bcb7e-9a5a-498e-8f2e-f2e67d24591a</rd:DataSourceID>
     </DataSource>
   </DataSources>
@@ -2395,7 +2220,6 @@
 	,c.pay_instruct
 	
 	,r.encoded_image req_signature
-	,approvedBy.encoded_image app_signature
 	
 FROM shipment s WITH(NOLOCK)
 	LEFT OUTER JOIN country consignee_country WITH(NOLOCK)
@@ -2409,9 +2233,6 @@ FROM shipment s WITH(NOLOCK)
 		
 	LEFT OUTER JOIN user_signature r with(nolock)
 		ON r.user_id = s.requested_by
-		
-	LEFT OUTER JOIN user_signature approvedBy with(nolock)
-		ON approvedBy.user_id = s.approved_by
 	
 WHERE s.id = @shipmentId </CommandText>
       </Query>
@@ -2472,10 +2293,6 @@ WHERE s.id = @shipmentId </CommandText>
           <DataField>req_signature</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="app_signature">
-          <DataField>app_signature</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="lines">
@@ -2524,7 +2341,7 @@ where c.parent_id = @shipmentId</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="chamber">
+    <DataSet Name="company">
       <Query>
         <DataSourceName>ecoo</DataSourceName>
         <QueryParameters>
@@ -2532,42 +2349,30 @@ where c.parent_id = @shipmentId</CommandText>
             <Value>=Parameters!shipmentId.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>
-select c.name
-,c.building + ', ' + c.street + ', ' line_1
-,c.city + ', ' + c.postcode + ', ' + cc.descr line_2
-,'Tel: ' + c.phone_no + ' Fax: ' + c.fax_no telephone
-,'Email: ' + c.email email
-,d.encoded_image logo_src
+        <CommandText>select c.name
+,dbo.SqueezeAddress(NULL, c.building, c.street, c.city, c.province_id, c.postcode, cc.descr, c.phone_no, c.email) company
+,cd.encoded_image logo_src
 from shipment s with(nolock)
-inner join chamber c with(nolock)
-	on c.id = s.chamber_id
-inner join chamber_doc d with(nolock)
-	on d.chamber_id = c.id
-	and d.doc_type = 'L'
-inner join country cc with(nolock)
+inner join user_acc u with(nolock)
+	on s.requested_by = u.id
+left outer join company c with(nolock)
+	on c.id = u.company_id
+left outer join company_doc cd with(nolock)
+	on cd.company_id = c.id
+	and cd.doc_type = 'L'
+left outer join country cc with(nolock)
 	on cc.id = c.country_id
-where s.id = @shipmentId</CommandText>
+where s.id = @shipmentId
+
+	</CommandText>
       </Query>
       <Fields>
         <Field Name="name">
           <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="line_1">
-          <DataField>line_1</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="line_2">
-          <DataField>line_2</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="telephone">
-          <DataField>telephone</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="email">
-          <DataField>email</DataField>
+        <Field Name="company">
+          <DataField>company</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="logo_src">

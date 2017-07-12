@@ -245,7 +245,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!line_1.Value, "chamber")</Value>
+                    <Value>=First(Fields!chamber_address.Value, "chamber")</Value>
                     <Style>
                       <FontFamily>Calibri</FontFamily>
                       <FontSize>6pt</FontSize>
@@ -263,87 +263,6 @@
             <Height>0.25cm</Height>
             <Width>2.96959in</Width>
             <ZIndex>3</ZIndex>
-            <Style />
-          </Textbox>
-          <Textbox Name="chamber_line_2">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!line_2.Value, "chamber")</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>6pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>1.08158in</Top>
-            <Left>0.05179in</Left>
-            <Height>0.25cm</Height>
-            <Width>2.96959in</Width>
-            <ZIndex>4</ZIndex>
-            <Style />
-          </Textbox>
-          <Textbox Name="chamber_tel">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!telephone.Value, "chamber")</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>6pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>1.18463in</Top>
-            <Left>0.0518in</Left>
-            <Height>0.25cm</Height>
-            <Width>2.96958in</Width>
-            <ZIndex>5</ZIndex>
-            <Style />
-          </Textbox>
-          <Textbox Name="chamber_email">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!email.Value, "chamber")</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>6pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>1.2923in</Top>
-            <Left>0.0518in</Left>
-            <Height>0.25cm</Height>
-            <Width>2.96957in</Width>
-            <ZIndex>6</ZIndex>
             <Style />
           </Textbox>
         </ReportItems>
@@ -803,6 +722,7 @@
                               <Style>
                                 <FontFamily>Calibri</FontFamily>
                                 <FontSize>6pt</FontSize>
+                                <Format>#,0.00</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2075,8 +1995,11 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="ecoo">
-      <DataSourceReference>ecoo</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=localhost;Initial Catalog=ecoo</ConnectString>
+      </ConnectionProperties>
+      <rd:SecurityType>DataBase</rd:SecurityType>
       <rd:DataSourceID>676bcb7e-9a5a-498e-8f2e-f2e67d24591a</rd:DataSourceID>
     </DataSource>
   </DataSources>
@@ -2241,12 +2164,8 @@ where shipment_id = @shipmentId</CommandText>
             <Value>=Parameters!shipmentId.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>
-select c.name
-,c.building + ', ' + c.street + ', ' line_1
-,c.city + ', ' + c.postcode + ', ' + cc.descr line_2
-,'Tel: ' + c.phone_no + ' Fax: ' + c.fax_no telephone
-,'Email: ' + c.email email
+        <CommandText>select c.name
+,dbo.SqueezeAddress(NULL, c.building, c.street, c.city, c.province_id, c.postcode, cc.descr, c.phone_no, c.email) chamber_address
 ,d.encoded_image logo_src
 from shipment s with(nolock)
 inner join chamber c with(nolock)
@@ -2256,27 +2175,17 @@ inner join chamber_doc d with(nolock)
 	and d.doc_type = 'L'
 inner join country cc with(nolock)
 	on cc.id = c.country_id
-where s.id = @shipmentId</CommandText>
+where s.id = @shipmentId
+
+	</CommandText>
       </Query>
       <Fields>
         <Field Name="name">
           <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="line_1">
-          <DataField>line_1</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="line_2">
-          <DataField>line_2</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="telephone">
-          <DataField>telephone</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="email">
-          <DataField>email</DataField>
+        <Field Name="chamber_address">
+          <DataField>chamber_address</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="logo_src">
