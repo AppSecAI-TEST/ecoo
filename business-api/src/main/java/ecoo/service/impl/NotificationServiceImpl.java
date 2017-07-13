@@ -2,12 +2,9 @@ package ecoo.service.impl;
 
 import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.entity.WorkflowRequest;
-import ecoo.data.Chamber;
-import ecoo.data.Feature;
-import ecoo.data.User;
-import ecoo.service.FeatureService;
-import ecoo.service.NotificationService;
-import ecoo.service.UserService;
+import ecoo.bpm.entity.WorkflowRequestDescriptionBuilder;
+import ecoo.data.*;
+import ecoo.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.camunda.bpm.engine.delegate.DelegateTask;
@@ -45,11 +42,65 @@ public final class NotificationServiceImpl implements NotificationService {
 
     private UserService userService;
 
+    private ShipmentCommentService shipmentCommentService;
+
+    private ChamberService chamberService;
+
     @Autowired
-    public NotificationServiceImpl(VelocityEngine velocityEngine, FeatureService featureService, UserService userService) {
+    public NotificationServiceImpl(VelocityEngine velocityEngine, FeatureService featureService, UserService userService, ShipmentCommentService shipmentCommentService, ChamberService chamberService) {
         this.velocityEngine = velocityEngine;
         this.featureService = featureService;
         this.userService = userService;
+        this.shipmentCommentService = shipmentCommentService;
+        this.chamberService = chamberService;
+    }
+
+    /**
+     * Method used to send an email to notify user(s) of the shipment.
+     *
+     * @param shipment The shipment to notify about.
+     * @return The message.
+     */
+    @Override
+    public MimeMessage createShipmentNotification(Shipment shipment, String title) throws UnsupportedEncodingException, AddressException {
+        Assert.notNull(shipment, "The variable shipment cannot be null.");
+
+        final User assigneeUser = userService.findById(shipment.getRequestedBy());
+
+        final Set<User> suggestedRecipients = new HashSet<>();
+        suggestedRecipients.add(assigneeUser);
+
+        final Feature nonProductionEmail = featureService.findByName(Feature.Type.NON_PRODUCTION_EMAIL);
+        final Collection<InternetAddress> intendedRecipients = determineRecipient(suggestedRecipients, nonProductionEmail);
+
+        final List<ShipmentComment> comments = shipmentCommentService.findByShipmentId(shipment.getPrimaryId());
+
+        final Chamber chamber = chamberService.findById(shipment.getChamberId());
+
+        return createMimeMessage0((MimeMessage mimeMessage) -> {
+            final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+            message.setTo(intendedRecipients.toArray(new InternetAddress[intendedRecipients.size()]));
+
+            final String subject = "Shipment #" + shipment.getPrimaryId() + " - " + title;
+            message.setSubject(subject);
+
+            final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
+            final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
+
+            final String shipmentUrl = applicationRootUrl.getValue() + "/#/app/shipments/view/" + shipment.getPrimaryId();
+
+            final Map<String, Object> model = new HashMap<>();
+            model.put("shipment", shipment);
+            model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
+            model.put("shipmentUrl", shipmentUrl);
+            model.put("comments", comments);
+            model.put("chamberName", chamber.getName());
+            model.put("chamberEmail", chamber.getEmail());
+
+            final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
+                    "velocity/ShipmentNotificationTemplate.vm", DEFAULT_ENCODING, model);
+            message.setText(text, true);
+        });
     }
 
     /**
@@ -59,7 +110,8 @@ public final class NotificationServiceImpl implements NotificationService {
      * @return The message.
      */
     @Override
-    public MimeMessage createTaskAssignmentNotification(DelegateTask delegateTask) throws UnsupportedEncodingException, AddressException {
+    public MimeMessage createTaskAssignmentNotification(DelegateTask delegateTask) throws
+            UnsupportedEncodingException, AddressException {
         Assert.notNull(delegateTask, "The variable delegateTask cannot be null.");
 
         final WorkflowRequest workflowRequest = (WorkflowRequest) delegateTask.getVariable(TaskVariables.REQUEST.variableName());
@@ -94,7 +146,18 @@ public final class NotificationServiceImpl implements NotificationService {
             final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
             message.setTo(intendedRecipients.toArray(new InternetAddress[intendedRecipients.size()]));
 
-            final String subject = "Task Assignment - Process #" + workflowRequest.getProcessInstanceId();
+            String workflowRequestDescription = WorkflowRequestDescriptionBuilder.aDescription()
+                    .withWorkflowRequest(workflowRequest)
+                    .build();
+//            if (workflowRequestDescription.endsWith(".")) {
+//                workflowRequestDescription = workflowRequestDescription.substring(0
+//                        , workflowRequestDescription.length() - 2);
+//            }
+
+            final String processInstanceId = delegateTask.getProcessInstanceId();
+
+            final String subject = "Task #" + processInstanceId + " - "
+                    + workflowRequestDescription;
             message.setSubject(subject);
 
             final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
@@ -105,8 +168,9 @@ public final class NotificationServiceImpl implements NotificationService {
             final Map<String, Object> model = new HashMap<>();
             model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
             model.put("applicationLoginUrl", applicationLoginUrl);
-            model.put("processInstanceId", workflowRequest.getProcessInstanceId());
-            model.put("comments", workflowRequest.getComments());
+            model.put("workflowRequestDescription", workflowRequestDescription);
+            model.put("processInstanceId", processInstanceId);
+            model.put("comments", StringUtils.stripToEmpty(workflowRequest.getComments()));
 
             final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
                     "velocity/TaskAssignmentNotificationTemplate.vm", DEFAULT_ENCODING, model);
@@ -159,7 +223,8 @@ public final class NotificationServiceImpl implements NotificationService {
         });
     }
 
-    private Collection<InternetAddress> determineRecipient(Set<User> suggestedRecipients, Feature nonProductionEmail) throws
+    private Collection<InternetAddress> determineRecipient(Set<User> suggestedRecipients, Feature
+            nonProductionEmail) throws
             AddressException, UnsupportedEncodingException {
         final Collection<InternetAddress> intendedRecipients = new ArrayList<>();
         // Only send email to the intended users if the email is an exception email OR if we are

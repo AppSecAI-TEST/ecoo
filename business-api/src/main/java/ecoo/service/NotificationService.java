@@ -1,6 +1,7 @@
 package ecoo.service;
 
 import ecoo.data.Chamber;
+import ecoo.data.Shipment;
 import ecoo.data.User;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 
@@ -13,6 +14,15 @@ import java.io.UnsupportedEncodingException;
  * @since July 2017
  */
 public interface NotificationService {
+
+    /**
+     * Method used to send an email to notify user(s) of the shipment.
+     *
+     * @param shipment The shipment to notify about.
+     * @param title    The email title.
+     * @return The message.
+     */
+    MimeMessage createShipmentNotification(Shipment shipment, String title) throws UnsupportedEncodingException, AddressException;
 
     /**
      * Method used to send an email to notify user(s) of BPM task assignment.

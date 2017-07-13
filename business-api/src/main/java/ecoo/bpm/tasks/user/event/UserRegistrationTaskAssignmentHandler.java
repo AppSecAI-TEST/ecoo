@@ -19,12 +19,14 @@ public class UserRegistrationTaskAssignmentHandler implements TaskListener {
 
     private final Logger log = LoggerFactory.getLogger(UserRegistrationTaskAssignmentHandler.class);
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void notify(DelegateTask delegateTask) {
         final RegisterUserAccountRequest request = (RegisterUserAccountRequest) delegateTask.
                 getVariable(TaskVariables.REQUEST.variableName());
 
         final String chamberGroupIdentity = ChamberGroupIdentityFactory.build(request.getChamber().getPrimaryId());
+        delegateTask.setAssignee(null);
         delegateTask.addCandidateGroup(chamberGroupIdentity);
         log.info("Task assigned to candidate group associated to chambers {} <{}>."
                 , request.getChamber().getName(), chamberGroupIdentity);

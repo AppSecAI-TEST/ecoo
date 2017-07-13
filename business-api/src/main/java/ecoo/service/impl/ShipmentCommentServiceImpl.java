@@ -2,7 +2,9 @@ package ecoo.service.impl;
 
 import ecoo.dao.ShipmentCommentDao;
 import ecoo.dao.impl.es.ShipmentCommentElasticsearchRepository;
+import ecoo.data.Shipment;
 import ecoo.data.ShipmentComment;
+import ecoo.data.User;
 import ecoo.service.ShipmentCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,6 +31,15 @@ public class ShipmentCommentServiceImpl extends ElasticsearchAuditTemplate<Integ
             , ElasticsearchTemplate elasticsearchTemplate) {
         super(shipmentCommentDao, shipmentCommentElasticsearchRepository, elasticsearchTemplate);
         this.shipmentCommentElasticsearchRepository = shipmentCommentElasticsearchRepository;
+    }
+
+    @Override
+    public ShipmentComment addComment(Shipment shipment, User user, String text) {
+        final ShipmentComment shipmentComment = new ShipmentComment();
+        shipmentComment.setShipmentId(shipment.getPrimaryId());
+        shipmentComment.setUser(user);
+        shipmentComment.setText(text);
+        return save(shipmentComment);
     }
 
     /**

@@ -4,7 +4,10 @@ import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.entity.NewShipmentRequest;
 import ecoo.data.Shipment;
 import ecoo.data.ShipmentStatus;
+import ecoo.data.User;
+import ecoo.service.ShipmentCommentService;
 import ecoo.service.ShipmentService;
+import ecoo.service.UserService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -26,9 +29,15 @@ public class ApproveShipmentRequestTask implements JavaDelegate {
 
     private ShipmentService shipmentService;
 
+    private ShipmentCommentService shipmentCommentService;
+
+    private UserService userService;
+
     @Autowired
-    public ApproveShipmentRequestTask(ShipmentService shipmentService) {
+    public ApproveShipmentRequestTask(ShipmentService shipmentService, ShipmentCommentService shipmentCommentService, UserService userService) {
         this.shipmentService = shipmentService;
+        this.shipmentCommentService = shipmentCommentService;
+        this.userService = userService;
     }
 
     @Override
@@ -48,5 +57,12 @@ public class ApproveShipmentRequestTask implements JavaDelegate {
 
         shipmentService.save(shipment);
         log.info("Saving shipment... {}", shipment);
+
+        addComment(approvedBy, shipment);
+    }
+
+    private void addComment(Integer approvedBy, Shipment shipment) {
+        final User user = userService.findById(approvedBy);
+        shipmentCommentService.addComment(shipment, user, "SHIPMENT APPROVED");
     }
 }
