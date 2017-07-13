@@ -19,9 +19,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.Assert;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.mail.internet.*;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -100,6 +98,30 @@ public final class NotificationServiceImpl implements NotificationService {
             final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
                     "velocity/ShipmentNotificationTemplate.vm", DEFAULT_ENCODING, model);
             message.setText(text, true);
+
+
+            Multipart multipart = new MimeMultipart("related");
+
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            // messageBody contains html that references image
+            // using something like <img src="cid:XXX"> where
+            // "XXX" is an identifier that you make up to refer
+            // to the image
+            htmlPart.setText(text, "utf-8", "html");
+            multipart.addBodyPart(htmlPart);
+
+            MimeBodyPart imgPart = new MimeBodyPart();
+            // imageFile is the file containing the image
+            imgPart.attachFile("C:\\code\\ecoo-ui\\styles\\img\\logo.png");
+            // or, if the image is in a byte array in memory, use
+            // imgPart.setDataHandler(new DataHandler(
+            //      new ByteArrayDataSource(bytes, "image/whatever")));
+
+            // "XXX" below matches "XXX" above in html code
+            imgPart.setContentID("<ApplicationImage>");
+            multipart.addBodyPart(imgPart);
+
+            mimeMessage.setContent(multipart);
         });
     }
 

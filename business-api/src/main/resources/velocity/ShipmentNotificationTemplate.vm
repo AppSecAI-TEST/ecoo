@@ -359,8 +359,9 @@
             <div class="content">
                 <table>
                     <tr>
-                        <td><img src="logo.png" height="30" width="142"/></td>
-
+                        <td>
+                            <img src="cid:ApplicationImage" alt="Logo" width="246" height="52" />
+                        </td>
                     </tr>
                 </table>
             </div>
