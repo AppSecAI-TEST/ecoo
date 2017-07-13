@@ -5,6 +5,7 @@ import ecoo.bpm.entity.WorkflowRequest;
 import ecoo.bpm.entity.WorkflowRequestDescriptionBuilder;
 import ecoo.data.*;
 import ecoo.service.*;
+import ecoo.util.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.camunda.bpm.engine.delegate.DelegateTask;
@@ -75,6 +76,8 @@ public final class NotificationServiceImpl implements NotificationService {
 
         final Chamber chamber = chamberService.findById(shipment.getChamberId());
 
+        final String systemDir = featureService.systemDirectory();
+
         return createMimeMessage0((MimeMessage mimeMessage) -> {
             final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
             message.setTo(intendedRecipients.toArray(new InternetAddress[intendedRecipients.size()]));
@@ -103,21 +106,11 @@ public final class NotificationServiceImpl implements NotificationService {
             Multipart multipart = new MimeMultipart("related");
 
             MimeBodyPart htmlPart = new MimeBodyPart();
-            // messageBody contains html that references image
-            // using something like <img src="cid:XXX"> where
-            // "XXX" is an identifier that you make up to refer
-            // to the image
             htmlPart.setText(text, "utf-8", "html");
             multipart.addBodyPart(htmlPart);
 
             MimeBodyPart imgPart = new MimeBodyPart();
-            // imageFile is the file containing the image
-            imgPart.attachFile("C:\\code\\ecoo-ui\\styles\\img\\logo.png");
-            // or, if the image is in a byte array in memory, use
-            // imgPart.setDataHandler(new DataHandler(
-            //      new ByteArrayDataSource(bytes, "image/whatever")));
-
-            // "XXX" below matches "XXX" above in html code
+            imgPart.attachFile(FileUtils.resolveDir(systemDir) + "logo.png");
             imgPart.setContentID("<ApplicationImage>");
             multipart.addBodyPart(imgPart);
 
