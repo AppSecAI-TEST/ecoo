@@ -112,6 +112,22 @@ public class WorkflowResource extends BaseResource {
         return ResponseEntity.ok(myTasks);
     }
 
+    @RequestMapping(value = "/processInstanceId/{processInstanceId}", method = RequestMethod.GET)
+    public ResponseEntity<TaskListRow> findTaskByProcessInstanceId(@PathVariable String processInstanceId) {
+        Assert.hasText(processInstanceId, "The variable processInstanceId cannot be null.");
+
+        final WorkflowRequest request = workflowService.findByProcessInstanceId(processInstanceId);
+        return ResponseEntity.ok(TaskListRowBuilder.aTaskListRow()
+                .withWorkflowRequest(request)
+                .withTaskId(Integer.parseInt(request.getProcessInstanceId()))
+                .withTaskType(request.getType())
+                .withDescription(WorkflowRequestDescriptionBuilder.aDescription()
+                        .withWorkflowRequest(request)
+                        .build())
+                .withDateCreated(request.getDateCreated())
+                .build());
+    }
+
     @RequestMapping(value = "/processType/UserRegistration/user/{username:.+}", method = RequestMethod.GET)
     public ResponseEntity<Collection<TaskListRow>> myPendingUserRegistrationTasks(@PathVariable String username) {
         Assert.hasText(username, "username cannot be null or blank.");
