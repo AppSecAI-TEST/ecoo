@@ -45,7 +45,7 @@ public class ResetPasswordTask implements JavaDelegate {
 
         log.info("Password reset to <{}> for user <{}>.", plainTextPassword, targetUser.getDisplayName());
 
-        userService.save(userService.setPassword(targetUser, plainTextPassword, true));
+        userService.save(userService.setPassword(targetUser, plainTextPassword, false));
         log.info(targetUser.toString());
     }
 
