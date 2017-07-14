@@ -85,7 +85,7 @@
         }
 
         /*table.comments tr td {*/
-            /*padding-bottom: 20px;*/
+        /*padding-bottom: 20px;*/
         /*}*/
 
         .comments a {
@@ -132,10 +132,6 @@
             width: 100%
         }
 
-        table.head-wrap {
-            width: 100%
-        }
-
         .header.container table td.logo {
             padding: 15px
         }
@@ -145,12 +141,7 @@
             padding-left: 0
         }
 
-        table.body-wrap {
-            width: 100%
-        }
-
         table.footer-wrap {
-            width: 100%;
             clear: both !important
         }
 
@@ -346,81 +337,43 @@
         .text-muted {
             color: #999;
         }
+
+        .aui-avatar-medium, .aui-avatar-medium img {
+            height: 32px;
+            width: 32px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
     </style>
 
 </head>
 
 <body bgcolor="#FFFFFF">
-<table class="head-wrap">
-    <tr>
-        <td></td>
-        <td class="header container">
-
-            <div class="content">
-                <table>
-                    <tr>
-                        <td>
-                            <img src="cid:ApplicationImage" alt="Logo" width="246" height="52" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-        </td>
-        <td></td>
-    </tr>
-</table>
-
 <table class="body-wrap">
     <tr>
         <td></td>
         <td class="container" bgcolor="#FFFFFF">
-
-            <div class="content">
+            <div class="content" style="padding-bottom:0;">
                 <table>
                     <tr>
                         <td>
                             <h3>Shipment #$shipment.primaryId</h3>
+                            This e-mail serves as a notification that shipment #$shipment.primaryId has recently been updated. To view the shipment details, please click on View Shipment.
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            #if ($comments.size() > 0)
-                                <table class="comments" style="margin:8px 0 18px 0;">
-                                    #foreach ($comment in $comments)
-                                        <tr>
-##                                            <td>
-##                                                <span class="aui-avatar-medium">
-##                                                    <img src="styles/img/avatars/male.png" alt="me">
-##                                                </span>
-##                                            </td>
-                                            <td>
-                                                <label>
-                                                    <b>$comment.user.displayName</b>
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"><label class="text-muted font-xs">$comment.text</label></td>
-                                        </tr>
-                                    #end
-                                </table>
-                            #end
-                            <table class=button-template
-                                   style="border-left-width: 0px; word-wrap: break-word; font-size: 14px; height: 30px; font-family: arial, freesans, helvetica, sans-serif; border-right-width: 0px; background-image: none; border-bottom-width: 0px; text-align: center; border-spacing: 0; border-top-width: 0px; background-color: #3572b0; border-radius: 3px; width: 150px; margin-top:10px;"
+                            <table style="border-left-width: 0px; word-wrap: break-word; font-size: 14px; height: 30px; font-family: arial, freesans, helvetica, sans-serif; border-right-width: 0px; background-image: none; border-bottom-width: 0px; text-align: center; border-spacing: 0; border-top-width: 0px; background-color: #3572b0; border-radius: 3px; width: 150px; margin-top:10px;"
                                    height=30 cellspacing=0 cellpadding=0 bgcolor=#3572b0 border=0>
                                 <tbody>
                                 <tr>
-                                    <td class=button-outer-cell
-                                        style="font-size: 14px; font-family: arial, freesans, helvetica, sans-serif; padding-left: 10px; padding-right: 10px"
-                                        align=center>
+                                    <td style="font-size: 14px; font-family: arial, freesans, helvetica, sans-serif; padding-left: 10px; padding-right: 10px">
                                         <table class=button-template-inner
                                                style="font-size: 14px; font-family: arial, freesans, helvetica, sans-serif; border-spacing: 0"
                                                cellspacing=0 cellpadding=0 border=0>
                                             <tbody>
                                             <tr>
-                                                <td class=button-template-font
-                                                    style="font-size: 14px; font-family: arial, freesans, helvetica, sans-serif; font-weight: bold; color: #ffffff; padding-left: 0px; padding-right: 0px; text-shadow: 0 1px 0 #205081; text-align: center;"
+                                                <td style="font-size: 14px; font-family: arial, freesans, helvetica, sans-serif; font-weight: bold; color: #ffffff; padding-left: 0px; padding-right: 0px; text-shadow: 0 1px 0 #205081; text-align: center;"
                                                     height=28>
                                                     <a style="border-left-width: 0px; text-decoration: none; border-right-width: 0px; border-bottom-width: 0px; color: #ffffff; border-top-width: 0px"
                                                        href="$shipmentUrl"
@@ -433,6 +386,29 @@
                                 </tr>
                                 </tbody>
                             </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            #if ($comments.size() > 0)
+                                <table class="comments" style="margin:8px 0 18px 0;">
+                                    #foreach ($comment in $comments)
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <b>$comment.user.displayName</b>
+                                                    <label class="text-muted font-xs"> $dateTool.format(
+                                                        "yyyy/MM/dd HH:mm",$comment.dateCreated)</label>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label class="text-muted font-xs">$comment.text</label></td>
+                                        </tr>
+                                    #end
+                                </table>
+                            #end
                         </td>
                     </tr>
 
@@ -455,7 +431,7 @@
     <tr>
         <td></td>
         <td class="container">
-            <div class="content">
+            <div class="content" style="padding-top:0;">
                 <table>
                     <tr>
                         <td class="descriptiontext">Electronically generated on behalf of:<br/>$outgoingDisplayName</td>

@@ -1189,7 +1189,7 @@ INSERT INTO "user_status" ("id", "descr") VALUES
 SET IDENTITY_INSERT "user_acc" ON ;
 INSERT INTO "user_acc" ("id", "title", "first_name", "last_name", "display_name", "primary_email_address", "mobile_no", "prefer_comm_type", "username", "password", "personal_ref_type", "personal_ref_value", "account_non_expired", "account_non_locked", "credentials_non_expired", "enabled", "reserved", "password_expired", "activation_serial_no", "last_login_time", "status", "company_id") VALUES
 (-99  ,NULL  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'ANONYMOUS'  ,'no-reply@ecoo.co.za'  ,NULL  ,NULL  ,'anonymous'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL  ,NULL ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  , NULL),
-(-98  ,NULL  ,'SYSTEM'  ,'ACCOUNT'  ,'SYSTEM ACCOUNT'  ,NULL  ,NULL  ,NULL  ,'sysaccount'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
+(-98  ,NULL  ,'SYSTEM'  ,'ACCOUNT'  ,'SYSTEM'  ,NULL  ,NULL  ,NULL  ,'sysaccount'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
 (-97  ,NULL  ,'BATCH PROCESSOR'  ,'ACCOUNT'  ,'BATCH PROCESSOR ACCOUNT'  ,NULL  ,NULL  ,'E'  ,'batch'  ,'21232f297a57a5a743894a0e4a801fc3'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
 (-96  ,NULL  ,'MOBILE'  ,'APP'  ,'MOBILE APP'  ,NULL  ,NULL  ,'E'  ,'mobile'  ,'1DECF8C589D5751C639229B33AA6C1E2'  ,NULL ,NULL  ,1  ,1  ,1  ,1  ,0  ,0  ,''  ,NULL  ,'A'  ,NULL),
 (1  ,NULL  ,'SYSTEM'  ,'ADMINISTRATION'  ,'SYSTEM ADMINISTRATION'  ,'system@s-squared.co.za'  ,NULL  ,'E'  ,'admin'  ,'21232f297a57a5a743894a0e4a801fc3'  ,'OTH'  ,'admin' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,1),

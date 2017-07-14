@@ -55,16 +55,16 @@ public class NewShipmentRequestTaskAssignmentHandler implements TaskListener {
     }
 
     private void addComment(Shipment shipment) {
-        final User SystemAccount = userService.findById(KnownUser.SystemAccount.getPrimaryId());
+        final User requestedBy = userService.findById(shipment.getRequestedBy());
 
         final Chamber chamber = chamberService.findById(shipment.getChamberId());
 
         final ShipmentComment shipmentComment = new ShipmentComment();
         shipmentComment.setShipmentId(shipment.getPrimaryId());
-        shipmentComment.setUser(SystemAccount);
+        shipmentComment.setUser(requestedBy);
         shipmentComment.setText("SUBMITTED FOR APPROVAL TO " + chamber.getName());
         shipmentComment.setDateCreated(new Date());
-        
+
         shipmentCommentService.save(shipmentComment);
         log.info("Saving comment... {}", shipment);
     }

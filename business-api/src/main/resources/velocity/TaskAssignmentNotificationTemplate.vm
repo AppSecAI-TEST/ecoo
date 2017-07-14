@@ -333,30 +333,11 @@
 </head>
 
 <body bgcolor="#FFFFFF">
-<table class="head-wrap">
-    <tr>
-        <td></td>
-        <td class="header container">
-
-            <div class="content">
-                <table>
-                    <tr>
-                        <td><img src="logo.png" height="30" width="142"/></td>
-
-                    </tr>
-                </table>
-            </div>
-
-        </td>
-        <td></td>
-    </tr>
-</table>
-
 <table class="body-wrap">
     <tr>
         <td></td>
         <td class="container" bgcolor="#FFFFFF">
-            <div class="content">
+            <div class="content" style="padding-bottom:0;">
                 <table>
                     <tr>
                         <td>
@@ -366,11 +347,6 @@
                     </tr>
                     <tr>
                         <td>
-                            #if ($comments != "")
-                                <p class="comments" style="margin-top:8px;">
-                                    $comments
-                                </p>
-                            #end
                             <table class=button-template
                                    style="border-left-width: 0px; word-wrap: break-word; font-size: 14px; height: 30px; font-family: arial, freesans, helvetica, sans-serif; border-right-width: 0px; background-image: none; border-bottom-width: 0px; text-align: center; border-spacing: 0; border-top-width: 0px; background-color: #3572b0; border-radius: 3px; width: 150px; margin-top:10px;"
                                    height=30 cellspacing=0 cellpadding=0 bgcolor=#3572b0 border=0>
@@ -400,6 +376,16 @@
                             </table>
                         </td>
                     </tr>
+
+                    <tr>
+                        <td>
+                            #if ($comments != "")
+                                <p class="comments" style="margin-top:10px;">
+                                    $comments
+                                </p>
+                            #end
+                        </td>
+                    </tr>
                 </table>
             </div>
         </td>
@@ -411,7 +397,7 @@
     <tr>
         <td></td>
         <td class="container">
-            <div class="content">
+            <div class="content" style="padding-top:0;">
                 <table>
                     <tr>
                         <td class="descriptiontext">Electronically generated on behalf of:<br/>$outgoingDisplayName</td>

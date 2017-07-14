@@ -70,7 +70,7 @@
       <bpmn:incoming>SequenceFlow_06j20lm</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_11mjhv4</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="UpdateShipment" name="Update Shipment">
+    <bpmn:userTask id="UpdateShipment" name="Update Shipment" default="SequenceFlow_1i5i25i">
       <bpmn:extensionElements>
         <camunda:taskListener delegateExpression="${shipmentRequestNeedsWorkdTaskAssignmentHandler}" event="create" />
       </bpmn:extensionElements>

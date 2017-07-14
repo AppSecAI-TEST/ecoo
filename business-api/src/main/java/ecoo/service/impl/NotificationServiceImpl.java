@@ -5,9 +5,9 @@ import ecoo.bpm.entity.WorkflowRequest;
 import ecoo.bpm.entity.WorkflowRequestDescriptionBuilder;
 import ecoo.data.*;
 import ecoo.service.*;
-import ecoo.util.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.tools.generic.DateTool;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.task.IdentityLink;
 import org.slf4j.Logger;
@@ -20,7 +20,9 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.Assert;
 
 import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -57,6 +59,46 @@ public final class NotificationServiceImpl implements NotificationService {
     /**
      * Method used to send an email to notify user(s) of the shipment.
      *
+     * @param user              The user who forgot their password.
+     * @param plainTextPassword The new temporary password.
+     * @return The message.
+     */
+    @Override
+    public MimeMessage createForgotPasswordNotification(User user, String plainTextPassword) throws UnsupportedEncodingException, AddressException {
+        Assert.notNull(user, "The variable user cannot be null.");
+        Assert.hasText(plainTextPassword, "The variable plainTextPassword cannot be null.");
+
+        final Set<User> suggestedRecipients = new HashSet<>();
+        suggestedRecipients.add(user);
+
+        final Feature nonProductionEmail = featureService.findByName(Feature.Type.NON_PRODUCTION_EMAIL);
+        final Collection<InternetAddress> intendedRecipients = determineRecipient(suggestedRecipients, nonProductionEmail);
+
+        return createMimeMessage0((MimeMessage mimeMessage) -> {
+            final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+            message.setTo(intendedRecipients.toArray(new InternetAddress[intendedRecipients.size()]));
+
+            final String subject = "Password Reset";
+            message.setSubject(subject);
+
+            final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
+            final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
+
+            final Map<String, Object> model = new HashMap<>();
+            model.put("displayName", user.getDisplayName());
+            model.put("applicationLoginUrl", applicationRootUrl.getValue());
+            model.put("plainTextPassword", plainTextPassword);
+            model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
+
+            final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
+                    "velocity/ForgotPasswordNotificationTemplate.vm", DEFAULT_ENCODING, model);
+            message.setText(text, true);
+        });
+    }
+
+    /**
+     * Method used to send an email to notify user(s) of the shipment.
+     *
      * @param shipment The shipment to notify about.
      * @return The message.
      */
@@ -72,11 +114,10 @@ public final class NotificationServiceImpl implements NotificationService {
         final Feature nonProductionEmail = featureService.findByName(Feature.Type.NON_PRODUCTION_EMAIL);
         final Collection<InternetAddress> intendedRecipients = determineRecipient(suggestedRecipients, nonProductionEmail);
 
-        final List<ShipmentComment> comments = shipmentCommentService.findByShipmentId(shipment.getPrimaryId());
+        final Set<ShipmentComment> orderedComments = new TreeSet<>((o1, o2) -> o2.getDateCreated().compareTo(o1.getDateCreated()));
+        orderedComments.addAll(shipmentCommentService.findByShipmentId(shipment.getPrimaryId()));
 
         final Chamber chamber = chamberService.findById(shipment.getChamberId());
-
-        final String systemDir = featureService.systemDirectory();
 
         return createMimeMessage0((MimeMessage mimeMessage) -> {
             final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
@@ -94,29 +135,31 @@ public final class NotificationServiceImpl implements NotificationService {
             model.put("shipment", shipment);
             model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
             model.put("shipmentUrl", shipmentUrl);
-            model.put("comments", comments);
+            model.put("comments", orderedComments);
             model.put("chamberName", chamber.getName());
             model.put("chamberEmail", chamber.getEmail());
+            model.put("dateTool", new DateTool());
 
             final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
                     "velocity/ShipmentNotificationTemplate.vm", DEFAULT_ENCODING, model);
             message.setText(text, true);
-
-
-            Multipart multipart = new MimeMultipart("related");
-
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setText(text, "utf-8", "html");
-            multipart.addBodyPart(htmlPart);
-
-            MimeBodyPart imgPart = new MimeBodyPart();
-            imgPart.attachFile(FileUtils.resolveDir(systemDir) + "logo.png");
-            imgPart.setContentID("<ApplicationImage>");
-            multipart.addBodyPart(imgPart);
-
-            mimeMessage.setContent(multipart);
         });
     }
+
+//    private void addApplicationLogo(String systemDir, MimeMessage mimeMessage, String text) throws MessagingException, IOException {
+//        Multipart multipart = new MimeMultipart("related");
+//
+//        MimeBodyPart htmlPart = new MimeBodyPart();
+//        htmlPart.setText(text, "utf-8", "html");
+//        multipart.addBodyPart(htmlPart);
+//
+//        MimeBodyPart imgPart = new MimeBodyPart();
+//        imgPart.attachFile(FileUtils.resolveDir(systemDir) + "logo.png");
+//        imgPart.setContentID("<ApplicationImage>");
+//        multipart.addBodyPart(imgPart);
+//
+//        mimeMessage.setContent(multipart);
+//    }
 
     /**
      * Method used to send an email to notify user(s) of BPM task assignment.

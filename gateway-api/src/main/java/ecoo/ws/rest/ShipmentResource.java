@@ -58,6 +58,12 @@ public class ShipmentResource extends BaseResource {
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     public ResponseEntity<NewShipmentResponse> submit(@RequestBody NewShipmentRequest request) {
         Assert.notNull(request, "The variable shipment cannot be null.");
+
+        final String processInstanceId = request.getShipment().getProcessInstanceId();
+        if (StringUtils.isNotBlank(processInstanceId)) {
+            throw new IllegalArgumentException(String.format("System cannot complete request. Shipment %s is already " +
+                    "associated with process %s.", request.getShipment().getPrimaryId(), processInstanceId));
+        }
         shipmentValidator.validate(request.getShipment());
         return ResponseEntity.ok(workflowService.requestNewShipment(request));
     }

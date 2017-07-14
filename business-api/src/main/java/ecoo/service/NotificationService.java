@@ -14,6 +14,15 @@ import java.io.UnsupportedEncodingException;
  * @since July 2017
  */
 public interface NotificationService {
+    
+    /**
+     * Method used to send an email to notify user(s) of the shipment.
+     *
+     * @param user              The user who forgot their password.
+     * @param plainTextPassword The new temporary password.
+     * @return The message.
+     */
+    MimeMessage createForgotPasswordNotification(User user, String plainTextPassword) throws UnsupportedEncodingException, AddressException;
 
     /**
      * Method used to send an email to notify user(s) of the shipment.

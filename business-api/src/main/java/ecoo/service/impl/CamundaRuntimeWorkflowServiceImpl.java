@@ -102,6 +102,12 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
     public NewShipmentResponse requestNewShipment(NewShipmentRequest request) {
         Assert.notNull(request, "The request cannot be null.");
 
+        final String processInstanceId = request.getShipment().getProcessInstanceId();
+        if (StringUtils.isNotBlank(processInstanceId)) {
+            throw new IllegalArgumentException(String.format("System cannot complete request. Shipment %s is already " +
+                    "associated with process %s.", request.getShipment().getPrimaryId(), processInstanceId));
+        }
+
         final User requestingUser = request.getRequestingUser();
         Assert.notNull(requestingUser, "The requestingUser cannot be null.");
 
