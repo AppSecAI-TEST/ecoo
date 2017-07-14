@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="processEngineConfiguration" class="org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration">
+        <property name="processEngineName" value="default" />
+        <property name="dataSource" ref="ecooDataSource" />
+        <!--<property name="transactionManager" ref="ecooTransactionManager" />-->
+        <property name="databaseSchemaUpdate" value="true" />
+        <property name="databaseType" value="mssql" />
+        <property name="jobExecutorActivate" value="true" />
+        <property name="deploymentResources" value="classpath*:/camunda/*.bpmn" />
+
+        <!-- Don't persist process variable data until it can be automatically cleaned up: -->
+        <property name="history" value="activity" />
+
+        <!-- History cleanup only available for camunda 7.7  -->
+        <property name="historyCleanupBatchWindowStartTime" value="20:00" />
+        <property name="historyCleanupBatchWindowEndTime" value="22:00" />
+        <property name="historyCleanupBatchSize" value="100" />
+    </bean>
+
+    <bean id="processEngineFactoryBean" class="org.camunda.bpm.engine.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration" />
+    </bean>
+
+    <bean id="repositoryService" factory-bean="processEngineFactoryBean" factory-method="getRepositoryService" />
+    <bean id="runtimeService" factory-bean="processEngineFactoryBean" factory-method="getRuntimeService" />
+    <bean id="taskService" factory-bean="processEngineFactoryBean" factory-method="getTaskService" />
+    <bean id="historyService" factory-bean="processEngineFactoryBean" factory-method="getHistoryService" />
+    <bean id="managementService" factory-bean="processEngineFactoryBean" factory-method="getManagementService" />
+
+</beans>
