@@ -25,24 +25,24 @@ public class WorkflowRequestDescriptionBuilder {
 
     public String build() {
         switch (workflowRequest.getType()) {
-            case UserRegistration:
-                final RegisterUserAccountRequest registerUserAccountRequest = (RegisterUserAccountRequest) workflowRequest;
-                final Company newCompany = ((RegisterUserAccountRequest) workflowRequest).getCompany();
+            case CompanyRegistration:
+                final RegisterCompanyAccountRequest registerCompanyAccountRequest = (RegisterCompanyAccountRequest) workflowRequest;
+                final Company newCompany = registerCompanyAccountRequest.getCompany();
                 if (newCompany.isInStatus(CompanyStatus.PendingDocumentation)) {
                     return String.format("Proof of company documents are required for company %s."
-                            , registerUserAccountRequest.getCompany().getName());
-
-                } else if (newCompany.isInStatus(CompanyStatus.PendingApproval)) {
-                    return String.format("User %s is requesting new company %s."
-                            , registerUserAccountRequest.getUser().getDisplayName()
-                            , registerUserAccountRequest.getCompany().getName());
+                            , registerCompanyAccountRequest.getCompany().getName());
 
                 } else {
-                    return String.format("User %s from %s is requesting membership to %s."
-                            , registerUserAccountRequest.getUser().getDisplayName()
-                            , registerUserAccountRequest.getCompany().getName()
-                            , registerUserAccountRequest.getChamber().getName());
+                    return String.format("User %s is requesting new company %s."
+                            , registerCompanyAccountRequest.getRequestingUser().getDisplayName()
+                            , registerCompanyAccountRequest.getCompany().getName());
                 }
+            case UserRegistration:
+                final RegisterUserAccountRequest registerUserAccountRequest = (RegisterUserAccountRequest) workflowRequest;
+                return String.format("User %s from %s is requesting membership to %s."
+                        , registerUserAccountRequest.getUser().getDisplayName()
+                        , registerUserAccountRequest.getCompany().getName()
+                        , registerUserAccountRequest.getChamber().getName());
             case NewShipmentRequest:
                 final NewShipmentRequest newShipmentRequest = (NewShipmentRequest) workflowRequest;
                 if (newShipmentRequest.getShipment().isInStatus(ShipmentStatus.SubmittedAndPendingChamberApproval)) {

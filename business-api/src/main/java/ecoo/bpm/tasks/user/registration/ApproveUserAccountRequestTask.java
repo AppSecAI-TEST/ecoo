@@ -60,18 +60,24 @@ public class ApproveUserAccountRequestTask implements JavaDelegate {
 
         approveSignature(signature, user);
 
-        final Integer approvedById = (Integer) delegateExecution.
-                getVariable(TaskVariables.ASSIGNEE.variableName());
+        final Integer approvedById = (Integer) delegateExecution.getVariable(TaskVariables.ASSIGNEE.variableName());
 
         final User approvedBy = userService.findById(approvedById);
 
-        final User approvedUser = approveUser(user, request.getChamber()
-                , request.getMember().equalsIgnoreCase("Y"));
+        final Company company = companyService.findById(request.getCompany().getPrimaryId());
+        final Company approvedCompany = approveCompanySignatory(user, company);
+
+        final User approvedUser = approveUser(user, company, request.getChamber(), request.getMember().equalsIgnoreCase("Y"));
         request.setUser(approvedUser);
     }
 
+    private Company approveCompanySignatory(User user, Company company) {
+        companySignatoryService.addSignatory(user, company.getPrimaryId());
+        return company;
+    }
 
-    private User approveUser(User user, Chamber chamber, boolean member) {
+    private User approveUser(User user, Company company, Chamber chamber, boolean member) {
+        user.setCompany(company);
         user.setStatus(UserStatus.Approved.id());
         userService.save(user);
 

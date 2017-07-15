@@ -1,10 +1,12 @@
 package ecoo.ws.security.filter;
 
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.lang.Assert;
 import ecoo.convert.HttpServletRequestToAuthenticationConverter;
 import ecoo.security.UserAuthentication;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.lang.Assert;
 import org.slf4j.MDC;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -41,11 +43,9 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             applyUserToMDC(authentication);
 
-            chain.doFilter(request, response); // always continue
+            chain.doFilter(request, response);
 
-        } catch (final SignatureException e) {
-            // This exception is thrown if it is not a signed JWS or token cannot be converted because the
-            // token has changed or been tampered with.
+        } catch (final ExpiredJwtException | SignatureException | BadCredentialsException e) {
             httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         }
     }

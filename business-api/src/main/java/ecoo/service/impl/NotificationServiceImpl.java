@@ -207,10 +207,10 @@ public final class NotificationServiceImpl implements NotificationService {
             String workflowRequestDescription = WorkflowRequestDescriptionBuilder.aDescription()
                     .withWorkflowRequest(workflowRequest)
                     .build();
-//            if (workflowRequestDescription.endsWith(".")) {
-//                workflowRequestDescription = workflowRequestDescription.substring(0
-//                        , workflowRequestDescription.length() - 2);
-//            }
+            if (workflowRequestDescription.length() > 2 && workflowRequestDescription.endsWith(".")) {
+                workflowRequestDescription = workflowRequestDescription.substring(0
+                        , workflowRequestDescription.length() - 1);
+            }
 
             final String processInstanceId = delegateTask.getProcessInstanceId();
 

@@ -10,7 +10,7 @@
     <name>ECOO - POM</name>
 
     <modules>
-        <!--<module>bpm</module>-->
+        <module>bpm</module>
         <module>business-api</module>
         <module>common</module>
         <module>db</module>

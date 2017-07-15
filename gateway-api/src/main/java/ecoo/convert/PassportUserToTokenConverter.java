@@ -2,10 +2,10 @@ package ecoo.convert;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
+import ecoo.ws.security.json.PassportUser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import ecoo.ws.security.json.PassportUser;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
@@ -25,8 +25,7 @@ public class PassportUserToTokenConverter implements Converter<PassportUser, Str
 
     private static final String USER = "user";
 
-//    private static final long TWO_DAY = 1000 * 60 * 60 * 24 * 2;
-    private static final long TWO_DAY = 60000;
+    private static final long TWO_DAY = 1000 * 60 * 60 * 24 * 2;
 
     private final String secret;
 
@@ -42,11 +41,13 @@ public class PassportUserToTokenConverter implements Converter<PassportUser, Str
 
             final String json = new ObjectMapper().writeValueAsString(passportUser);
             claims.put(USER, json);
-            claims.put(Claims.EXPIRATION, createDefaultExpirationDate());
 
             return Jwts.builder()
+                    .setIssuedAt(DateTime.now().toDate())
+                    .setIssuer("ecoo")
                     .setClaims(claims)
                     .signWith(SignatureAlgorithm.HS256, secret)
+                    .setExpiration(createExpirationDate())
                     .compact();
 
         } catch (JsonProcessingException e) {
@@ -55,7 +56,7 @@ public class PassportUserToTokenConverter implements Converter<PassportUser, Str
         }
     }
 
-    private Date createDefaultExpirationDate() {
+    private Date createExpirationDate() {
         return new Date(new Date().getTime() + TWO_DAY);
     }
 }

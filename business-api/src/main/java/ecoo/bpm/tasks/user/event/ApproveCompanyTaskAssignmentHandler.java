@@ -1,7 +1,7 @@
 package ecoo.bpm.tasks.user.event;
 
 import ecoo.bpm.constants.TaskVariables;
-import ecoo.bpm.entity.RegisterUserAccountRequest;
+import ecoo.bpm.entity.RegisterCompanyAccountRequest;
 import ecoo.data.ChamberGroupIdentityFactory;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
@@ -21,13 +21,12 @@ public class ApproveCompanyTaskAssignmentHandler implements TaskListener {
 
     @Override
     public void notify(DelegateTask delegateTask) {
-        final RegisterUserAccountRequest request = (RegisterUserAccountRequest) delegateTask.
+        final RegisterCompanyAccountRequest request = (RegisterCompanyAccountRequest) delegateTask.
                 getVariable(TaskVariables.REQUEST.variableName());
 
         final String chamberGroupIdentity = ChamberGroupIdentityFactory.build(request.getChamber().getPrimaryId());
         delegateTask.setAssignee(null);
         delegateTask.addCandidateGroup(chamberGroupIdentity);
-        log.info("Task assigned to candidate group associated to chambers {} <{}>."
-                , request.getChamber().getName(), chamberGroupIdentity);
+        log.info("Task assigned to candidate group associated to chambers {} <{}>.", request.getChamber().getName(), chamberGroupIdentity);
     }
 }

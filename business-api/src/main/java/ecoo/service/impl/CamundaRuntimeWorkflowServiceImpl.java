@@ -81,6 +81,9 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
         request.setBusinessKey(businessKey);
         request.setDateCreated(new Date());
 
+        request.setEmailAddress(StringUtils.stripToNull(request.getEmailAddress()));
+        request.setUsername(StringUtils.stripToNull(request.getUsername()));
+
         final Map<String, Object> variables = new HashMap<>();
         variables.put(TaskVariables.REQUEST.variableName(), request);
 
@@ -274,6 +277,42 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
             tasks.addAll(findAssignedByTasks(username, definition));
         }
         return tasks;
+    }
+
+    /**
+     * The method to kick-off the register company process.
+     *
+     * @param request The request.
+     * @return The response.
+     */
+    @Override
+    public RegisterCompanyAccountResponse register(RegisterCompanyAccountRequest request) {
+        Assert.notNull(request, "The request cannot be null.");
+
+        final User requestingUser = request.getRequestingUser();
+        Assert.notNull(requestingUser, "The requestingUser cannot be null.");
+
+        final String businessKey = request.getCompany().getRegistrationNo();
+        LOG.info("businessKey: {}", businessKey);
+
+        request.setBusinessKey(businessKey);
+        request.setDateCreated(new Date());
+
+        final Map<String, Object> variables = new HashMap<>();
+        variables.put(TaskVariables.REQUEST.variableName(), request);
+
+        final ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(CamundaProcess.CompanyRegistration.id()
+                , businessKey, variables);
+
+        final RegisterCompanyAccountResponse response = RegisterCompanyAccountResponseBuilder.aRegisterCompanyAccountResponse()
+                .withProcessInstanceId(processInstance.getProcessInstanceId())
+                .withBusinessKey(businessKey)
+                .withRequestingUserId(requestingUser.getPrimaryId())
+                .withRequestingUser(requestingUser.getDisplayName())
+                .build();
+        LOG.info("Company registration process started: " + response.toString());
+
+        return response;
     }
 
     /**

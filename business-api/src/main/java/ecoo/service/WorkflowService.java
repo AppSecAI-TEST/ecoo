@@ -121,6 +121,14 @@ public interface WorkflowService {
     long countAssignedToTasks(String username);
 
     /**
+     * The method to kick-off the register company process.
+     *
+     * @param request The request.
+     * @return The response.
+     */
+    RegisterCompanyAccountResponse register(RegisterCompanyAccountRequest request);
+
+    /**
      * The method to kick-off the register user process.
      *
      * @param request The request.

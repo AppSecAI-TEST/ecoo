@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>ecoo</groupId>
+        <artifactId>ecoo-bpm-pom</artifactId>
+        <version>RELEASE.1.0</version>
+        <relativePath>../../bpm</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>ECOO - BPM Camunda Cockpit</name>
+    <artifactId>ecoo-camunda-cockpit</artifactId>
+    <packaging>jar</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.camunda.bpm.extension</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+            <version>${camunda.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.jtds</groupId>
+            <artifactId>jtds</artifactId>
+            <version>${jtds.jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+    </dependencies>
+</project>

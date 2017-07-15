@@ -1,7 +1,7 @@
 package ecoo.bpm.tasks.user.registration;
 
 import ecoo.bpm.constants.TaskVariables;
-import ecoo.bpm.entity.RegisterUserAccountRequest;
+import ecoo.bpm.entity.RegisterCompanyAccountRequest;
 import ecoo.data.Company;
 import ecoo.data.CompanyStatus;
 import ecoo.service.CompanyService;
@@ -33,7 +33,7 @@ public class MarkCompanyAsPendingApprovalTask implements JavaDelegate {
     public void execute(final DelegateExecution delegateExecution) throws Exception {
         log.info("Called");
 
-        final RegisterUserAccountRequest request = (RegisterUserAccountRequest) delegateExecution.
+        final RegisterCompanyAccountRequest request = (RegisterCompanyAccountRequest) delegateExecution.
                 getVariable(TaskVariables.REQUEST.variableName());
         request.setProcessInstanceId(delegateExecution.getProcessInstanceId());
 
@@ -42,7 +42,5 @@ public class MarkCompanyAsPendingApprovalTask implements JavaDelegate {
 
         log.info("Attempting to save company... {}", company.toString());
         companyService.save(company);
-
-        request.getUser().setCompany(company);
     }
 }

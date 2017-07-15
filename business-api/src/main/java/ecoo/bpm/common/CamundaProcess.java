@@ -7,6 +7,11 @@ package ecoo.bpm.common;
 public enum CamundaProcess {
 
     /**
+     * A new company request.
+     */
+    CompanyRegistration("CompanyRegistration", "fa-building"),
+
+    /**
      * A new user request.
      */
     UserRegistration("UserRegistration", "fa-user"),

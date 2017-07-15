@@ -1,0 +1,22 @@
+server:
+  port: 3332
+  contextPath: /camunda-cockpit
+spring:
+  main:
+    banner-mode: console
+  datasource:
+    name: camundaCockpitDS
+    driverClassName: net.sourceforge.jtds.jdbc.Driver
+    url: jdbc:jtds:sqlserver://localhost:1433/ecoo
+    username: ecoo
+    password: jd3rcJuiWN4sExXB
+    max-active: 5
+    validationQuery: SELECT 1
+    testOnBorrow: true
+camunda:
+  bpm:
+    webapp:
+      index-redirect-enabled: false
+    database:
+      schema-update: false
+      type: mssql

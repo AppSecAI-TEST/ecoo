@@ -5,7 +5,6 @@ import ecoo.ws.security.filter.CORSFilter;
 import ecoo.ws.security.filter.StatelessAuthenticationFilter;
 import ecoo.ws.security.filter.StatelessLoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -31,10 +30,6 @@ public class StatelessAuthenticationSecurityConfig extends WebSecurityConfigurer
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private UserService userService;
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    private CounterService counterService;
 
     public StatelessAuthenticationSecurityConfig() {
         super(true);
@@ -84,7 +79,7 @@ public class StatelessAuthenticationSecurityConfig extends WebSecurityConfigurer
                 .anyRequest().authenticated().and()
 
                 // custom JSON based authentication by POST of {"username":"<name>","password":"<password>"} which sets the token header upon authentication
-                .addFilterBefore(new StatelessLoginFilter("/api/login", secret, userService, counterService, authenticationManager())
+                .addFilterBefore(new StatelessLoginFilter("/api/login", secret, userService, authenticationManager())
                         , UsernamePasswordAuthenticationFilter.class)
 
                 // custom JWTToken based authentication based on the header previously given to the client

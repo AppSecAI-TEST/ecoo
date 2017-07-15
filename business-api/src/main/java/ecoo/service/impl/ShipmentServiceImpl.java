@@ -130,6 +130,7 @@ public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shi
             final String escapedQuery = escape(q);
             queryBuilder.must(queryStringQuery("*" + escapedQuery + "*")
                     // TODO: Need to define other columns.
+                    //.field("primaryId")
                     .field("exporterReference")
                     .analyzeWildcard(true));
         } else {
@@ -138,10 +139,6 @@ public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shi
                     .field("exporterReference")
                     .analyzeWildcard(true));
         }
-
-//        if(!requestingUser.isInRole(Role.ROLE_SYSADMIN)) {
-//            
-//       }
 
         final BoolQueryBuilder ownerIdQueryBuilder = boolQuery();
         ownerIdQueryBuilder.must(matchQuery("ownerId", requestingUser.getPrimaryId()));

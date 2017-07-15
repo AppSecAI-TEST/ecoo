@@ -1,7 +1,7 @@
 package ecoo.bpm.tasks.user.event;
 
 import ecoo.bpm.constants.TaskVariables;
-import ecoo.bpm.entity.RegisterUserAccountRequest;
+import ecoo.bpm.entity.RegisterCompanyAccountRequest;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
 import org.slf4j.Logger;
@@ -20,13 +20,12 @@ public class UploadProofOfCompanyDocumentTaskAssignmentHandler implements TaskLi
 
     @Override
     public void notify(DelegateTask delegateTask) {
-        final RegisterUserAccountRequest request = (RegisterUserAccountRequest) delegateTask.
+        final RegisterCompanyAccountRequest request = (RegisterCompanyAccountRequest) delegateTask.
                 getVariable(TaskVariables.REQUEST.variableName());
 
         final String assignee = request.getRequestingUser().getUsername();
         delegateTask.setAssignee(assignee);
 
-        log.info("Task assigned to assignee {} <{}>."
-                , request.getRequestingUser().getDisplayName(), assignee);
+        log.info("Task assigned to assignee {} <{}>.", request.getRequestingUser().getDisplayName(), assignee);
     }
 }

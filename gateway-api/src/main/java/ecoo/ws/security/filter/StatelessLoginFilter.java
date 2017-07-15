@@ -36,17 +36,13 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 
     private final UserService userService;
 
-    private CounterService counterService;
-
     public StatelessLoginFilter(String urlMapping
             , String secret
             , UserService userService
-            , CounterService counterService
             , AuthenticationManager authManager) {
         super(new AntPathRequestMatcher(urlMapping));
         this.secret = secret;
         this.userService = userService;
-        this.counterService = counterService;
         setAuthenticationManager(authManager);
     }
 
@@ -61,10 +57,8 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
             final Authentication authentication = userService.authenticate(authenticationRequest.getUsername()
                     , authenticationRequest.getPassword());
             if (authentication == null) {
-                counterService.increment("counter.login.failure");
                 return null;
             } else {
-                counterService.increment("counter.login.success");
                 return authentication;
             }
         }

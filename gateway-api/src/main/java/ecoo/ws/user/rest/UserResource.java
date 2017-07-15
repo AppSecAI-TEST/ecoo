@@ -1,6 +1,7 @@
 package ecoo.ws.user.rest;
 
 import ecoo.bpm.entity.*;
+import ecoo.data.CompanyStatus;
 import ecoo.data.Role;
 import ecoo.data.User;
 import ecoo.data.UserStatus;
@@ -67,6 +68,15 @@ public class UserResource extends BaseResource {
     public ResponseEntity<RegisterUserAccountResponse> register(@RequestBody RegisterUserAccountRequest registerUserAccountRequest) {
         companyValidator.validate(registerUserAccountRequest.getCompany());
         userValidator.validate(registerUserAccountRequest.getUser());
+
+        if (!registerUserAccountRequest.getCompany().isInStatus(CompanyStatus.Approved)) {
+            final RegisterCompanyAccountRequest registerCompanyAccountRequest = RegisterCompanyAccountRequestBuilder.aRegisterCompanyAccountRequest()
+                    .withChamber(registerUserAccountRequest.getChamber())
+                    .withCompany(registerUserAccountRequest.getCompany())
+                    .withRequestingUser(registerUserAccountRequest.getRequestingUser())
+                    .build();
+            workflowService.register(registerCompanyAccountRequest);
+        }
         return ResponseEntity.ok(workflowService.register(registerUserAccountRequest));
     }
 
