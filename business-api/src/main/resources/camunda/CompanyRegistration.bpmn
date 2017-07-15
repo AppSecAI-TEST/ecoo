@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.8.2">
+  <bpmn:process id="CompanyRegistration" name="Company Registration" isExecutable="true">
+    <bpmn:startEvent id="ReceiveRegisterUserRequest" name="Start">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${log4jProcessInstanceIdHandler}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_07a3gz9</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_0ahpj89" name="End">
+      <bpmn:incoming>SequenceFlow_0austwr</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="MarkCompanyAsPendingDocumentTask" name="Mark Company As Pending Documentation" camunda:delegateExpression="${markCompanyAsPendingDocumentationTask}">
+      <bpmn:incoming>CompanyNeedsWork</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_07a3gz9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_04p0xop</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="UploadProofOfCompanyDocument" name="Upload Proof of Company Document">
+      <bpmn:extensionElements>
+        <camunda:taskListener delegateExpression="${uploadProofOfCompanyDocumentTaskAssignmentHandler}" event="create" />
+        <camunda:taskListener delegateExpression="${taskNotificationAssignmentHandler}" event="create" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_04p0xop</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ow27ma</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="ApproveCompany" name="Approve Company">
+      <bpmn:extensionElements>
+        <camunda:taskListener delegateExpression="${approveCompanyTaskAssignmentHandler}" event="create" />
+        <camunda:taskListener delegateExpression="${taskNotificationAssignmentHandler}" event="create" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0afh4fh</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1frsaee</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_04p0xop" sourceRef="MarkCompanyAsPendingDocumentTask" targetRef="UploadProofOfCompanyDocument" />
+    <bpmn:exclusiveGateway id="CompanyApprovedDecision" name="Company Approved?">
+      <bpmn:incoming>SequenceFlow_1frsaee</bpmn:incoming>
+      <bpmn:outgoing>CompanyNeedsWork</bpmn:outgoing>
+      <bpmn:outgoing>CompanyApproved</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1frsaee" sourceRef="ApproveCompany" targetRef="CompanyApprovedDecision" />
+    <bpmn:sequenceFlow id="CompanyApproved" name="Approved" sourceRef="CompanyApprovedDecision" targetRef="MarkCompanyAsApprovedTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${action == "APPROVE"}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="CompanyNeedsWork" name="Needs Work" sourceRef="CompanyApprovedDecision" targetRef="MarkCompanyAsPendingDocumentTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${action == "NEEDS_WORK"}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0ow27ma" sourceRef="UploadProofOfCompanyDocument" targetRef="MarkCompanyAsPendingApprovalTask" />
+    <bpmn:sequenceFlow id="SequenceFlow_0afh4fh" sourceRef="MarkCompanyAsPendingApprovalTask" targetRef="ApproveCompany" />
+    <bpmn:serviceTask id="MarkCompanyAsPendingApprovalTask" name="Mark Company As Pending Approval" camunda:delegateExpression="${markCompanyAsPendingApprovalTask}">
+      <bpmn:incoming>SequenceFlow_0ow27ma</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0afh4fh</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="MarkCompanyAsApprovedTask" name="Mark Company As Approved" camunda:delegateExpression="${markCompanyAsApprovedTask}">
+      <bpmn:incoming>CompanyApproved</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0austwr</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_07a3gz9" sourceRef="ReceiveRegisterUserRequest" targetRef="MarkCompanyAsPendingDocumentTask" />
+    <bpmn:sequenceFlow id="SequenceFlow_0austwr" sourceRef="MarkCompanyAsApprovedTask" targetRef="EndEvent_0ahpj89" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="CompanyRegistration">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="ReceiveRegisterUserRequest">
+        <dc:Bounds x="-654" y="-62" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-648" y="-19" width="23" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0ahpj89_di" bpmnElement="EndEvent_0ahpj89">
+        <dc:Bounds x="705" y="-62" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="713" y="-18" width="19" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1dt0grh_di" bpmnElement="MarkCompanyAsPendingDocumentTask">
+        <dc:Bounds x="-471" y="-84" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1y625qh_di" bpmnElement="UploadProofOfCompanyDocument">
+        <dc:Bounds x="-258" y="-84" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1me3yc1_di" bpmnElement="ApproveCompany">
+        <dc:Bounds x="106" y="-84" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_04p0xop_di" bpmnElement="SequenceFlow_04p0xop">
+        <di:waypoint xsi:type="dc:Point" x="-371" y="-44" />
+        <di:waypoint xsi:type="dc:Point" x="-258" y="-44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-359.5" y="-69" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0tgwdaa_di" bpmnElement="CompanyApprovedDecision" isMarkerVisible="true">
+        <dc:Bounds x="285" y="-69" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="283" y="-12" width="53" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1frsaee_di" bpmnElement="SequenceFlow_1frsaee">
+        <di:waypoint xsi:type="dc:Point" x="206" y="-44" />
+        <di:waypoint xsi:type="dc:Point" x="285" y="-44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="200.5" y="-69" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ns0pdw_di" bpmnElement="CompanyApproved">
+        <di:waypoint xsi:type="dc:Point" x="335" y="-44" />
+        <di:waypoint xsi:type="dc:Point" x="468" y="-44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="373.6379233183713" y="-65.65708747715186" width="47" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1s4vfr5_di" bpmnElement="CompanyNeedsWork">
+        <di:waypoint xsi:type="dc:Point" x="310" y="-69" />
+        <di:waypoint xsi:type="dc:Point" x="310" y="-142" />
+        <di:waypoint xsi:type="dc:Point" x="-421" y="-142" />
+        <di:waypoint xsi:type="dc:Point" x="-421" y="-84" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-93.51819620253147" y="-167" width="61" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ow27ma_di" bpmnElement="SequenceFlow_0ow27ma">
+        <di:waypoint xsi:type="dc:Point" x="-158" y="-44" />
+        <di:waypoint xsi:type="dc:Point" x="-78" y="-44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-163" y="-69" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0afh4fh_di" bpmnElement="SequenceFlow_0afh4fh">
+        <di:waypoint xsi:type="dc:Point" x="22" y="-44" />
+        <di:waypoint xsi:type="dc:Point" x="106" y="-44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="19" y="-69" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_14zs2kn_di" bpmnElement="MarkCompanyAsPendingApprovalTask">
+        <dc:Bounds x="-78" y="-84" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0ctt4fa_di" bpmnElement="MarkCompanyAsApprovedTask">
+        <dc:Bounds x="468" y="-84" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_07a3gz9_di" bpmnElement="SequenceFlow_07a3gz9">
+        <di:waypoint xsi:type="dc:Point" x="-618" y="-44" />
+        <di:waypoint xsi:type="dc:Point" x="-471" y="-44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-544.5" y="-65" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0austwr_di" bpmnElement="SequenceFlow_0austwr">
+        <di:waypoint xsi:type="dc:Point" x="568" y="-44" />
+        <di:waypoint xsi:type="dc:Point" x="705" y="-44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="636.5" y="-65" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
