@@ -31,8 +31,9 @@ public class MarkCompanyAsApprovedTask implements JavaDelegate {
     private UserService userService;
 
     @Autowired
-    public MarkCompanyAsApprovedTask(CompanyService companyService) {
+    public MarkCompanyAsApprovedTask(CompanyService companyService, UserService userService) {
         this.companyService = companyService;
+        this.userService = userService;
     }
 
     @Override

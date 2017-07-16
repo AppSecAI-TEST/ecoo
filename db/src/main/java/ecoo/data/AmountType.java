@@ -1,5 +1,7 @@
 package ecoo.data;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 
 /**
@@ -8,6 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "amount_type")
+@Audited
 public class AmountType extends BaseModel<Integer> {
 
     private static final long serialVersionUID = -849125304465931221L;

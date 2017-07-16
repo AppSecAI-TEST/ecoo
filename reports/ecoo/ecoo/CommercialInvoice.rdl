@@ -2389,7 +2389,13 @@ where s.id = @shipmentId
             <Value>=Parameters!shipmentId.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>select c.* from doc_comm_inv_amount c with(nolock)
+        <CommandText>select
+	 c.id
+	,c.shipment_id
+	,a.code amount_type
+	,c.amount
+from doc_comm_inv_amount c with(nolock)
+	inner join amount_type a with(nolock) on a.id = c.amount_type
 where c.shipment_id = @shipmentId
 and c.amount &gt; 0</CommandText>
       </Query>
