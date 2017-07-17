@@ -364,7 +364,7 @@
                                                     style="font-size: 14px; font-family: arial, freesans, helvetica, sans-serif; font-weight: bold; color: #ffffff; padding-left: 0px; padding-right: 0px; text-shadow: 0 1px 0 #205081; text-align: center;"
                                                     height=28>
                                                     <a style="border-left-width: 0px; text-decoration: none; border-right-width: 0px; border-bottom-width: 0px; color: #ffffff; border-top-width: 0px"
-                                                       href="http://bitbucket.discsrv.co.za/projects/dhsclsbms/repos/bms/pull-requests/1777"
+                                                       href="$requestUrl"
                                                        target=_blank>View Request</a>
                                                 </td>
                                             </tr>

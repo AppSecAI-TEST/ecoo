@@ -223,11 +223,11 @@ public final class NotificationServiceImpl implements NotificationService {
             final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
 
             // http://localhost:8888/#/app/request/142
-            final String applicationLoginUrl = applicationRootUrl.getValue() + "/#/app/request/" + processInstanceId;
+            final String requestUrl = applicationRootUrl.getValue() + "/#/app/request/" + processInstanceId;
 
             final Map<String, Object> model = new HashMap<>();
             model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
-            model.put("applicationLoginUrl", applicationLoginUrl);
+            model.put("requestUrl", requestUrl);
             model.put("workflowRequestDescription", workflowRequestDescription);
             model.put("processInstanceId", processInstanceId);
             model.put("comments", StringUtils.stripToEmpty(workflowRequest.getComments()));
