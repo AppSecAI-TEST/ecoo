@@ -22,14 +22,17 @@ public class CloneShipmentCommand {
 
     private CommercialInvoiceAmountService commercialInvoiceAmountService;
 
+    private ShipmentDocumentService shipmentDocumentService;
+
     private CertificateOfOriginService certificateOfOriginService;
 
     @Autowired
-    public CloneShipmentCommand(ShipmentService shipmentService, CommercialInvoiceService commercialInvoiceService, CommercialInvoiceLineService commercialInvoiceLineService, CommercialInvoiceAmountService commercialInvoiceAmountService, CertificateOfOriginService certificateOfOriginService) {
+    public CloneShipmentCommand(ShipmentService shipmentService, CommercialInvoiceService commercialInvoiceService, CommercialInvoiceLineService commercialInvoiceLineService, CommercialInvoiceAmountService commercialInvoiceAmountService, ShipmentDocumentService shipmentDocumentService, CertificateOfOriginService certificateOfOriginService) {
         this.shipmentService = shipmentService;
         this.commercialInvoiceService = commercialInvoiceService;
         this.commercialInvoiceLineService = commercialInvoiceLineService;
         this.commercialInvoiceAmountService = commercialInvoiceAmountService;
+        this.shipmentDocumentService = shipmentDocumentService;
         this.certificateOfOriginService = certificateOfOriginService;
     }
 
@@ -79,6 +82,13 @@ public class CloneShipmentCommand {
                         .withCommercialInvoiceAmount(commercialInvoiceAmount)
                         .clone(shipmentCloneId);
                 commercialInvoiceAmountService.save(commercialInvoiceAmountClone);
+            }
+
+            for (ShipmentDocument shipmentDocument : shipmentDocumentService.findByShipment(shipmentId)) {
+                final ShipmentDocument shipmentDocumentClone = ShipmentDocumentCloneBuilder.aShipmentDocument()
+                        .withShipmentDocument(shipmentDocument)
+                        .clone(shipmentCloneId);
+                shipmentDocumentService.save(shipmentDocumentClone);
             }
         }
     }
