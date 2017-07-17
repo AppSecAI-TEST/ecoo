@@ -10,6 +10,7 @@ import ecoo.data.Feature;
 import ecoo.data.Shipment;
 import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
+import ecoo.security.UserAuthentication;
 import ecoo.service.FeatureService;
 import ecoo.service.ShipmentService;
 import ecoo.service.UserService;
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -412,7 +414,11 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
                 .singleResult();
         Assert.notNull(task, String.format("System cannot complete request. No active task found for " +
                 "processInstanceId %s.", workflowRequest.getProcessInstanceId()));
-        assertTaskAssignment(workflowRequest.getProcessInstanceId(), task, workflowRequest.getRequestingUser());
+
+        final UserAuthentication authentication = (UserAuthentication) SecurityContextHolder
+                .getContext().getAuthentication();
+        final User currentUser = (User) authentication.getDetails();
+        assertTaskAssignment(workflowRequest.getProcessInstanceId(), task, currentUser);
 
         final String message = String.format("Process %s approved.", workflowRequest.getProcessInstanceId());
         taskService.createComment(task.getId(), workflowRequest.getProcessInstanceId(), message);

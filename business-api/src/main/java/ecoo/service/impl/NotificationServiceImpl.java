@@ -147,21 +147,6 @@ public final class NotificationServiceImpl implements NotificationService {
         });
     }
 
-//    private void addApplicationLogo(String systemDir, MimeMessage mimeMessage, String text) throws MessagingException, IOException {
-//        Multipart multipart = new MimeMultipart("related");
-//
-//        MimeBodyPart htmlPart = new MimeBodyPart();
-//        htmlPart.setText(text, "utf-8", "html");
-//        multipart.addBodyPart(htmlPart);
-//
-//        MimeBodyPart imgPart = new MimeBodyPart();
-//        imgPart.attachFile(FileUtils.resolveDir(systemDir) + "logo.png");
-//        imgPart.setContentID("<ApplicationImage>");
-//        multipart.addBodyPart(imgPart);
-//
-//        mimeMessage.setContent(multipart);
-//    }
-
     /**
      * Method used to send an email to notify user(s) of BPM task assignment.
      *
@@ -431,4 +416,19 @@ public final class NotificationServiceImpl implements NotificationService {
             }
         }
     }
+
+//    private void addApplicationLogo(String systemDir, MimeMessage mimeMessage, String text) throws MessagingException, IOException {
+//        Multipart multipart = new MimeMultipart("related");
+//
+//        MimeBodyPart htmlPart = new MimeBodyPart();
+//        htmlPart.setText(text, "utf-8", "html");
+//        multipart.addBodyPart(htmlPart);
+//
+//        MimeBodyPart imgPart = new MimeBodyPart();
+//        imgPart.attachFile(FileUtils.resolveDir(systemDir) + "logo.png");
+//        imgPart.setContentID("<ApplicationImage>");
+//        multipart.addBodyPart(imgPart);
+//
+//        mimeMessage.setContent(multipart);
+//    }
 }
