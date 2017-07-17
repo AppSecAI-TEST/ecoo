@@ -50,7 +50,7 @@ public class ApproveShipmentRequestTask implements JavaDelegate {
         final Integer approvedBy = (Integer) delegateExecution.getVariable("actionedBy");
 
         final Shipment shipment = request.getShipment();
-        shipment.setStatus(ShipmentStatus.ApprovedAndPendingPayment.id());
+        shipment.setStatus(ShipmentStatus.Approved.id());
 
         shipment.setApprovedBy(approvedBy);
         shipment.setDateApproved(new Date());

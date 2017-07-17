@@ -12,6 +12,14 @@ import java.util.List;
 public interface ShipmentService extends CrudService<Integer, Shipment>, AuditedModelAware<Shipment> {
 
     /**
+     * Returns the shipment for the given exporter reference.
+     *
+     * @param exporterReference The exporter reference.
+     * @return The shipment.
+     */
+    Shipment findShipmentByExporterReference(String exporterReference);
+
+    /**
      * Returns the shipment for the given process instance id.
      *
      * @param processInstanceId The BPM process instance id.

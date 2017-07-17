@@ -129,6 +129,7 @@ public final class NotificationServiceImpl implements NotificationService {
             final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
             final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
 
+            // http://localhost:8888/#/app/shipments/view/3
             final String shipmentUrl = applicationRootUrl.getValue() + "/#/app/shipments/view/" + shipment.getPrimaryId();
 
             final Map<String, Object> model = new HashMap<>();
@@ -221,7 +222,8 @@ public final class NotificationServiceImpl implements NotificationService {
             final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
             final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
 
-            final String applicationLoginUrl = applicationRootUrl.getValue() + "/#/login";
+            // http://localhost:8888/#/app/request/142
+            final String applicationLoginUrl = applicationRootUrl.getValue() + "/#/app/request/" + processInstanceId;
 
             final Map<String, Object> model = new HashMap<>();
             model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());

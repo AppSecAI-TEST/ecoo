@@ -112,20 +112,24 @@ public class WorkflowResource extends BaseResource {
         return ResponseEntity.ok(myTasks);
     }
 
-    @RequestMapping(value = "/processInstanceId/{processInstanceId}", method = RequestMethod.GET)
-    public ResponseEntity<TaskListRow> findTaskByProcessInstanceId(@PathVariable String processInstanceId) {
+    @RequestMapping(value = "/activity/processInstanceId/{processInstanceId}", method = RequestMethod.GET)
+    public ResponseEntity<TaskListRow> findActivityByProcessInstanceId(@PathVariable String processInstanceId) {
         Assert.hasText(processInstanceId, "The variable processInstanceId cannot be null.");
 
         final WorkflowRequest request = workflowService.findByProcessInstanceId(processInstanceId);
-        return ResponseEntity.ok(TaskListRowBuilder.aTaskListRow()
-                .withWorkflowRequest(request)
-                .withTaskId(Integer.parseInt(request.getProcessInstanceId()))
-                .withTaskType(request.getType())
-                .withDescription(WorkflowRequestDescriptionBuilder.aDescription()
-                        .withWorkflowRequest(request)
-                        .build())
-                .withDateCreated(request.getDateCreated())
-                .build());
+        if (request == null) {
+            return ResponseEntity.ok(null);
+        } else {
+            return ResponseEntity.ok(TaskListRowBuilder.aTaskListRow()
+                    .withWorkflowRequest(request)
+                    .withTaskId(Integer.parseInt(request.getProcessInstanceId()))
+                    .withTaskType(request.getType())
+                    .withDescription(WorkflowRequestDescriptionBuilder.aDescription()
+                            .withWorkflowRequest(request)
+                            .build())
+                    .withDateCreated(request.getDateCreated())
+                    .build());
+        }
     }
 
     @RequestMapping(value = "/processType/UserRegistration/user/{username:.+}", method = RequestMethod.GET)

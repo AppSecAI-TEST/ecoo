@@ -54,6 +54,19 @@ public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shi
     }
 
     /**
+     * Returns the shipment for the given exporter reference.
+     *
+     * @param exporterReference The exporter reference.
+     * @return The shipment.
+     */
+    @Override
+    public Shipment findShipmentByExporterReference(String exporterReference) {
+        final List<Shipment> shipments = shipmentElasticsearchRepository.findShipmentByExporterReferenceEquals(exporterReference);
+        if (shipments == null || shipments.isEmpty()) return null;
+        return shipments.iterator().next();
+    }
+
+    /**
      * Returns the shipment for the given process instance id.
      *
      * @param processInstanceId The BPM process instance id.
@@ -158,8 +171,16 @@ public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shi
             final List<Shipment> shipments = new ArrayList<>();
             for (Shipment shipment : results) {
                 if (shipment.isInStatus(ShipmentStatus.NewAndPendingSubmission
-                        , ShipmentStatus.SubmittedAndPendingChamberApproval
-                        , ShipmentStatus.ApprovedAndPendingPayment)) {
+                        , ShipmentStatus.SubmittedAndPendingChamberApproval)) {
+                    shipments.add(shipment);
+                }
+            }
+            return shipments;
+
+        } else if (status.equalsIgnoreCase("CANCELLED_ONLY")) {
+            final List<Shipment> shipments = new ArrayList<>();
+            for (Shipment shipment : results) {
+                if (shipment.isInStatus(ShipmentStatus.Cancelled)) {
                     shipments.add(shipment);
                 }
             }
