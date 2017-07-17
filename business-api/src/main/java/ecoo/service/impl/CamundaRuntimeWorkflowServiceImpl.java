@@ -1,5 +1,6 @@
 package ecoo.service.impl;
 
+import ecoo.bpm.BusinessRuleViolationException;
 import ecoo.bpm.common.CamundaProcess;
 import ecoo.bpm.common.TaskDefinition;
 import ecoo.bpm.constants.TaskVariables;
@@ -411,6 +412,7 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
                 .singleResult();
         Assert.notNull(task, String.format("System cannot complete request. No active task found for " +
                 "processInstanceId %s.", workflowRequest.getProcessInstanceId()));
+        assertTaskAssignment(workflowRequest.getProcessInstanceId(), task, workflowRequest.getRequestingUser());
 
         final String message = String.format("Process %s approved.", workflowRequest.getProcessInstanceId());
         taskService.createComment(task.getId(), workflowRequest.getProcessInstanceId(), message);
@@ -434,6 +436,7 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
         final User requestingUser = userService.findById(request.getRequestingUserId());
         Assert.notNull(requestingUser, String.format("System cannot complete request. No user found for id %s."
                 , request.getRequestingUserId()));
+        assertTaskAssignment(request.getProcessInstanceId(), task, requestingUser);
 
         final TaskCompletedResponse response = TaskCompletedResponseBuilder.aTaskCompletedResponse()
                 .withProcessInstanceId(request.getProcessInstanceId())
@@ -461,6 +464,45 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
                 .putValue("actionedBy", requestingUser.getPrimaryId()));
 
         return response;
+    }
+
+    private void assertTaskAssignment(String processInstanceId, Task task, User requestingUser) {
+        final String taskAssignee = task.getAssignee();
+        final String requestingUsername = requestingUser.getUsername();
+        if (taskAssignee != null) {
+            LOG.info("Task taskAssignee <{}>, requesting user <{}>.", taskAssignee, requestingUsername);
+            if (!taskAssignee.equalsIgnoreCase(requestingUsername)) {
+                throw new BusinessRuleViolationException(String.format("System cannot action request %s. The user %s <%s> does" +
+                                " not have permission to action request as the request is not assigned to you."
+                        , processInstanceId, requestingUser.getDisplayName(), requestingUsername));
+            }
+        } else {
+            if (requestingUser.getGroupIdentities().isEmpty()) {
+                throw new BusinessRuleViolationException(String.format("System cannot action request %s. The user %s <%s> does" +
+                                " not have permission to action request as the request is not assigned to you."
+                        , processInstanceId, requestingUser.getDisplayName(), requestingUsername));
+            }
+
+            final List<IdentityLink> identityLinksForTask = taskService.getIdentityLinksForTask(task.getId());
+            final Set<String> groupIds = new HashSet<>();
+            for (IdentityLink identityLink : identityLinksForTask) {
+                final String groupId = identityLink.getGroupId();
+                if (StringUtils.isNotBlank(groupId)) {
+                    groupIds.add(groupId);
+                }
+
+            }
+
+            LOG.info("Task groups <{}>, requesting user <{}>.", groupIds, requestingUser.getGroupIdentities());
+            for (String groupId : groupIds) {
+                if (requestingUser.getGroupIdentities().contains(groupId)) {
+                    return;
+                }
+            }
+            throw new BusinessRuleViolationException(String.format("System cannot action request %s. The user %s <%s> does" +
+                            " not have permission to action request as the request is not assigned to you."
+                    , processInstanceId, requestingUser.getDisplayName(), requestingUsername));
+        }
     }
 
     @Override
