@@ -153,7 +153,6 @@ public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shi
                         , requestingUser.getPrimaryId(), statusIds, pageRequest);
                 return convertToShipmentList(resultSet);
             }
-
         } else {
             final Page<Shipment> resultSet = shipmentElasticsearchRepository.findShipmentByOwnerIdEqualsAndStatusIn(requestingUser.getPrimaryId()
                     , statusIds, pageRequest);
