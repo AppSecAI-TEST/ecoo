@@ -5,6 +5,7 @@ import ecoo.bpm.entity.CancelTaskRequest;
 import ecoo.bpm.entity.CancelTaskResponse;
 import ecoo.bpm.entity.NewShipmentRequest;
 import ecoo.bpm.entity.NewShipmentResponse;
+import ecoo.command.CloneShipmentCommand;
 import ecoo.data.Shipment;
 import ecoo.data.ShipmentStatus;
 import ecoo.data.audit.Revision;
@@ -13,6 +14,7 @@ import ecoo.service.ShipmentService;
 import ecoo.service.WorkflowService;
 import ecoo.validator.ShipmentValidator;
 import ecoo.ws.common.json.QueryPageRquestResponse;
+import ecoo.ws.common.json.ShipmentCloneRequest;
 import ecoo.ws.common.rest.BaseResource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +38,14 @@ public class ShipmentResource extends BaseResource {
 
     private ShipmentValidator shipmentValidator;
 
+    private CloneShipmentCommand cloneShipmentCommand;
+
     @Autowired
-    public ShipmentResource(ShipmentService shipmentService, WorkflowService workflowService, ShipmentValidator shipmentValidator) {
+    public ShipmentResource(ShipmentService shipmentService, WorkflowService workflowService, ShipmentValidator shipmentValidator, CloneShipmentCommand cloneShipmentCommand) {
         this.shipmentService = shipmentService;
         this.workflowService = workflowService;
         this.shipmentValidator = shipmentValidator;
+        this.cloneShipmentCommand = cloneShipmentCommand;
     }
 
     @RequestMapping(value = "/processInstanceId/{processInstanceId}", method = RequestMethod.GET)
@@ -72,6 +77,13 @@ public class ShipmentResource extends BaseResource {
         }
         shipmentValidator.validate(request.getShipment());
         return ResponseEntity.ok(workflowService.requestNewShipment(request));
+    }
+
+    @RequestMapping(value = "/clone", method = RequestMethod.POST)
+    public ResponseEntity<Shipment> clone(@RequestBody ShipmentCloneRequest request) {
+        Assert.notNull(request, "The variable request cannot be null.");
+        return ResponseEntity.ok(cloneShipmentCommand.execute(request.getShipment()
+                , request.getNewExporterReference(), currentUser()));
     }
 
     @RequestMapping(value = "/reopen", method = RequestMethod.POST)
