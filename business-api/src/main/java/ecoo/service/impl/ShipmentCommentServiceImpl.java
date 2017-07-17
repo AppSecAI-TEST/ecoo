@@ -34,9 +34,9 @@ public class ShipmentCommentServiceImpl extends ElasticsearchAuditTemplate<Integ
     }
 
     @Override
-    public ShipmentComment addComment(Shipment shipment, User user, String text) {
+    public ShipmentComment addComment(Integer shipmentId, User user, String text) {
         final ShipmentComment shipmentComment = new ShipmentComment();
-        shipmentComment.setShipmentId(shipment.getPrimaryId());
+        shipmentComment.setShipmentId(shipmentId);
         shipmentComment.setUser(user);
         shipmentComment.setText(text);
         return save(shipmentComment);

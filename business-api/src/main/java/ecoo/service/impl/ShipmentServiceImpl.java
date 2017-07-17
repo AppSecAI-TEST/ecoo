@@ -8,10 +8,11 @@ import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
 import ecoo.service.ShipmentService;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.common.collect.Lists;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -23,10 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 /**
  * @author Justin Rundle
@@ -137,58 +140,49 @@ public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shi
     public List<Shipment> queryShipmentsAssociatedToUser(String q, String status, Integer start, Integer pageSize, Integer column
             , String direction, User requestingUser) {
         final PageRequest pageRequest = buildPageRequest(start, pageSize, column, direction);
+        final String[] statusIds = buildStatusIds(status);
 
-        final BoolQueryBuilder queryBuilder = boolQuery();
         if (StringUtils.isNotBlank(q)) {
-            final String escapedQuery = escape(q);
-            queryBuilder.must(queryStringQuery("*" + escapedQuery + "*")
-                    // TODO: Need to define other columns.
-                    //.field("primaryId")
-                    .field("exporterReference")
-                    .analyzeWildcard(true));
-        } else {
-            queryBuilder.must(queryStringQuery("*")
-                    // TODO: Need to define other columns.
-                    .field("exporterReference")
-                    .analyzeWildcard(true));
-        }
-
-        final BoolQueryBuilder ownerIdQueryBuilder = boolQuery();
-        ownerIdQueryBuilder.must(matchQuery("ownerId", requestingUser.getPrimaryId()));
-        queryBuilder.must(ownerIdQueryBuilder);
-
-        final Iterable<Shipment> results = shipmentElasticsearchRepository.search(new NativeSearchQueryBuilder()
-                .withIndices(indexName)
-                .withTypes(indexType)
-                .withQuery(queryBuilder)
-                .withPageable(pageRequest)
-                .build());
-        if (results == null) {
-            return new ArrayList<>();
-        }
-
-        if (status.equalsIgnoreCase("PENDING_ONLY")) {
-            final List<Shipment> shipments = new ArrayList<>();
-            for (Shipment shipment : results) {
-                if (shipment.isInStatus(ShipmentStatus.NewAndPendingSubmission
-                        , ShipmentStatus.SubmittedAndPendingChamberApproval)) {
-                    shipments.add(shipment);
-                }
+            if (NumberUtils.isNumber(q)) {
+                final Page<Shipment> resultSet = shipmentElasticsearchRepository
+                        .findShipmentByPrimaryIdEqualsOrExporterReferenceContainsAndOwnerIdEqualsAndStatusIn(Integer.parseInt(q)
+                                , q, requestingUser.getPrimaryId(), statusIds, pageRequest);
+                return convertToShipmentList(resultSet);
+            } else {
+                final Page<Shipment> resultSet = shipmentElasticsearchRepository.findShipmentByExporterReferenceContainsAndOwnerIdEqualsAndStatusIn(q
+                        , requestingUser.getPrimaryId(), statusIds, pageRequest);
+                return convertToShipmentList(resultSet);
             }
-            return shipments;
+
+        } else {
+            final Page<Shipment> resultSet = shipmentElasticsearchRepository.findShipmentByOwnerIdEqualsAndStatusIn(requestingUser.getPrimaryId()
+                    , statusIds, pageRequest);
+            return convertToShipmentList(resultSet);
+        }
+    }
+
+    private String[] buildStatusIds(String status) {
+        final Collection<String> statusIds = new ArrayList<>();
+        if (status.equalsIgnoreCase("PENDING_ONLY")) {
+            statusIds.add(ShipmentStatus.NewAndPendingSubmission.id());
+            statusIds.add(ShipmentStatus.SubmittedAndPendingChamberApproval.id());
 
         } else if (status.equalsIgnoreCase("CANCELLED_ONLY")) {
-            final List<Shipment> shipments = new ArrayList<>();
-            for (Shipment shipment : results) {
-                if (shipment.isInStatus(ShipmentStatus.Cancelled)) {
-                    shipments.add(shipment);
-                }
-            }
-            return shipments;
-
+            statusIds.add(ShipmentStatus.Cancelled.id());
         } else {
-            return Lists.newArrayList(results.iterator());
+            for (ShipmentStatus e : ShipmentStatus.values()) {
+                statusIds.add(e.id());
+            }
         }
+        return statusIds.toArray(new String[statusIds.size()]);
+    }
+
+    private List<Shipment> convertToShipmentList(Page<Shipment> resultSet) {
+        final List<Shipment> shipments = new ArrayList<>();
+        for (Shipment shipment : resultSet) {
+            shipments.add(shipment);
+        }
+        return shipments;
     }
 
     private PageRequest buildPageRequest(int start, int pageSize, int column, String direction) {

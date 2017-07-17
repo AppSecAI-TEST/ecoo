@@ -1,6 +1,5 @@
 package ecoo.service;
 
-import ecoo.data.Shipment;
 import ecoo.data.ShipmentComment;
 import ecoo.data.User;
 
@@ -12,7 +11,7 @@ import java.util.List;
  */
 public interface ShipmentCommentService extends CrudService<Integer, ShipmentComment> {
 
-    ShipmentComment addComment(Shipment shipment, User user, String text);
+    ShipmentComment addComment(Integer shipmentId, User user, String text);
 
     /**
      * Returns all the shipment comments for the give shipment.

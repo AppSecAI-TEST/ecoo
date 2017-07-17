@@ -57,6 +57,6 @@ public class RejectShipmentRequestTask implements JavaDelegate {
 
     private void addComment(Integer actionedBy, Shipment shipment) {
         final User user = userService.findById(actionedBy);
-        shipmentCommentService.addComment(shipment, user, "Shipment declined");
+        shipmentCommentService.addComment(shipment.getPrimaryId(), user, "SHIPMENT DECLINED");
     }
 }

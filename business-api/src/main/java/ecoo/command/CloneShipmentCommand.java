@@ -26,14 +26,17 @@ public class CloneShipmentCommand {
 
     private CertificateOfOriginService certificateOfOriginService;
 
+    private ShipmentCommentService shipmentCommentService;
+
     @Autowired
-    public CloneShipmentCommand(ShipmentService shipmentService, CommercialInvoiceService commercialInvoiceService, CommercialInvoiceLineService commercialInvoiceLineService, CommercialInvoiceAmountService commercialInvoiceAmountService, ShipmentDocumentService shipmentDocumentService, CertificateOfOriginService certificateOfOriginService) {
+    public CloneShipmentCommand(ShipmentService shipmentService, CommercialInvoiceService commercialInvoiceService, CommercialInvoiceLineService commercialInvoiceLineService, CommercialInvoiceAmountService commercialInvoiceAmountService, ShipmentDocumentService shipmentDocumentService, CertificateOfOriginService certificateOfOriginService, ShipmentCommentService shipmentCommentService) {
         this.shipmentService = shipmentService;
         this.commercialInvoiceService = commercialInvoiceService;
         this.commercialInvoiceLineService = commercialInvoiceLineService;
         this.commercialInvoiceAmountService = commercialInvoiceAmountService;
         this.shipmentDocumentService = shipmentDocumentService;
         this.certificateOfOriginService = certificateOfOriginService;
+        this.shipmentCommentService = shipmentCommentService;
     }
 
     @Transactional
@@ -51,8 +54,14 @@ public class CloneShipmentCommand {
 
         cloneCommercialInvoice(shipmentId, shipmentCloneId);
         cloneCertificateOfOrigin(shipmentId, shipmentCloneId);
+        addComment(shipmentId, shipmentCloneId, requestedBy);
 
         return shipmentClone;
+    }
+
+    private void addComment(Integer shipmentId, Integer shipmentCloneId, User requestedBy) {
+        shipmentCommentService.addComment(shipmentCloneId, requestedBy
+                , String.format("SHIPMENT CLONED FROM SHIPMENT #%s BY %s.", shipmentId, requestedBy.getDisplayName()));
     }
 
     private Shipment cloneShipment(Shipment shipment, String newExporterReference, User requestedBy) {

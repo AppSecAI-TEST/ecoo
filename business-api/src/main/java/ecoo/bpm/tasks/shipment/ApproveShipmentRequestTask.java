@@ -63,6 +63,6 @@ public class ApproveShipmentRequestTask implements JavaDelegate {
 
     private void addComment(Integer approvedBy, Shipment shipment) {
         final User user = userService.findById(approvedBy);
-        shipmentCommentService.addComment(shipment, user, "SHIPMENT APPROVED");
+        shipmentCommentService.addComment(shipment.getPrimaryId(), user, "SHIPMENT APPROVED");
     }
 }
