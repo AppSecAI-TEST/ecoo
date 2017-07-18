@@ -14,8 +14,12 @@ import java.util.Collection;
 @RequestMapping("/api/features")
 public class FeatureResource extends BaseResource {
 
-    @Autowired
     private FeatureService featureService;
+
+    @Autowired
+    public FeatureResource(FeatureService featureService) {
+        this.featureService = featureService;
+    }
 
     @RequestMapping(value = "/createdBy/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Revision> findCreatedBy(@PathVariable Integer id) {
@@ -33,7 +37,6 @@ public class FeatureResource extends BaseResource {
     public ResponseEntity<Feature> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(featureService.findById(id));
     }
-
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Feature> delete(@PathVariable Integer id) {
