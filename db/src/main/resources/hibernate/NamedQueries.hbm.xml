@@ -151,7 +151,7 @@
 	  	]]>
     </sql-query>
 
-    <sql-query name="FIND_USERS_BY_CHAMBER_AND_MEMBER_INDICATOR">
+    <sql-query name="FIND_USERS_BY_CHAMBER">
         <![CDATA[
             select
 				 cu.id

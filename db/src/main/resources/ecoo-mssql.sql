@@ -931,7 +931,8 @@ INSERT INTO "feature" ("id", "name", "value", "descr") VALUES
 (5, 'SMTP_PORT', '25', 'The SMTP server port'),
 (6, 'NON_PRODUCTION_EMAIL', 'justin@s-squared.co.za', 'The target email address for non-production deployments'),
 (7, 'OUTGOING_DISPLAY_NAME', 'ECOO Smart Admin', 'The display name when sending out emails out from the application'),
-(8, 'APPLICATION_ROOT_URL', 'http://testmyspivadmin.dedicated.co.za/ecoo-ui/', 'The string representation of the URL to the application');
+(8, 'APPLICATION_ROOT_URL', 'http://testmyspivadmin.dedicated.co.za/ecoo-ui/', 'The string representation of the URL to the application'),
+(9, 'CAMUNDA_ADMIN_URL', 'http://testmyspivadmin.dedicated.co.za/camunda-cockpit/app/cockpit/default/#/dashboard', 'The string representation of the URL to the Camunda Cockpit application');
 SET IDENTITY_INSERT "feature" OFF;
 
 CREATE TABLE "feature_log" (

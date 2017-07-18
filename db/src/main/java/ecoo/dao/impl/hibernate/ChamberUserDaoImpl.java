@@ -38,7 +38,7 @@ public class ChamberUserDaoImpl extends BaseAuditLogDaoImpl<Integer, ChamberUser
     public Collection<ChamberUserListRow> findChamberUserListRowsByChamber(Integer chamberId) {
         Assert.notNull(chamberId, "The variable chamberId cannot be null.");
         final List<Object[]> data = (List<Object[]>) getHibernateTemplate().findByNamedQueryAndNamedParam(
-                "FIND_USERS_BY_CHAMBER_AND_MEMBER_INDICATOR"
+                "FIND_USERS_BY_CHAMBER"
                 , new String[]{"chamberId"}
                 , new Object[]{chamberId});
 
