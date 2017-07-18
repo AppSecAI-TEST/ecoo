@@ -136,7 +136,7 @@
         }
 
         table.body-wrap {
-            width: 100%
+            width: 100%;
         }
 
         table.footer-wrap {
@@ -335,7 +335,6 @@
 <body bgcolor="#FFFFFF">
 <table class="body-wrap">
     <tr>
-        <td></td>
         <td class="container" bgcolor="#FFFFFF">
             <div class="content" style="padding-bottom:0;">
                 <table>
@@ -347,29 +346,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <table class=button-template
-                                   style="border-left-width: 0px; word-wrap: break-word; font-size: 14px; height: 30px; font-family: arial, freesans, helvetica, sans-serif; border-right-width: 0px; background-image: none; border-bottom-width: 0px; text-align: center; border-spacing: 0; border-top-width: 0px; background-color: #3572b0; border-radius: 3px; width: 150px; margin-top:10px;"
-                                   height=30 cellspacing=0 cellpadding=0 bgcolor=#3572b0 border=0>
+                            <table style="border-left-width: 0px; word-wrap: break-word; font-size: 14px; height: 30px; font-family: arial, freesans, helvetica, sans-serif; border-right-width: 0px; background-image: none; border-bottom-width: 0px; text-align: center; border-spacing: 0; border-top-width: 0px; background-color: #3572b0; border-radius: 3px; width: 150px; margin-top:10px;">
                                 <tbody>
                                 <tr>
-                                    <td class=button-outer-cell
-                                        style="font-size: 14px; font-family: arial, freesans, helvetica, sans-serif; padding-left: 10px; padding-right: 10px"
-                                        align=center>
-                                        <table class=button-template-inner
-                                               style="font-size: 14px; font-family: arial, freesans, helvetica, sans-serif; border-spacing: 0"
-                                               cellspacing=0 cellpadding=0 border=0>
-                                            <tbody>
-                                            <tr>
-                                                <td class=button-template-font
-                                                    style="font-size: 14px; font-family: arial, freesans, helvetica, sans-serif; font-weight: bold; color: #ffffff; padding-left: 0px; padding-right: 0px; text-shadow: 0 1px 0 #205081; text-align: center;"
-                                                    height=28>
-                                                    <a style="border-left-width: 0px; text-decoration: none; border-right-width: 0px; border-bottom-width: 0px; color: #ffffff; border-top-width: 0px"
-                                                       href="$requestUrl"
-                                                       target=_blank>View Request</a>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                                    <td align="center">
+                                        <a style="border-left-width: 0px; text-decoration: none; border-right-width: 0px; border-bottom-width: 0px; color: #ffffff; border-top-width: 0px; font-weight: bold;"
+                                           href="$requestUrl" target="_blank">View Request</a>
                                     </td>
                                 </tr>
                                 </tbody>
