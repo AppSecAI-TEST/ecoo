@@ -3,6 +3,7 @@ package ecoo.service.impl;
 import ecoo.dao.ChamberUserDao;
 import ecoo.data.Chamber;
 import ecoo.data.ChamberUser;
+import ecoo.data.ChamberUserListRow;
 import ecoo.data.User;
 import ecoo.service.ChamberUserService;
 import org.joda.time.DateTime;
@@ -29,6 +30,17 @@ public class ChamberUserServiceImpl extends AuditTemplate<Integer, ChamberUser, 
     public ChamberUserServiceImpl(ChamberUserDao chamberUserDao) {
         super(chamberUserDao);
         this.chamberUserDao = chamberUserDao;
+    }
+
+    /**
+     * Returns users for a given chamber and member indicator.
+     *
+     * @param chamberId The chamber pk.
+     * @return A list of users.
+     */
+    @Override
+    public Collection<ChamberUserListRow> findChamberUserListRowsByChamber(Integer chamberId) {
+        return chamberUserDao.findChamberUserListRowsByChamber(chamberId);
     }
 
     @Override

@@ -35,6 +35,21 @@ public class UserDaoImplTest {
     }
 
     @Test
+    public void testFindUsersAssociatedToMe() {
+        Collection<User> data = userDao.findUsersAssociatedToMe(-1);
+        Assert.assertNotNull(data);
+
+        data = userDao.findUsersAssociatedToMe(1);
+        Assert.assertNotNull(data);
+
+        data = userDao.findUsersAssociatedToMe(2);
+        Assert.assertNotNull(data);
+
+        data = userDao.findUsersAssociatedToMe(1, 2, 3);
+        Assert.assertNotNull(data);
+    }
+
+    @Test
     public void testFindUsersByCompany() {
         Collection<User> data = userDao.findUsersByCompany(-1);
         Assert.assertNotNull(data);
@@ -45,10 +60,7 @@ public class UserDaoImplTest {
         Collection<User> data = userDao.findByRole(Role.ROLE_SYSADMIN);
         Assert.assertNotNull(data);
 
-        data = userDao.findByRole(Role.ROLE_PM);
-        Assert.assertNotNull(data);
-
-        data = userDao.findByRole(Role.ROLE_FSM);
+        data = userDao.findByRole(Role.ROLE_CHAMBERADMIN);
         Assert.assertNotNull(data);
     }
 

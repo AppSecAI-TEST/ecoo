@@ -5,7 +5,6 @@ package ecoo.data;
  * @since April 2017
  */
 public enum Role {
-    ROLE_FSM,
-    ROLE_PM,
-    ROLE_SYSADMIN
+    ROLE_SYSADMIN,
+    ROLE_CHAMBERADMIN
 }

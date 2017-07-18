@@ -136,6 +136,44 @@
 	  	]]>
     </sql-query>
 
+    <sql-query name="FIND_USERS_ASSOCIATED_TO_ME">
+        <return class="ecoo.data.User"/>
+        <![CDATA[
+            select uc.* from dbo.user_acc uc with(nolock)
+            inner join dbo.chamber_user cu with(nolock) on cu.user_id = uc.id
+            where cu.chamber_id in(:chamberIds)
+            and uc.reserved = 0
+            union
+            select uc.* from dbo.user_acc uc with(nolock)
+            inner join dbo.chamber_admin cu with(nolock) on cu.user_id = uc.id
+            where cu.chamber_id in(:chamberIds)
+            and uc.reserved = 0
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_USERS_BY_CHAMBER_AND_MEMBER_INDICATOR">
+        <![CDATA[
+            select
+				 cu.id
+				,uc.id user_id
+				,uc.display_name
+				,uc.username
+				,uc.personal_ref_value
+				,uc.primary_email_address
+				,CASE WHEN c.name IS NULL THEN NULL ELSE c.name END name
+				,uc.designation
+				,uc.status
+				,cu.member_ind
+				,cu.start_date
+				,cu.end_date
+
+            from dbo.user_acc uc with(nolock)
+				inner join dbo.chamber_user cu with(nolock) on cu.user_id = uc.id
+				left outer join dbo.company c with(nolock) on c.id = uc.company_id
+            where cu.chamber_id = :chamberId
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_USERS_BY_COMPANY">
         <return class="ecoo.data.User"/>
         <![CDATA[

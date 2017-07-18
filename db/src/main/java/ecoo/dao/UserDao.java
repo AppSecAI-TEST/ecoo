@@ -14,6 +14,14 @@ import java.util.List;
 public interface UserDao extends AuditLogDao<Integer, User> {
 
     /**
+     * Returns all the users for the given chamber.
+     *
+     * @param chamberIds The chamber pk.
+     * @return The list of users.
+     */
+    List<User> findUsersAssociatedToMe(Integer... chamberIds);
+
+    /**
      * Returns the list of users for the given company.
      *
      * @param companyId The company pk to evaluate.

@@ -39,7 +39,6 @@ public class ChamberUser extends BaseModel<Integer> implements Serializable {
     @Audited
     private Date endDate;
 
-
     @Column(name = "member_ind")
     @Audited
     private boolean member;

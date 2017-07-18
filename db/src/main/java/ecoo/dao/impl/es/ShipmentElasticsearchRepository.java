@@ -17,14 +17,36 @@ public interface ShipmentElasticsearchRepository extends ElasticsearchRepository
 
     Page<Shipment> findShipmentByOwnerIdEqualsAndStatusIn(Integer ownerId, String[] status, Pageable pageable);
 
-    Page<Shipment> findShipmentByExporterReferenceContainsAndOwnerIdEqualsAndStatusIn(String exporterReference
+    Page<Shipment> findShipmentByPrimaryIdEqualsOrExporterReferenceContainsOrPortOfLoadingContainsOrPortOfAcceptanceContainsAndOwnerIdEqualsAndStatusIn(Integer primaryId
+            , String portOfLoading
+            , String portOfAcceptance
+            , String exporterReference
             , Integer ownerId
             , String[] status
             , Pageable pageable);
 
-    Page<Shipment> findShipmentByPrimaryIdEqualsOrExporterReferenceContainsAndOwnerIdEqualsAndStatusIn(Integer primaryId
-            , String exporterReference
+    Page<Shipment> findShipmentByExporterReferenceContainsOrPortOfLoadingContainsOrPortOfAcceptanceContainsAndOwnerIdEqualsAndStatusIn(String exporterReference
+            , String portOfLoading
+            , String portOfAcceptance
             , Integer ownerId
+            , String[] status
+            , Pageable pageable);
+
+    // No owner.
+    Page<Shipment> findShipmentByStatusIn(String[] status, Pageable pageable);
+
+    // No owner.
+    Page<Shipment> findShipmentByPrimaryIdEqualsOrExporterReferenceContainsOrPortOfLoadingContainsOrPortOfAcceptanceContainsAndStatusIn(Integer primaryId
+            , String portOfLoading
+            , String portOfAcceptance
+            , String exporterReference
+            , String[] status
+            , Pageable pageable);
+
+    // No owner.
+    Page<Shipment> findShipmentByExporterReferenceContainsOrPortOfLoadingContainsOrPortOfAcceptanceContainsAndStatusIn(String exporterReference
+            , String portOfLoading
+            , String portOfAcceptance
             , String[] status
             , Pageable pageable);
 

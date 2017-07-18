@@ -61,15 +61,7 @@ public abstract class BaseScheduledTask implements ScheduledTask {
             systemJobService.save(systemJob);
         }
     }
-
-    protected final User currentUser() {
-        final UserAuthentication authentication = (UserAuthentication) SecurityContextHolder
-                .getContext().getAuthentication();
-        final User currentUser = (User) authentication.getDetails();
-        Assert.state(currentUser != null, "No current user defined in session");
-        return currentUser;
-    }
-
+    
     private void markAsSuccessful(SystemJob systemJob) {
         systemJob.setEndTime(new Date());
         systemJob.setSuccessfulProcessingInd("Y");

@@ -1,11 +1,9 @@
 package ecoo.service.impl;
 
+import ecoo.dao.ChamberAdminDao;
 import ecoo.dao.UserDao;
 import ecoo.dao.impl.es.UserElasticsearchRepository;
-import ecoo.data.Role;
-import ecoo.data.User;
-import ecoo.data.UserRole;
-import ecoo.data.UserStatus;
+import ecoo.data.*;
 import ecoo.policy.PasswordPolicy;
 import ecoo.security.GrantRoleConfirmation;
 import ecoo.security.UserAuthentication;
@@ -31,10 +29,7 @@ import org.springframework.util.Assert;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Justin Rundle
@@ -54,28 +49,45 @@ public class UserServiceImpl extends ElasticsearchAuditTemplate<Integer
 
     private UserElasticsearchRepository userElasticsearchRepository;
 
+    private ChamberAdminDao chamberAdminDao;
+
     @Autowired
     public UserServiceImpl(UserDao userDao, @Qualifier("userElasticsearchRepository") UserElasticsearchRepository userElasticsearchRepository
             , UserValidator userValidator
-            , ElasticsearchTemplate elasticsearchTemplate) {
+            , ElasticsearchTemplate elasticsearchTemplate
+            , ChamberAdminDao chamberAdminDao) {
         super(userDao, userElasticsearchRepository, elasticsearchTemplate);
         this.userDao = userDao;
         this.userValidator = userValidator;
         this.userElasticsearchRepository = userElasticsearchRepository;
+        this.chamberAdminDao = chamberAdminDao;
     }
 
     /**
-     * Method to activate the user.
+     * Returns all users that I have access to see.
      *
-     * @param activationSerialNumber The unique serial number.
-     * @return The activated user.
+     * @param requestingUser The user asking to see the users.
+     * @return A list of users.
      */
-    @Transactional
     @Override
-    public User activate(String activationSerialNumber) {
-        // TODO:
-        // findByMobileNumber()
-        return null;
+    public Collection<User> findUsersAssociatedToMe(User requestingUser) {
+        Assert.notNull(requestingUser, "The variable requestingUser cannot be null.");
+        if (requestingUser.isInRole(Role.ROLE_SYSADMIN)) {
+            return findAll();
+        } else if (requestingUser.isInRole(Role.ROLE_CHAMBERADMIN)) {
+            final Set<Integer> chamberIds = new HashSet<>();
+            for (ChamberAdmin chamberAdmin : chamberAdminDao.findByUser(requestingUser.getPrimaryId())) {
+                chamberIds.add(chamberAdmin.getChamberId());
+            }
+            if (chamberIds.isEmpty()) {
+                throw new DataIntegrityViolationException(String.format("User %s cannot have the role ROLE_CHAMBERADMIN, " +
+                        "and have no entry in dbo.chamber_admin.", requestingUser.getDisplayName()));
+            }
+            return userDao.findUsersAssociatedToMe(chamberIds.toArray(new Integer[chamberIds.size()]));
+
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     /**

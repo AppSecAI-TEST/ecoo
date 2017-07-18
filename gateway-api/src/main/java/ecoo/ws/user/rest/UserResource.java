@@ -9,12 +9,8 @@ import ecoo.data.audit.Revision;
 import ecoo.service.UserService;
 import ecoo.service.WorkflowService;
 import ecoo.validator.CompanyValidator;
-import ecoo.validator.SouthAfricanIdentityNumberValidator;
 import ecoo.validator.UserValidator;
-import ecoo.validator.ValidationFailedException;
-import ecoo.ws.common.json.ValidationResponse;
 import ecoo.ws.common.rest.BaseResource;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,12 +41,6 @@ public class UserResource extends BaseResource {
         this.workflowService = workflowService;
         this.userValidator = userValidator;
         this.companyValidator = companyValidator;
-    }
-
-    @RequestMapping(value = "/activate/activationSerialNumber/{activationSerialNumber}", method = RequestMethod.GET)
-    public ResponseEntity<User> activate(@PathVariable String activationSerialNumber) {
-        Assert.hasText(activationSerialNumber, "The variable activationSerialNumber cannot be null.");
-        return ResponseEntity.ok(userService.activate(activationSerialNumber));
     }
 
     @RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
@@ -101,76 +91,6 @@ public class UserResource extends BaseResource {
         return ResponseEntity.ok(userService.findByRole(role));
     }
 
-    @RequestMapping(value = "/validate/username", method = RequestMethod.GET)
-    public ResponseEntity<ValidationResponse> validateUsername(@RequestParam("id") Integer id, @RequestParam("username") String username) {
-        username = StringUtils.trimToNull(username);
-        if (StringUtils.isNotBlank(username)) {
-            final User user = (User) userService.loadUserByUsername(username);
-            if (user != null && !user.getPrimaryId().equals(id)) {
-                return ResponseEntity.ok(new ValidationResponse(false, "Value is not unique"));
-            } else {
-                return ResponseEntity.ok(new ValidationResponse(true));
-            }
-        } else {
-            return ResponseEntity.ok(new ValidationResponse(true));
-        }
-    }
-
-    @RequestMapping(value = "/validate/primaryEmailAddress", method = RequestMethod.GET)
-    public ResponseEntity<ValidationResponse> validatePrimaryEmailAddress(@RequestParam("id") Integer id
-            , @RequestParam("primaryEmailAddress") String primaryEmailAddress) {
-        primaryEmailAddress = StringUtils.trimToNull(primaryEmailAddress);
-        if (StringUtils.isNotBlank(primaryEmailAddress)) {
-            final User user = userService.findByPrimaryEmailAddress(primaryEmailAddress);
-            if (user != null && !user.getPrimaryId().equals(id)) {
-                return ResponseEntity.ok(new ValidationResponse(false, "Value is not unique"));
-            } else {
-                return ResponseEntity.ok(new ValidationResponse(true));
-            }
-        } else {
-            return ResponseEntity.ok(new ValidationResponse(true));
-        }
-    }
-
-    @RequestMapping(value = "/validate/mobileNumber", method = RequestMethod.GET)
-    public ResponseEntity<ValidationResponse> validateMobileNumber(@RequestParam("id") Integer id
-            , @RequestParam("mobileNumber") String mobileNumber) {
-        mobileNumber = StringUtils.trimToNull(mobileNumber);
-        if (StringUtils.isNotBlank(mobileNumber)) {
-            final User user = userService.findByMobileNumber(mobileNumber);
-            if (user != null && !user.getPrimaryId().equals(id)) {
-                return ResponseEntity.ok(new ValidationResponse(false, "Value is not unique"));
-            } else {
-                return ResponseEntity.ok(new ValidationResponse(true));
-            }
-        } else {
-            return ResponseEntity.ok(new ValidationResponse(true));
-        }
-    }
-
-    @RequestMapping(value = "/validate/personalReferenceValue", method = RequestMethod.GET)
-    public ResponseEntity<ValidationResponse> validate(@RequestParam("id") Integer id
-            , @RequestParam("personalReferenceType") String personalReferenceType
-            , @RequestParam("personalReferenceValue") String personalReferenceValue) {
-        personalReferenceType = StringUtils.trimToNull(personalReferenceType);
-        personalReferenceValue = StringUtils.trimToEmpty(personalReferenceValue);
-        if (personalReferenceType != null && personalReferenceType.equalsIgnoreCase("RSA")) {
-            try {
-                final SouthAfricanIdentityNumberValidator validator = new SouthAfricanIdentityNumberValidator();
-                validator.validate(personalReferenceValue);
-            } catch (final ValidationFailedException e) {
-                return ResponseEntity.ok(new ValidationResponse(false, e.getMessage()));
-            }
-        }
-
-        final User user = userService.findByPersonalReference(personalReferenceType, personalReferenceValue);
-        if (user != null && !user.getPrimaryId().equals(id)) {
-            return ResponseEntity.ok(new ValidationResponse(false, "Value is not unique"));
-        } else {
-            return ResponseEntity.ok(new ValidationResponse(true));
-        }
-    }
-
     @RequestMapping(value = "/lock", method = RequestMethod.POST
             , consumes = MediaType.APPLICATION_JSON_VALUE
             , produces = MediaType.APPLICATION_JSON_VALUE)
@@ -190,6 +110,11 @@ public class UserResource extends BaseResource {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<Collection<User>> findAll() {
         return ResponseEntity.ok(userService.findAll());
+    }
+
+    @RequestMapping(value = "/associatedTo/me", method = RequestMethod.GET)
+    public ResponseEntity<Collection<User>> findUsersAssociatedToMe() {
+        return ResponseEntity.ok(userService.findUsersAssociatedToMe(currentUser()));
     }
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)

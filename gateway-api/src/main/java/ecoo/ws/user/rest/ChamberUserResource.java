@@ -1,6 +1,7 @@
 package ecoo.ws.user.rest;
 
 import ecoo.data.ChamberUser;
+import ecoo.data.ChamberUserListRow;
 import ecoo.data.audit.Revision;
 import ecoo.service.ChamberUserService;
 import ecoo.ws.common.rest.BaseResource;
@@ -23,6 +24,11 @@ public class ChamberUserResource extends BaseResource {
     @Autowired
     public ChamberUserResource(ChamberUserService chamberUserService) {
         this.chamberUserService = chamberUserService;
+    }
+
+    @RequestMapping(value = "/chamber/{chamberId}", method = RequestMethod.GET)
+    public ResponseEntity<Collection<ChamberUserListRow>> findChamberUserListRowsByChamber(@PathVariable Integer chamberId) {
+        return ResponseEntity.ok(chamberUserService.findChamberUserListRowsByChamber(chamberId));
     }
 
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)

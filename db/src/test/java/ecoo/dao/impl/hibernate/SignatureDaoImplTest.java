@@ -51,6 +51,7 @@ public class SignatureDaoImplTest {
         newSignature.setFirstName("BART");
         newSignature.setLastName("SIMPSON");
         newSignature.setEncodedImage("image");
+        newSignature.setCompanyName("PNP");
         newSignature.setDateCreated(new Date());
 
         signatureDao.save(newSignature);
@@ -60,5 +61,6 @@ public class SignatureDaoImplTest {
         Assert.assertEquals("BART", signature.getFirstName());
         Assert.assertEquals("SIMPSON", signature.getLastName());
         Assert.assertEquals("image", signature.getEncodedImage());
+        Assert.assertEquals("PNP", signature.getCompanyName());
     }
 }

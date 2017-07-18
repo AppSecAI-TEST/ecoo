@@ -2,6 +2,7 @@ package ecoo.dao.impl.hibernate;
 
 import ecoo.dao.ChamberUserDao;
 import ecoo.data.ChamberUser;
+import ecoo.data.ChamberUserListRow;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -28,6 +29,18 @@ public class ChamberUserDaoImplTest {
     @BeforeClass
     public static void init() {
         BasicConfigurator.configure();
+    }
+
+    @Test
+    public void testFindChamberUserListRowsByChamber() {
+        Collection<ChamberUserListRow> data = chamberUserDao.findChamberUserListRowsByChamber(-1);
+        Assert.assertNotNull(data);
+
+        data = chamberUserDao.findChamberUserListRowsByChamber(1);
+        Assert.assertNotNull(data);
+
+        data = chamberUserDao.findChamberUserListRowsByChamber(2);
+        Assert.assertNotNull(data);
     }
 
     @Test

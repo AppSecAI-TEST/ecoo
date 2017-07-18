@@ -553,6 +553,7 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
             case NewShipmentRequest:
                 final NewShipmentRequest newShipmentRequest = (NewShipmentRequest) workflowRequest;
                 final Shipment shipment = newShipmentRequest.getShipment();
+                shipment.setProcessInstanceId(null);
                 shipment.setStatus(ShipmentStatus.Cancelled.id());
                 shipmentService.save(shipment);
                 break;

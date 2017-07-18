@@ -19,12 +19,12 @@ import java.util.List;
 public interface UserService extends CrudService<Integer, User>, UserDetailsService, AuditedModelAware<User> {
 
     /**
-     * Method to activate the user.
+     * Returns all users that I have access to see.
      *
-     * @param activationSerialNumber The unique serial number.
-     * @return The activated user.
+     * @param requestingUser The user asking to see the users.
+     * @return A list of users.
      */
-    User activate(String activationSerialNumber);
+    Collection<User> findUsersAssociatedToMe(User requestingUser);
 
     /**
      * Returns the user for the given activation serial number.

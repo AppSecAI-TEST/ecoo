@@ -1204,6 +1204,9 @@ INSERT INTO "user_acc" ("id", "title", "first_name", "last_name", "display_name"
 (4  ,NULL  ,'JACQUELINE'  ,'CHANDA'  ,'JACQUELINE SIMAPUKA CHANDA'  ,'support@s-squared.co.za'  ,NULL  ,'E'  ,'manager@rcci.co.za'  ,'fe01ce2a7fbac8fafaed7c982a04e229'  ,'OTH'  ,'ZN017569' ,1  ,1  ,1  ,1  ,1  ,0  ,'a4e6d213-c745-4152-94e2-99577bfb360d'  ,NULL  ,'A'  ,NULL);
 SET IDENTITY_INSERT "user_acc" OFF;
 
+UPDATE user_acc SET reserved=0 where id>1
+GO
+
 CREATE TABLE "user_signature" (
   "id" int IDENTITY(1,1) NOT NULL,
   "user_id" int NOT NULL,
@@ -1271,7 +1274,9 @@ GO
 
 SET IDENTITY_INSERT "user_role" ON ;
 INSERT INTO "user_role" ("id", "user_id", "role") VALUES
-(1, 1, 'ROLE_SYSADMIN'); -- admin
+(1, 1 /*SYSTEM ADMIN*/, 'ROLE_SYSADMIN'),
+(2, 3 /*LINDA BLACKBEARD*/, 'ROLE_CHAMBERADMIN'),
+(3, 4 /*JACQUELINE CHANDA*/, 'ROLE_CHAMBERADMIN');
 SET IDENTITY_INSERT "user_role" OFF;
 
 ALTER TABLE "user_role" ADD CONSTRAINT "fk_user_role_user" FOREIGN KEY ("user_id") REFERENCES [user_acc]("id") ON DELETE CASCADE;
@@ -2457,12 +2462,40 @@ DECLARE @revisionId INT
 INSERT INTO revision VALUES(1,'1493368646354',GETDATE())
 SET @revisionId = @@IDENTITY
 
-INSERT INTO feature_log(rev,revType,id,name,value,descr)
-SELECT 1,0,id,name,value,descr FROM feature;
+INSERT INTO amount_schema_log(rev,revType,id,descr)
+SELECT 1,0,id,descr FROM amount_schema;
+GO
+
+INSERT INTO amount_type_log(rev,revType,id,code,descr,amount_schema)
+SELECT 1,0,id,code,descr,amount_schema FROM amount_type;
 GO
 
 INSERT INTO captcha_log(rev,revType,id,value,data)
 SELECT 1,0,id,value,data FROM captcha;
+GO
+
+INSERT INTO chamber_admin_log(rev,revType,id,chamber_id,user_id,start_date,end_date)
+SELECT 1,0,id,chamber_id,user_id,start_date,end_date FROM chamber_admin;
+GO
+
+INSERT INTO chamber_log(rev,revType,id,name,building,street,city,postcode,province_id,country_id,phone_no,fax_no,email,website)
+SELECT 1,0,id,name,building,street,city,postcode,province_id,country_id,phone_no,fax_no,email,website FROM chamber;
+GO
+
+INSERT INTO chamber_user_log(rev,revType,id,chamber_id,user_id,start_date,end_date,member_ind)
+SELECT 1,0,id,chamber_id,user_id,start_date,end_date,member_ind FROM chamber_user;
+GO
+
+INSERT INTO company_log(rev,revType,id,name,registration_no,vat_no,type_id,building,street,city,postcode,province_id,country_id,phone_no,email,status)
+SELECT 1,0,id,name,registration_no,vat_no,type_id,building,street,city,postcode,province_id,country_id,phone_no,email,status FROM company;
+GO
+
+INSERT INTO country_log(rev,revType,id,descr)
+SELECT 1,0,id,descr FROM country;
+GO
+
+INSERT INTO feature_log(rev,revType,id,name,value,descr)
+SELECT 1,0,id,name,value,descr FROM feature;
 GO
 
 /**
