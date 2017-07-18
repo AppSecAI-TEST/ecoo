@@ -2524,3 +2524,7 @@ UPDATE feature SET value='http://ecoo.co.za/ecoo-ui/' WHERE name='APPLICATION_RO
 UPDATE feature SET value='http://testmyspivadmin.dedicated.co.za/ecoo-ui/' WHERE name='APPLICATION_ROOT_URL'
 UPDATE feature SET value='http://localhost:8888/' WHERE name='APPLICATION_ROOT_URL'
 GO
+
+UPDATE feature SET value='http://ecoo.co.za/camunda-cockpit/app/cockpit/default/#/dashboard' WHERE name='CAMUNDA_ADMIN_URL'
+UPDATE feature SET value='http://testmyspivadmin.dedicated.co.za/camunda-cockpit/app/cockpit/default/#/dashboard' WHERE name='CAMUNDA_ADMIN_URL'
+GO
