@@ -104,7 +104,7 @@ public class UserElasticsearchIndexLoader {
                 final User entity = userDao.findByPrimaryId(id);
                 if (entity != null) {
                     for (ChamberAdmin chamberAdmin : chamberAdminDao.findByUser(id)) {
-                        final String chamberGroupIdentity = ChamberGroupIdentityFactory.build(chamberAdmin.getChamberId());
+                        final String chamberGroupIdentity = ChamberGroupIdentityFactory.build(chamberAdmin.getChamber().getPrimaryId());
                         entity.addGroupIdentity(chamberGroupIdentity);
                     }
                     data.add(entity);

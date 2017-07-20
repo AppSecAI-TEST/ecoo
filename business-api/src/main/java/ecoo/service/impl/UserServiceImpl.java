@@ -77,7 +77,7 @@ public class UserServiceImpl extends ElasticsearchAuditTemplate<Integer
         } else if (requestingUser.isInRole(Role.ROLE_CHAMBERADMIN)) {
             final Set<Integer> chamberIds = new HashSet<>();
             for (ChamberAdmin chamberAdmin : chamberAdminDao.findByUser(requestingUser.getPrimaryId())) {
-                chamberIds.add(chamberAdmin.getChamberId());
+                chamberIds.add(chamberAdmin.getChamber().getPrimaryId());
             }
             if (chamberIds.isEmpty()) {
                 throw new DataIntegrityViolationException(String.format("User %s cannot have the role ROLE_CHAMBERADMIN, " +

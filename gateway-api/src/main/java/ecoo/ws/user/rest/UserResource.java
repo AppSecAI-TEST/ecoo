@@ -1,11 +1,9 @@
 package ecoo.ws.user.rest;
 
 import ecoo.bpm.entity.*;
-import ecoo.data.CompanyStatus;
-import ecoo.data.Role;
-import ecoo.data.User;
-import ecoo.data.UserStatus;
+import ecoo.data.*;
 import ecoo.data.audit.Revision;
+import ecoo.security.UserAuthentication;
 import ecoo.service.UserService;
 import ecoo.service.WorkflowService;
 import ecoo.validator.CompanyValidator;
@@ -14,6 +12,7 @@ import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,19 +54,27 @@ public class UserResource extends BaseResource {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<RegisterUserAccountResponse> register(@RequestBody RegisterUserAccountRequest registerUserAccountRequest) {
-        companyValidator.validate(registerUserAccountRequest.getCompany());
-        userValidator.validate(registerUserAccountRequest.getUser());
+    public ResponseEntity<RegisterUserAccountResponse> register(@RequestBody RegisterUserAccountRequest request) {
+        Assert.notNull(request, "The variable request cannot be null.");
+        Assert.hasText(request.getSource(), "The source cannot be null.");
 
-        if (!registerUserAccountRequest.getCompany().isInStatus(CompanyStatus.Approved)) {
+        if (request.getSource().equalsIgnoreCase("PUBLIC")) {
+            final User systemAccount = userService.findById(KnownUser.SystemAccount.getPrimaryId());
+            SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(systemAccount));
+        }
+
+        companyValidator.validate(request.getCompany());
+        userValidator.validate(request.getUser());
+
+        if (!request.getCompany().isInStatus(CompanyStatus.Approved)) {
             final RegisterCompanyAccountRequest registerCompanyAccountRequest = RegisterCompanyAccountRequestBuilder.aRegisterCompanyAccountRequest()
-                    .withChamber(registerUserAccountRequest.getChamber())
-                    .withCompany(registerUserAccountRequest.getCompany())
-                    .withRequestingUser(registerUserAccountRequest.getRequestingUser())
+                    .withChamber(request.getChamber())
+                    .withCompany(request.getCompany())
+                    .withRequestingUser(request.getRequestingUser())
                     .build();
             workflowService.register(registerCompanyAccountRequest);
         }
-        return ResponseEntity.ok(workflowService.register(registerUserAccountRequest));
+        return ResponseEntity.ok(workflowService.register(request));
     }
 
 

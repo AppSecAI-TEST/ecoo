@@ -24,9 +24,10 @@ public class ChamberAdmin extends BaseModel<Integer> implements Serializable {
     @Audited
     private Integer primaryId;
 
-    @Column(name = "chamber_id")
+    @ManyToOne
+    @JoinColumn(name = "chamber_id")
     @Audited
-    private Integer chamberId;
+    private Chamber chamber;
 
     @Column(name = "user_id")
     @Audited
@@ -61,12 +62,12 @@ public class ChamberAdmin extends BaseModel<Integer> implements Serializable {
         this.primaryId = primaryId;
     }
 
-    public Integer getChamberId() {
-        return chamberId;
+    public Chamber getChamber() {
+        return chamber;
     }
 
-    public void setChamberId(Integer chamberId) {
-        this.chamberId = chamberId;
+    public void setChamber(Chamber chamber) {
+        this.chamber = chamber;
     }
 
     public Integer getUserId() {
@@ -106,7 +107,7 @@ public class ChamberAdmin extends BaseModel<Integer> implements Serializable {
     public String toString() {
         return "ChamberAdmin{" +
                 "primaryId=" + primaryId +
-                ", chamberId=" + chamberId +
+                ", chamber=" + chamber +
                 ", userId=" + userId +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
