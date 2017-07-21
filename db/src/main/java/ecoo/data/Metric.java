@@ -104,9 +104,9 @@ public class Metric extends BaseModel<Integer> implements Serializable {
     @JsonGetter
     public String getLastUpdatedDescription() {
         if (this.lastUpdated == null) return null;
-        final DateTime dateClosed = new DateTime().withMillis(this.lastUpdated.getTime());
+        final DateTime date = new DateTime().withMillis(this.lastUpdated.getTime());
         return TimeDescriptionBuilder.aTimeDescription()
-                .witEvaluationDate(dateClosed)
+                .witEvaluationDate(date)
                 .build();
     }
 

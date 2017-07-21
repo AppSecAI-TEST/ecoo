@@ -60,7 +60,7 @@ public class TimeDescriptionBuilder {
             } else if (minutes > 1) {
                 return "More than 1 minute...";
             } else {
-                return "Less than 1 minute...";
+                return "A few moments ago...";
             }
         } else {
             int days = Days.daysBetween(evaluationDate.withTimeAtStartOfDay(), this.startTime.withTimeAtStartOfDay()).getDays();
