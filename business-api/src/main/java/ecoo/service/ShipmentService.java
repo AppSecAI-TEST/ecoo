@@ -1,7 +1,9 @@
 package ecoo.service;
 
 import ecoo.data.Shipment;
+import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -10,6 +12,26 @@ import java.util.List;
  * @since May 2017
  */
 public interface ShipmentService extends CrudService<Integer, Shipment>, AuditedModelAware<Shipment> {
+
+    /**
+     * Count the number of shipments.
+     *
+     * @param ownerId The user that requested the shipment
+     * @param status  The status(es) to evaluate.
+     * @return The count.
+     */
+    long count(Integer ownerId, ShipmentStatus... status);
+
+    /**
+     * Count the number of shipments.
+     *
+     * @param ownerId   The user that requested the shipment
+     * @param startDate The start date.
+     * @param endDate   The end date.
+     * @param status    The status(es) to evaluate.
+     * @return The count.
+     */
+    long count(Integer ownerId, DateTime startDate, DateTime endDate, ShipmentStatus... status);
 
     /**
      * Returns the shipment for the given exporter reference.

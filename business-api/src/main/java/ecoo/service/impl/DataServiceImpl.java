@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Justin Rundle
@@ -29,6 +31,9 @@ public class DataServiceImpl implements DataService {
     private CurrencyDao currencyDao;
 
     private AmountTypeDao amountTypeDao;
+
+
+    private Map<String, MetricType> metricTypeMap;
 
     @Autowired
     public DataServiceImpl(ProvinceDao provinceDao, CountryDao countryDao
@@ -84,7 +89,7 @@ public class DataServiceImpl implements DataService {
      */
     @Override
     public Collection<MetricType> metricTypes() {
-        return metricTypeDao.findAll();
+        return getMetricTypeMap().values();
     }
 
     /**
@@ -95,8 +100,21 @@ public class DataServiceImpl implements DataService {
      */
     @Override
     public MetricType metricTypeById(String id) {
-        return metricTypeDao.findByPrimaryId(id);
+        return getMetricTypeMap().get(id);
     }
+
+
+    private Map<String, MetricType> getMetricTypeMap() {
+        if (metricTypeMap == null) {
+            metricTypeMap = new HashMap<>();
+            for (MetricType metricType : metricTypeDao.findAll()) {
+                metricTypeMap.put(metricType.getPrimaryId(), metricType);
+            }
+
+        }
+        return metricTypeMap;
+    }
+
 
     /**
      * Returns a list of all the provinces.

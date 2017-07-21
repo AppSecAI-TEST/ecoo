@@ -20,7 +20,7 @@ public class MetricType extends BaseModel<String> {
     private static final long serialVersionUID = 7355245443793182419L;
 
     public enum Type {
-        Example("XXX");
+        ShipmentCountCurrentMonth("SCM"),ShipmentCountLastMonth("SLM"),OpenShipmentCount("OSC");
 
         private String primaryId;
 

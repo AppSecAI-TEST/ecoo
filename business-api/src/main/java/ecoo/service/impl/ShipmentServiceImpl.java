@@ -9,6 +9,7 @@ import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
 import ecoo.service.ShipmentService;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -53,6 +54,37 @@ public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shi
 
         this.indexName = Shipment.class.getAnnotation(Document.class).indexName();
         this.indexType = Shipment.class.getAnnotation(Document.class).type();
+    }
+
+    /**
+     * Count the number of shipments.
+     *
+     * @param ownerId The user that requested the shipment
+     * @param status  The status(es) to evaluate.
+     * @return The count.
+     */
+    @Override
+    public long count(Integer ownerId, ShipmentStatus... status) {
+        final String[] statusArray = new String[status.length];
+        for (int i = 0; i < status.length; i++) statusArray[i] = status[i].id();
+        return shipmentElasticsearchRepository.countShipmentByOwnerIdEqualsAndStatusIn(ownerId, statusArray);
+    }
+
+    /**
+     * Count the number of shipments.
+     *
+     * @param ownerId   The user that requested the shipment
+     * @param startDate The start date.
+     * @param endDate   The end date.
+     * @param status    The status(es) to evaluate.
+     * @return The count.
+     */
+    @Override
+    public long count(Integer ownerId, DateTime startDate, DateTime endDate, ShipmentStatus... status) {
+        final String[] statusArray = new String[status.length];
+        for (int i = 0; i < status.length; i++) statusArray[i] = status[i].id();
+        return shipmentElasticsearchRepository.countShipmentByOwnerIdEqualsAndDateSubmittedGreaterThanEqualAndDateSubmittedLessThanAndStatusIn(ownerId
+                , startDate.getMillis(), endDate.getMillis(), statusArray);
     }
 
     /**

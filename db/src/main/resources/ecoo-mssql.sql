@@ -1394,7 +1394,9 @@ CREATE TABLE [dbo].[metric_type](
 GO
 
 INSERT INTO [dbo].[metric_type] ("id", "name", "descr") VALUES
-('EXP', 'Test','The description.');
+('SCM', 'Current Month','The total count of shipments this month.'),
+('SLM', 'Last Month','The total count of shipments last month.'),
+('OSC', 'Open Shipments','The number of open shipments created by you.');
 
 SET ANSI_PADDING OFF
 GO
@@ -1878,7 +1880,7 @@ GO
 ----------------------------------------------------------------------------------------------------------------
 CREATE TABLE [ecoo].[dbo].[doc_coo](
 	[shipment_id] [int] NOT NULL,
-	[remarks] [varchar](100) NULL,
+	[remarks] [varchar](512) NULL,
 CONSTRAINT [pk_doc_coo] PRIMARY KEY CLUSTERED ([shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 
@@ -1889,7 +1891,7 @@ CREATE TABLE [dbo].[doc_coo_log](
 	[rev] int NOT NULL,
 	[revType] tinyint NOT NULL,
 	[shipment_id] [int] NOT NULL,
-	[remarks] [varchar](100) NULL,
+	[remarks] [varchar](512) NULL,
 CONSTRAINT [pk_doc_coo_log] PRIMARY KEY CLUSTERED ([rev] ASC, [shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 

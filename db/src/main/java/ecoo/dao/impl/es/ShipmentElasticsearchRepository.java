@@ -15,6 +15,11 @@ import java.util.List;
 @Repository(value = "shipmentElasticsearchRepository")
 public interface ShipmentElasticsearchRepository extends ElasticsearchRepository<Shipment, Integer> {
 
+    long countShipmentByOwnerIdEqualsAndStatusIn(Integer ownerId, String[] status);
+
+    long countShipmentByOwnerIdEqualsAndDateSubmittedGreaterThanEqualAndDateSubmittedLessThanAndStatusIn(Integer ownerId
+            , long dateSubmittedStart, long dateSubmittedEnd, String[] status);
+
     Page<Shipment> findShipmentByOwnerIdEqualsAndStatusIn(Integer ownerId, String[] status, Pageable pageable);
 
     Page<Shipment> findShipmentByPrimaryIdEqualsOrExporterReferenceContainsOrPortOfLoadingContainsOrPortOfAcceptanceContainsAndOwnerIdEqualsAndStatusIn(Integer primaryId
