@@ -32,6 +32,12 @@ public class ShipmentDaoImplTest {
     }
 
     @Test
+    public void testFindHistory() {
+        final Collection<Shipment> data = shipmentDao.findHistory(1);
+        Assert.assertNotNull(data);
+    }
+
+    @Test
     public void testFindAll() {
         final Collection<Shipment> data = shipmentDao.findAll();
         Assert.assertNotNull(data);

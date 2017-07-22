@@ -3,11 +3,21 @@ package ecoo.dao;
 import ecoo.data.BaseModel;
 import ecoo.data.audit.Revision;
 
+import java.util.List;
+
 /**
  * @author Justin Rundle
  * @since April 2017
  */
 public interface AuditLogDao<P extends Object, M extends BaseModel<P>> extends BaseDao<P, M> {
+
+    /**
+     * Returns the history of the given model.
+     *
+     * @param id The pk of the audited entity.
+     * @return A list of audited history.s
+     */
+    List<M>findHistory(P id);
 
     /**
      * Returns the createed {@link Revision} for the given model.
