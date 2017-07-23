@@ -12,7 +12,8 @@ import java.util.Collection;
  * @author Justin Rundle
  * @since April 2017
  */
-public interface ChamberUserService extends CrudService<Integer, ChamberUser>, AuditedModelAware<ChamberUser> {
+public interface ChamberUserService extends CrudService<Integer, ChamberUser>
+        , AuditedModelAware<Integer, ChamberUser> {
 
     /**
      * Returns users for a given chamber and member indicator.

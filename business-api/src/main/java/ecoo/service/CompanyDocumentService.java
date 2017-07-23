@@ -8,7 +8,7 @@ import java.util.List;
  * @author Justin Rundle
  * @since April 2017
  */
-public interface CompanyDocumentService extends CrudService<Integer, CompanyDocument>, AuditedModelAware<CompanyDocument> {
+public interface CompanyDocumentService extends CrudService<Integer, CompanyDocument>, AuditedModelAware<Integer, CompanyDocument> {
 
     /**
      * Returns the company document for the company and the type.

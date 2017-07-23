@@ -16,7 +16,7 @@ import java.util.List;
  * @author Justin Rundle
  * @since April 2017
  */
-public interface UserService extends CrudService<Integer, User>, UserDetailsService, AuditedModelAware<User> {
+public interface UserService extends CrudService<Integer, User>, UserDetailsService, AuditedModelAware<Integer, User> {
 
     /**
      * Returns all users that I have access to see.

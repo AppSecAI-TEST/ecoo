@@ -6,7 +6,7 @@ import ecoo.data.Feature;
  * @author Justin Rundle
  * @since April 2017
  */
-public interface FeatureService extends CrudService<Integer, Feature>, AuditedModelAware<Feature> {
+public interface FeatureService extends CrudService<Integer, Feature>, AuditedModelAware<Integer, Feature> {
 
     /**
      * Returns the String representation of the APP_HOME/system directory.

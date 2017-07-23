@@ -3,16 +3,18 @@ package ecoo.service.impl;
 import ecoo.dao.AuditLogDao;
 import ecoo.dao.UserDao;
 import ecoo.data.BaseModel;
-import ecoo.data.audit.Revision;
 import ecoo.data.KnownUser;
 import ecoo.data.User;
+import ecoo.data.audit.Revision;
 import ecoo.service.AuditedModelAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Map;
 
 /**
  * The audit service representation of a service that provides basic auditing methods.
@@ -22,11 +24,12 @@ import java.util.GregorianCalendar;
  * @author Justin Rundle
  * @since April 2017
  */
-public abstract class AuditTemplate<P, M extends BaseModel<P>, D extends AuditLogDao<P, M>> extends JdbcTemplateService<P, M>
-        implements AuditedModelAware<M> {
+public abstract class AuditTemplate<P extends Serializable, M extends BaseModel<P>, D extends AuditLogDao<P, M>> extends JdbcTemplateService<P, M>
+        implements AuditedModelAware<P, M> {
 
     private D dao;
 
+    @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
     private UserDao userDao;
 
@@ -39,6 +42,17 @@ public abstract class AuditTemplate<P, M extends BaseModel<P>, D extends AuditLo
     public AuditTemplate(D dao) {
         super(dao);
         this.dao = dao;
+    }
+
+    /**
+     * Returns the history of the given model.
+     *
+     * @param id The pk of the audited entity.
+     * @return A list of audited history.s
+     */
+    @Override
+    public Map<Revision, M> findHistory(P id) {
+        return dao.findHistory(id);
     }
 
     /**

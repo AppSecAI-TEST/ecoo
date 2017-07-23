@@ -8,7 +8,7 @@ import java.util.List;
  * @author Justin Rundle
  * @since July 2017
  */
-public interface MetricService extends AuditedModelAware<Metric> {
+public interface MetricService extends AuditedModelAware<Integer, Metric> {
 
     /**
      * Returns ALL the metrics for the the given user.

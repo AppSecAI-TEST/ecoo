@@ -9,7 +9,7 @@ import java.util.List;
  * @since July 2017
  */
 public interface CommercialInvoiceAmountService extends CrudService<Integer, CommercialInvoiceAmount>
-        , AuditedModelAware<CommercialInvoiceAmount> {
+        , AuditedModelAware<Integer, CommercialInvoiceAmount> {
 
     /**
      * Returns the list of amounts for the given shipment.

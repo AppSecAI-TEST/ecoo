@@ -7,7 +7,8 @@ import ecoo.data.CertificateOfOriginLine;
  * @author Justin Rundle
  * @since June 2017
  */
-public interface CertificateOfOriginService extends CrudService<Integer, CertificateOfOrigin>, AuditedModelAware<CertificateOfOrigin> {
+public interface CertificateOfOriginService extends CrudService<Integer, CertificateOfOrigin>
+        , AuditedModelAware<Integer, CertificateOfOrigin> {
 
     CertificateOfOrigin delete(CertificateOfOriginLine line);
 

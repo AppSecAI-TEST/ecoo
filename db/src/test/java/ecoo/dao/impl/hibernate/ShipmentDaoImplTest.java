@@ -2,6 +2,7 @@ package ecoo.dao.impl.hibernate;
 
 import ecoo.dao.ShipmentDao;
 import ecoo.data.Shipment;
+import ecoo.data.audit.Revision;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -13,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author Justin Rundle
@@ -33,7 +35,7 @@ public class ShipmentDaoImplTest {
 
     @Test
     public void testFindHistory() {
-        final Collection<Shipment> data = shipmentDao.findHistory(1);
+        final Map<Revision, Shipment> data = shipmentDao.findHistory(1);
         Assert.assertNotNull(data);
     }
 

@@ -1977,6 +1977,34 @@ ALTER TABLE [dbo].[doc_pack_list_log]  WITH NOCHECK ADD  CONSTRAINT [fk_doc_pack
 ALTER TABLE [dbo].[doc_pack_list_log] CHECK CONSTRAINT [fk_doc_pack_list_log_rev_type]
 GO
 
+CREATE TABLE [ecoo].[dbo].[shipment_activity_grp](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[user_id] [int] NOT NULL,
+	[display_name] [varchar](200) NOT NULL,
+	[shipment_id] [int] NOT NULL,
+	[date_modified] [datetime] NOT NULL,
+CONSTRAINT [pk_shipment_activity_grp] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [shipment_activity_grp] ADD CONSTRAINT "fk_shipment_activity_user_acc" FOREIGN KEY ([user_id]) REFERENCES [user_acc]([id]);  
+ALTER TABLE [shipment_activity_grp] ADD CONSTRAINT "fk_shipment_activity_shipment" FOREIGN KEY ([shipment_id]) REFERENCES [shipment]([id]);  
+GO
+
+CREATE NONCLUSTERED INDEX [ux_shipment_activity_grp_001] ON [dbo].[shipment_activity_grp] 
+([shipment_id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
+GO
+
+
+CREATE TABLE [ecoo].[dbo].[shipment_activity](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[group_id] int NULL,
+	[descr] [varchar](512) NOT NULL,
+CONSTRAINT [pk_shipment_activity] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
+GO
+
+ALTER TABLE [shipment_activity] ADD CONSTRAINT "fk_activity_shipment_shipment_activity_grp" FOREIGN KEY ([group_id]) REFERENCES [shipment_activity_grp]([id]);  
+GO
+
 
 -- =====================================================================================
 -- UPLOAD

@@ -9,7 +9,8 @@ import java.util.List;
  * @author Justin Rundle
  * @since May 2017
  */
-public interface CompanySignatoryService extends CrudService<Integer, CompanySignatory>, AuditedModelAware<CompanySignatory> {
+public interface CompanySignatoryService extends CrudService<Integer, CompanySignatory>
+        , AuditedModelAware<Integer, CompanySignatory> {
 
     /**
      * Adds a signatory to the given company.

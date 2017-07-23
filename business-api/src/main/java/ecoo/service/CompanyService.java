@@ -6,7 +6,7 @@ import ecoo.data.Company;
  * @author Justin Rundle
  * @since April 2017
  */
-public interface CompanyService extends CrudService<Integer, Company>, AuditedModelAware<Company> {
+public interface CompanyService extends CrudService<Integer, Company>, AuditedModelAware<Integer, Company> {
 
     Company findByRegistrationNo(String registrationNo);
 }

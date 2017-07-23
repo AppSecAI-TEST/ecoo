@@ -1,41 +1,28 @@
 package ecoo.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.envers.Audited;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.util.Assert;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Justin Rundle
  * @since July 2017
  */
-//@Entity
-//@Table(name = "shipment_activity")
-//@Document(type = "ecoo.shipment.activity", indexName = "ecoo.shipment.activity", shards = 1, replicas = 0)
+@Entity
+@Table(name = "shipment_activity")
 public class ShipmentActivity extends BaseModel<Integer> implements Serializable {
 
+    private static final long serialVersionUID = 3655032359946659208L;
+
     @Id
-    @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer primaryId;
 
-    @Column(name = "user_id")
-    private Integer userId;
-
-    @Column(name = "shipment_id")
-    private Integer shipmentId;
+    @Column(name = "group_id")
+    private Integer groupId;
 
     @Column(name = "descr")
     private String descr;
-
-    @Column(name = "date_modified")
-    private Date dateModified;
-
 
     @Override
     public Integer getPrimaryId() {
@@ -44,23 +31,15 @@ public class ShipmentActivity extends BaseModel<Integer> implements Serializable
 
     @Override
     public void setPrimaryId(Integer primaryId) {
-this.primaryId = primaryId;
+        this.primaryId = primaryId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getGroupId() {
+        return groupId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getShipmentId() {
-        return shipmentId;
-    }
-
-    public void setShipmentId(Integer shipmentId) {
-        this.shipmentId = shipmentId;
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 
     public String getDescr() {
@@ -71,22 +50,12 @@ this.primaryId = primaryId;
         this.descr = descr;
     }
 
-    public Date getDateModified() {
-        return dateModified;
-    }
-
-    public void setDateModified(Date dateModified) {
-        this.dateModified = dateModified;
-    }
-
     @Override
     public String toString() {
         return "ShipmentActivity{" +
                 "primaryId=" + primaryId +
-                ", userId=" + userId +
-                ", shipmentId=" + shipmentId +
+                ", groupId=" + groupId +
                 ", descr='" + descr + '\'' +
-                ", dateModified=" + dateModified +
                 '}';
     }
 }

@@ -8,7 +8,8 @@ import java.util.List;
  * @author Justin Rundle
  * @since June 2017
  */
-public interface ShipmentDocumentService extends CrudService<Integer, ShipmentDocument>, AuditedModelAware<ShipmentDocument> {
+public interface ShipmentDocumentService extends CrudService<Integer, ShipmentDocument>
+        , AuditedModelAware<Integer, ShipmentDocument> {
 
 
     /**

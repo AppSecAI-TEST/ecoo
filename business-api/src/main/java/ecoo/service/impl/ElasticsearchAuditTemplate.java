@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Map;
 
 /**
  * The audit service representation of a service that provides basic auditing methods.
@@ -28,10 +29,11 @@ import java.util.GregorianCalendar;
 public abstract class ElasticsearchAuditTemplate<P extends Serializable, M extends BaseModel<P>
         , D extends AuditLogDao<P, M>
         , R extends ElasticsearchRepository<M, P>>
-        extends ElasticsearchTemplateService<P, M> implements AuditedModelAware<M> {
+        extends ElasticsearchTemplateService<P, M> implements AuditedModelAware<P, M> {
 
     private D dao;
 
+    @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
     private UserDao userDao;
 
@@ -41,9 +43,20 @@ public abstract class ElasticsearchAuditTemplate<P extends Serializable, M exten
      * @param dao The object used to save/load the models.
      * @throws IllegalArgumentException If the dao is null.
      */
-    public ElasticsearchAuditTemplate(D dao, R repository, ElasticsearchTemplate elasticsearchTemplate) {
+    ElasticsearchAuditTemplate(D dao, R repository, ElasticsearchTemplate elasticsearchTemplate) {
         super(dao, repository, elasticsearchTemplate);
         this.dao = dao;
+    }
+
+    /**
+     * Returns the history of the given model.
+     *
+     * @param id The pk of the audited entity.
+     * @return A list of audited history.s
+     */
+    @Override
+    public Map<Revision, M> findHistory(P id) {
+        return dao.findHistory(id);
     }
 
     /**

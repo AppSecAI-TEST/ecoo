@@ -9,7 +9,7 @@ import java.util.List;
  * @author Justin Rundle
  * @since April 2017
  */
-public interface UserSignatureService extends CrudService<Integer, UserSignature>, AuditedModelAware<UserSignature> {
+public interface UserSignatureService extends CrudService<Integer, UserSignature>, AuditedModelAware<Integer, UserSignature> {
 
     UserSignature assign(Integer userId, Signature signature);
 

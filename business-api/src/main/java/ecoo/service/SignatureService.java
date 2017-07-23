@@ -6,7 +6,7 @@ import ecoo.data.Signature;
  * @author Justin Rundle
  * @since May 2017
  */
-public interface SignatureService extends CrudService<Integer, Signature>, AuditedModelAware<Signature> {
+public interface SignatureService extends CrudService<Integer, Signature>, AuditedModelAware<Integer, Signature> {
 
     /**
      * Returns the signature for the given personal reference.

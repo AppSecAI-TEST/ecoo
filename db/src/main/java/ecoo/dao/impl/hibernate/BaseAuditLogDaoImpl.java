@@ -11,12 +11,10 @@ import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 
-import javax.persistence.EntityManager;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The {@link BaseHibernateDaoImpl} data access object used to load/save the parametized model. This
@@ -49,37 +47,28 @@ public abstract class BaseAuditLogDaoImpl<P extends Serializable, M extends Base
      * @param id The pk of the audited entity.
      * @return A list of audited history.s
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public List<M> findHistory(P id) {
-        final List<Object> history = new ArrayList<>();
+    public Map<Revision, M> findHistory(P id) {
         final Session session = getSessionFactory().getCurrentSession();
         final AuditReader reader = AuditReaderFactory.get(session);
+        final AuditQuery query = reader.createQuery().forRevisionsOfEntity(getBaseModelClass(), false, true);
+ 
+        query.add(AuditEntity.id().eq(id));
+        query.addOrder(AuditEntity.revisionProperty("dateModified").desc());
+        
+        final Collection<Object[]> data = query.getResultList();
 
-        final List<Number> revisionIds = reader.getRevisions(getBaseModelClass(), id);
-        for (final Number revisionId : revisionIds) {
-            AuditQuery query = reader.createQuery().forEntitiesAtRevision(getBaseModelClass(), revisionId);
-            List entity = query.getResultList();
-            history.add(entity);
+        final Map<Revision, M> revisions = new HashMap<>();
+        if (data != null) {
+            for (Object[] d : data) {
+                final Revision revision = (Revision) d[PROPERTY_REVISION_INDEX];
+                final M entity = (M) d[PROPERTY_REVISION_MODEL_INDEX];
+                revisions.put(revision, entity);
+            }
         }
-
-        return null;
+        return revisions;
     }
-
-
-//        query.setMaxResults(1);
-//        query.add(AuditEntity.id().eq(model.getPrimaryId()));
-//        query.add(AuditEntity.revisionType().eq(RevisionType.ADD));
-//
-//        Collection<Object[]> data = query.getResultList();
-//
-//        EntityManager em = entityManagerFactory.createEntityManager();
-//        AuditReader reader = AuditReaderFactory.get(em);
-//        List<Number> revisions = reader.getRevisions(Patient.class, patientId);
-//        List<HistoryDto> historyList = findHistoryDetails(revisions);
-//        List<HistoryDto> legalHistoryList = findLegalHistoryByPatient(patientId);
-//        historyList.addAll(legalHistoryList);
-//        Collections.sort(historyList);
-//    }
 
     /*
          * (non-Javadoc)
@@ -97,7 +86,7 @@ public abstract class BaseAuditLogDaoImpl<P extends Serializable, M extends Base
 
         final Session session = getSessionFactory().getCurrentSession();
         AuditReader reader = AuditReaderFactory.get(session);
-        AuditQuery query = reader.createQuery().forRevisionsOfEntity(getBaseModelClass(), false, true);
+        AuditQuery query = reader.createQuery().forRevisionsOfEntity(getBaseModelClass(), false, false);
 
         query.setMaxResults(1);
         query.add(AuditEntity.id().eq(model.getPrimaryId()));

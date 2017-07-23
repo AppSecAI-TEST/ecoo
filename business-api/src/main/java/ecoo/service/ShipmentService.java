@@ -11,7 +11,7 @@ import java.util.List;
  * @author Justin Rundle
  * @since May 2017
  */
-public interface ShipmentService extends CrudService<Integer, Shipment>, AuditedModelAware<Shipment> {
+public interface ShipmentService extends CrudService<Integer, Shipment>, AuditedModelAware<Integer, Shipment> {
 
     /**
      * Count the number of shipments.
