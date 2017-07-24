@@ -1,5 +1,6 @@
 package ecoo.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -50,6 +51,14 @@ public class ShipmentActivityGroup extends BaseModel<Integer> implements Seriali
         this.dateModified = dateModified;
     }
 
+    public ShipmentActivityGroup(Integer userId, String displayName, Integer shipmentId, Date dateModified, List<ShipmentActivity> activities) {
+        this.userId = userId;
+        this.displayName = displayName;
+        this.shipmentId = shipmentId;
+        this.dateModified = dateModified;
+        this.activities = activities;
+    }
+
     @Override
     public Integer getPrimaryId() {
         return primaryId;
@@ -98,6 +107,11 @@ public class ShipmentActivityGroup extends BaseModel<Integer> implements Seriali
 
     public void setActivities(List<ShipmentActivity> activities) {
         this.activities = activities;
+    }
+
+    @JsonIgnore
+    public void addActivity(ShipmentActivity shipmentActivity) {
+        this.activities.add(shipmentActivity);
     }
 
     @Override

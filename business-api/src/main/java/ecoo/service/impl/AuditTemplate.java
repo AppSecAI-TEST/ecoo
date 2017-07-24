@@ -112,7 +112,7 @@ public abstract class AuditTemplate<P extends Serializable, M extends BaseModel<
      */
     @SuppressWarnings("unchecked")
     @Override
-    public M findMostRecentRevision(M model) {
+    public Map<Revision, M> findMostRecentRevision(M model) {
         return dao.findMostRecentRevision(model);
     }
 }

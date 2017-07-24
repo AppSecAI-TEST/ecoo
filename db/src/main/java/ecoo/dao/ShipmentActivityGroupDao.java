@@ -7,4 +7,11 @@ import ecoo.data.ShipmentActivityGroup;
  * @since July 2017
  */
 public interface ShipmentActivityGroupDao extends BaseDao<Integer, ShipmentActivityGroup> {
+
+    /**
+     * Method to delete all activities by shipment.
+     *
+     * @param shipmentId The pk of the shipment.
+     */
+    void deleteAllActivitiesByShipment(Integer shipmentId);
 }

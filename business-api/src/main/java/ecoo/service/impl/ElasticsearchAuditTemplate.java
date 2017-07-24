@@ -116,7 +116,7 @@ public abstract class ElasticsearchAuditTemplate<P extends Serializable, M exten
      */
     @SuppressWarnings("unchecked")
     @Override
-    public M findMostRecentRevision(M model) {
+    public Map<Revision, M> findMostRecentRevision(M model) {
         return dao.findMostRecentRevision(model);
     }
 }

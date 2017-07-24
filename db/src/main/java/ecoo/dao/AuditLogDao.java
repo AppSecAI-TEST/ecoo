@@ -42,5 +42,5 @@ public interface AuditLogDao<P extends Serializable, M extends BaseModel<P>> ext
      * @param model the model to evaluate
      * @return the most recent model or null if none found
      */
-    M findMostRecentRevision(M model);
+    Map<Revision, M> findMostRecentRevision(M model);
 }

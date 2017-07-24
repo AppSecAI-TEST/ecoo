@@ -1,8 +1,8 @@
 package ecoo.audit;
 
+import ecoo.dao.ShipmentDao;
 import ecoo.data.*;
 import ecoo.data.audit.Revision;
-import ecoo.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -17,19 +17,19 @@ import java.util.Map;
  * @since July 2017
  */
 @Component
-public class ShipmentHistoryBuilder {
+public class ShipmentAllChangesBuilder {
 
-    private ShipmentService shipmentService;
+    private ShipmentDao shipmentDao;
 
     @Autowired
-    public ShipmentHistoryBuilder(ShipmentService shipmentService) {
-        this.shipmentService = shipmentService;
+    public ShipmentAllChangesBuilder(ShipmentDao shipmentDao) {
+        this.shipmentDao = shipmentDao;
     }
 
     public List<ShipmentActivityGroup> execute(Integer shipmentId) {
         Assert.notNull(shipmentId, "The variable shipmentId cannot be null.");
 
-        final Map<Revision, Shipment> revisions = shipmentService.findHistory(shipmentId);
+        final Map<Revision, Shipment> revisions = shipmentDao.findHistory(shipmentId);
         Assert.notNull(revisions, String.format("System cannot complete request to build shipment history. The system " +
                 "found no revisions for shipment <%s>.", shipmentId));
         Assert.isTrue(!revisions.isEmpty(), String.format("System cannot complete request to build shipment history. The system " +
@@ -38,7 +38,7 @@ public class ShipmentHistoryBuilder {
         final List<ShipmentActivityGroup> activityGroups = new ArrayList<>();
         if (revisions.keySet().size() == 1) {
             final Revision firstRevision = revisions.keySet().iterator().next();
-            activityGroups.add(ShipmentActivityGroupBuilder.aShipmentActivityGroup(shipmentId, firstRevision)
+            activityGroups.add(ShipmentActivityGroupBuilder.aShipmentActivityGroup(firstRevision, shipmentId)
                     .withLine(ShipmentActivityBuilder.aShipmentActivity()
                             .withDescr("Shipment created.")
                             .build())
@@ -57,7 +57,7 @@ public class ShipmentHistoryBuilder {
         if (activityGroup.size() == 0) {
             final Shipment currentShipment = revisions.get(currentRevision);
             activityGroup.add(ShipmentActivityGroupBuilder
-                    .aShipmentActivityGroup(currentShipment.getPrimaryId(), currentRevision)
+                    .aShipmentActivityGroup(currentRevision, currentShipment.getPrimaryId())
                     .withLine(ShipmentActivityBuilder.aShipmentActivity()
                             .withDescr("Shipment created.")
                             .build())
@@ -75,7 +75,7 @@ public class ShipmentHistoryBuilder {
                 final List<ShipmentActivity> activities = shipmentDifferenceDetector.execute(currentShipment, otherShipment);
 
                 activityGroup.add(ShipmentActivityGroupBuilder
-                        .aShipmentActivityGroup(otherShipment.getPrimaryId(), otherRevision)
+                        .aShipmentActivityGroup(otherRevision, otherShipment.getPrimaryId())
                         .withLines(activities)
                         .build());
 

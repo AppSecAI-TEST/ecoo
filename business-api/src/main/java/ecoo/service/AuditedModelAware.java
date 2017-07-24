@@ -46,5 +46,5 @@ public interface AuditedModelAware<P extends Serializable, M extends BaseModel<P
      * @param model The model to evaluate.
      * @return The most recent model or null if none found.
      */
-    M findMostRecentRevision(M model);
+    Map<Revision, M> findMostRecentRevision(M model);
 }

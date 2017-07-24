@@ -53,21 +53,12 @@ public abstract class BaseAuditLogDaoImpl<P extends Serializable, M extends Base
         final Session session = getSessionFactory().getCurrentSession();
         final AuditReader reader = AuditReaderFactory.get(session);
         final AuditQuery query = reader.createQuery().forRevisionsOfEntity(getBaseModelClass(), false, true);
- 
+
         query.add(AuditEntity.id().eq(id));
         query.addOrder(AuditEntity.revisionProperty("dateModified").desc());
-        
-        final Collection<Object[]> data = query.getResultList();
 
-        final Map<Revision, M> revisions = new HashMap<>();
-        if (data != null) {
-            for (Object[] d : data) {
-                final Revision revision = (Revision) d[PROPERTY_REVISION_INDEX];
-                final M entity = (M) d[PROPERTY_REVISION_MODEL_INDEX];
-                revisions.put(revision, entity);
-            }
-        }
-        return revisions;
+        final Collection<Object[]> data = query.getResultList();
+        return convertToRevisionMap(data);
     }
 
     /*
@@ -137,15 +128,11 @@ public abstract class BaseAuditLogDaoImpl<P extends Serializable, M extends Base
      * .common.db.model .BaseModel)
      */
     @SuppressWarnings("unchecked")
-    public final M findMostRecentRevision(M model) {
-        if (model == null || model.isNew()) {
-            return model;
-        }
-
+    public final Map<Revision, M> findMostRecentRevision(M model) {
         AuditQuery query = null;
-        Session session;
+
         try {
-            session = getSessionFactory().getCurrentSession();
+            final Session session = getSessionFactory().getCurrentSession();
             AuditReader reader = AuditReaderFactory.get(session);
             query = reader.createQuery().forRevisionsOfEntity(getBaseModelClass(), false, false);
 
@@ -154,13 +141,24 @@ public abstract class BaseAuditLogDaoImpl<P extends Serializable, M extends Base
             query.addOrder(AuditEntity.revisionProperty("dateModified").desc());
 
             Collection<Object[]> data = query.getResultList();
-            if (data == null || data.isEmpty()) {
-                return model;
-            }
-            return (M) data.iterator().next()[PROPERTY_REVISION_MODEL_INDEX];
+            return convertToRevisionMap(data);
+
         } finally {
             if (query != null) query.setMaxResults(0);
             // if (session != null) session.close();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<Revision, M> convertToRevisionMap(Collection<Object[]> data) {
+        final Map<Revision, M> revisions = new HashMap<>();
+        if (data != null) {
+            for (Object[] d : data) {
+                final Revision revision = (Revision) d[PROPERTY_REVISION_INDEX];
+                final M entity = (M) d[PROPERTY_REVISION_MODEL_INDEX];
+                revisions.put(revision, entity);
+            }
+        }
+        return revisions;
     }
 }

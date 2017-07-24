@@ -5,16 +5,23 @@ package ecoo.data;
  * @since May 2017
  */
 public enum ShipmentStatus {
-    NewAndPendingSubmission("N"), SubmittedAndPendingChamberApproval("SPA"), Approved("APP"), Declined("D"), Cancelled("C");
+    NewAndPendingSubmission("N", "New And Pending Submission"), SubmittedAndPendingChamberApproval("SPA", "Submitted And Pending Chamber Approval"), Approved("APP", "Approved"), Declined("D", "Declined"), Cancelled("C", "Cancelled");
 
     private String id;
 
-    ShipmentStatus(String id) {
+    private String description;
+
+    ShipmentStatus(String id, String description) {
         this.id = id;
+        this.description = description;
     }
 
     public String id() {
         return id;
+    }
+
+    public String description() {
+        return description;
     }
 
     public static ShipmentStatus valueOfById(String id) {
@@ -23,6 +30,6 @@ public enum ShipmentStatus {
                 return userStatus;
             }
         }
-        throw new IllegalArgumentException("No enum constant ecoo.data.ShipmentStatus.id: " + id);
+        return null;
     }
 }

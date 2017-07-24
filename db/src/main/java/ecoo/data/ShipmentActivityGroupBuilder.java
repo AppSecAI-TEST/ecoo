@@ -1,8 +1,10 @@
 package ecoo.data;
 
 import ecoo.data.audit.Revision;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,17 +13,24 @@ import java.util.List;
  */
 public final class ShipmentActivityGroupBuilder {
 
+    private User modifiedBy;
+    private Date dateModified;
     private Integer shipmentId;
-    private Revision revision;
     private List<ShipmentActivity> activities = new ArrayList<>();
 
-    private ShipmentActivityGroupBuilder(Integer shipmentId, Revision revision) {
+    private ShipmentActivityGroupBuilder(User modifiedBy, Date dateModified, Integer shipmentId) {
+        this.modifiedBy = modifiedBy;
+        this.dateModified = dateModified;
         this.shipmentId = shipmentId;
-        this.revision = revision;
     }
 
-    public static ShipmentActivityGroupBuilder aShipmentActivityGroup(Integer shipmentId, Revision revision) {
-        return new ShipmentActivityGroupBuilder(shipmentId, revision);
+    public static ShipmentActivityGroupBuilder aShipmentActivityGroup(Revision revision, Integer shipmentId) {
+        return new ShipmentActivityGroupBuilder(revision.getModifiedBy(), revision.getDateModified(), shipmentId);
+    }
+
+
+    public static ShipmentActivityGroupBuilder aShipmentActivityGroup(User modifiedBy, DateTime dateModified, Integer shipmentId) {
+        return new ShipmentActivityGroupBuilder(modifiedBy, dateModified.toDate(), shipmentId);
     }
 
     public ShipmentActivityGroupBuilder withLine(ShipmentActivity activity) {
@@ -35,9 +44,9 @@ public final class ShipmentActivityGroupBuilder {
     }
 
     public ShipmentActivityGroup build() {
-        final User modifiedBy = revision.getModifiedBy();
+        if (activities == null || activities.isEmpty()) return null;
         final ShipmentActivityGroup shipmentActivityGroup = new ShipmentActivityGroup(modifiedBy.getPrimaryId(),
-                modifiedBy.getDisplayName(), shipmentId, revision.getDateModified());
+                modifiedBy.getDisplayName(), shipmentId, dateModified);
         shipmentActivityGroup.setActivities(activities);
         return shipmentActivityGroup;
     }

@@ -7,6 +7,8 @@ import ecoo.dao.impl.es.ShipmentElasticsearchRepository;
 import ecoo.data.Shipment;
 import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
+import ecoo.security.UserAuthentication;
+import ecoo.service.ShipmentActivityGroupService;
 import ecoo.service.ShipmentService;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.joda.time.DateTime;
@@ -17,6 +19,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -43,18 +46,23 @@ public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shi
 
     private QueryShipmentCommand queryShipmentCommand;
 
+    private ShipmentActivityGroupService shipmentActivityGroupService;
+
     @Autowired
     public ShipmentServiceImpl(ShipmentDao shipmentDao
             , @Qualifier("shipmentElasticsearchRepository") ShipmentElasticsearchRepository shipmentElasticsearchRepository
             , ElasticsearchTemplate elasticsearchTemplate
-            , QueryShipmentCommand queryShipmentCommand) {
+            , QueryShipmentCommand queryShipmentCommand
+            , ShipmentActivityGroupService shipmentActivityGroupService) {
         super(shipmentDao, shipmentElasticsearchRepository, elasticsearchTemplate);
         this.shipmentElasticsearchRepository = shipmentElasticsearchRepository;
         this.queryShipmentCommand = queryShipmentCommand;
+        this.shipmentActivityGroupService = shipmentActivityGroupService;
 
         this.indexName = Shipment.class.getAnnotation(Document.class).indexName();
         this.indexType = Shipment.class.getAnnotation(Document.class).type();
     }
+
 
     /**
      * Count the number of shipments.
@@ -184,5 +192,33 @@ public class ShipmentServiceImpl extends ElasticsearchAuditTemplate<Integer, Shi
             entity.setDateSubmitted(new Date());
             entity.setStatus(ShipmentStatus.NewAndPendingSubmission.id());
         }
+    }
+
+    /**
+     * Method called before after is called.
+     *
+     * @param entity The entity to after.
+     */
+    @Override
+    protected void afterSave(Shipment entity) {
+        final UserAuthentication authentication = (UserAuthentication) SecurityContextHolder
+                .getContext().getAuthentication();
+        final User currentUser = (User) authentication.getDetails();
+        Assert.notNull(currentUser, "System cannot complete request. No security principle set.");
+        shipmentActivityGroupService.recordActivity(currentUser, DateTime.now(), entity);
+    }
+
+    /**
+     * Method called before after is called.
+     *
+     * @param entity The entity to after.
+     */
+    @Override
+    protected void afterDelete(Shipment entity) {
+        final UserAuthentication authentication = (UserAuthentication) SecurityContextHolder
+                .getContext().getAuthentication();
+        final User currentUser = (User) authentication.getDetails();
+        Assert.notNull(currentUser, "System cannot complete request. No security principle set.");
+        shipmentActivityGroupService.recordActivity(currentUser, DateTime.now(), entity);
     }
 }

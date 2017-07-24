@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Justin Rundle
@@ -28,12 +28,28 @@ public class ShipmentActivityResource extends BaseResource {
     }
 
     @RequestMapping(value = "/shipment/{shipmentId}", method = RequestMethod.GET)
-    public ResponseEntity<List<ShipmentActivityGroup>> findShipmentActivityGroupsByShipmentId(@PathVariable Integer shipmentId) {
-        return ResponseEntity.ok(shipmentActivityGroupService.findShipmentActivityGroupsByShipmentId(shipmentId));
+    public ResponseEntity<Collection<ShipmentActivityGroup>> findShipmentActivityGroupsByShipmentId(@PathVariable Integer shipmentId) {
+        return findShipmentActivityGroupsByShipmentId(shipmentId, "ASC");
+    }
+
+    @RequestMapping(value = "/shipment/{shipmentId}/order/{order}", method = RequestMethod.GET)
+    public ResponseEntity<Collection<ShipmentActivityGroup>> findShipmentActivityGroupsByShipmentId(@PathVariable Integer shipmentId
+            , @PathVariable String order) {
+        final List<ShipmentActivityGroup> groups = shipmentActivityGroupService.findShipmentActivityGroupsByShipmentId(shipmentId);
+        if (order.equalsIgnoreCase("DESC")) {
+            final Set<ShipmentActivityGroup> reverseOrder = new TreeSet<>((o1, o2) -> o2.getPrimaryId().compareTo(o1.getPrimaryId()));
+            reverseOrder.addAll(groups);
+            return ResponseEntity.ok(reverseOrder);
+
+        } else {
+            final Set<ShipmentActivityGroup> ascendingOrder = new TreeSet<>(Comparator.comparing(ShipmentActivityGroup::getPrimaryId));
+            ascendingOrder.addAll(groups);
+            return ResponseEntity.ok(ascendingOrder);
+        }
     }
 
     @RequestMapping(value = "/shipment/{shipmentId}/build", method = RequestMethod.GET)
-    public ResponseEntity<List<ShipmentActivityGroup>> build(@PathVariable Integer shipmentId) {
-        return ResponseEntity.ok(shipmentActivityGroupService.buildAllHistory(shipmentId));
+    public ResponseEntity<List<ShipmentActivityGroup>> buildHistoryWithStartOfShipment(@PathVariable Integer shipmentId) {
+        return ResponseEntity.ok(shipmentActivityGroupService.buildHistoryWithStartOfShipment(shipmentId));
     }
 }

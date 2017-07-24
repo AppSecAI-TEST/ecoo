@@ -117,7 +117,10 @@ public abstract class ElasticsearchTemplateService<P extends Serializable
         beforeSave(entity);
 
         dao.mergeThenSave(entity);
-        return reload(entity);
+        entity = reload(entity);
+
+        afterSave(entity);
+        return entity;
     }
 
     /**
@@ -143,6 +146,15 @@ public abstract class ElasticsearchTemplateService<P extends Serializable
      */
 
     protected void beforeSave(M entity) {
+    }
+
+    /**
+     * Method called before after is called.
+     *
+     * @param entity The entity to after.
+     */
+
+    protected void afterSave(M entity) {
     }
 
     /**
@@ -176,6 +188,8 @@ public abstract class ElasticsearchTemplateService<P extends Serializable
 
         dao.delete(entity);
         repository.delete(entity);
+
+        afterDelete(entity);
         return entity;
     }
 
@@ -185,6 +199,14 @@ public abstract class ElasticsearchTemplateService<P extends Serializable
      * @param entity The entity to save.
      */
     protected void beforeDelete(M entity) {
+    }
+
+    /**
+     * Method called before after is called.
+     *
+     * @param entity The entity to after.
+     */
+    protected void afterDelete(M entity) {
     }
 
     protected final List<String> queryForIds(SearchQuery searchQuery) {

@@ -32,7 +32,6 @@ public class DataServiceImpl implements DataService {
 
     private AmountTypeDao amountTypeDao;
 
-
     private Map<String, MetricType> metricTypeMap;
 
     @Autowired

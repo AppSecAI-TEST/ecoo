@@ -1,6 +1,9 @@
 package ecoo.service;
 
+import ecoo.data.Shipment;
 import ecoo.data.ShipmentActivityGroup;
+import ecoo.data.User;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -10,7 +13,11 @@ import java.util.List;
  */
 public interface ShipmentActivityGroupService extends CrudService<Integer, ShipmentActivityGroup> {
 
+    ShipmentActivityGroup recordActivity(User modifiedBy, DateTime dateModified, Shipment shipment);
+
+    ShipmentActivityGroup recordActivity(User modifiedBy, DateTime dateModified, Shipment shipment, String description);
+
     List<ShipmentActivityGroup> findShipmentActivityGroupsByShipmentId(Integer shipmentId);
 
-    List<ShipmentActivityGroup> buildAllHistory(Integer shipmentId);
+    List<ShipmentActivityGroup> buildHistoryWithStartOfShipment(Integer shipmentId);
 }
