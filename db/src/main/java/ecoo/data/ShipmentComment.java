@@ -96,7 +96,7 @@ public class ShipmentComment extends BaseModel<Integer> implements Serializable 
         if (this.dateCreated == null) return null;
         return TimeDescriptionBuilder.aTimeDescription()
                 .withStartTime(this.dateCreated)
-                .witEvaluationDate(DateTime.now())
+                .withEvaluationDate(DateTime.now())
                 .build();
     }
 

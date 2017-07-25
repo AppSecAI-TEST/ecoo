@@ -49,37 +49,22 @@ public class ShipmentSingleChangeBuilder {
             final List<ShipmentActivity> activities = shipmentDifferenceDetector.execute(firstShipment, shipment);
 
             return ShipmentActivityGroupBuilder
-                    .aShipmentActivityGroup(firstRevision, shipment.getPrimaryId())
+                    .aShipmentActivityGroup(modifiedBy,dateModified,shipment.getPrimaryId())
                     .withLines(activities)
                     .build();
         } else {
             final Iterator<Revision> iterator = revisions.keySet().iterator();
-            final Revision currentRevision = iterator.next();
-            return buildDifferenceWithLastRevision(revisions, iterator, currentRevision, shipment);
-        }
-    }
 
+            final Revision lastModifiedRevision = iterator.next();
+            final Shipment lastModifiedShipment = revisions.get(lastModifiedRevision);
 
-    private ShipmentActivityGroup buildDifferenceWithLastRevision(Map<Revision, Shipment> revisions
-            , Iterator<Revision> iterator, Revision currentRevision, Shipment lastShipment) {
-        if (iterator.hasNext()) {
-            final Revision lastRevision = iterator.next();
-            if (iterator.hasNext()) {
-                return buildDifferenceWithLastRevision(revisions, iterator, lastRevision, lastShipment);
+            final ShipmentDifferenceDetector shipmentDifferenceDetector = new ShipmentDifferenceDetector();
+            final List<ShipmentActivity> activities = shipmentDifferenceDetector.execute(lastModifiedShipment, shipment);
 
-            } else {
-                final Shipment secondLastShipment = revisions.get(currentRevision);
-
-                final ShipmentDifferenceDetector shipmentDifferenceDetector = new ShipmentDifferenceDetector();
-                final List<ShipmentActivity> activities = shipmentDifferenceDetector.execute(secondLastShipment, lastShipment);
-
-                return ShipmentActivityGroupBuilder
-                        .aShipmentActivityGroup(lastRevision, lastShipment.getPrimaryId())
-                        .withLines(activities)
-                        .build();
-            }
-        } else {
-            return null;
+            return ShipmentActivityGroupBuilder
+                    .aShipmentActivityGroup(modifiedBy,dateModified,shipment.getPrimaryId())
+                    .withLines(activities)
+                    .build();
         }
     }
 }

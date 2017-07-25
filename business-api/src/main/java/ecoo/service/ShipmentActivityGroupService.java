@@ -15,7 +15,9 @@ public interface ShipmentActivityGroupService extends CrudService<Integer, Shipm
 
     ShipmentActivityGroup recordActivity(User modifiedBy, DateTime dateModified, Shipment shipment);
 
-    ShipmentActivityGroup recordActivity(User modifiedBy, DateTime dateModified, Shipment shipment, String description);
+    ShipmentActivityGroup recordActivity(User modifiedBy, DateTime dateModified, Shipment shipment, String...description);
+
+    ShipmentActivityGroup recordActivity(User modifiedBy, DateTime dateModified, Integer shipmentId, String...description);
 
     List<ShipmentActivityGroup> findShipmentActivityGroupsByShipmentId(Integer shipmentId);
 

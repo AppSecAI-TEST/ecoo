@@ -1,6 +1,8 @@
 package ecoo.data;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import ecoo.builder.TimeDescriptionBuilder;
 import org.hibernate.annotations.Cascade;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -43,21 +45,6 @@ public class ShipmentActivityGroup extends BaseModel<Integer> implements Seriali
     @JoinColumn(name = "group_id")
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
     private List<ShipmentActivity> activities = new ArrayList<>();
-
-    public ShipmentActivityGroup(Integer userId, String displayName, Integer shipmentId, Date dateModified) {
-        this.userId = userId;
-        this.displayName = displayName;
-        this.shipmentId = shipmentId;
-        this.dateModified = dateModified;
-    }
-
-    public ShipmentActivityGroup(Integer userId, String displayName, Integer shipmentId, Date dateModified, List<ShipmentActivity> activities) {
-        this.userId = userId;
-        this.displayName = displayName;
-        this.shipmentId = shipmentId;
-        this.dateModified = dateModified;
-        this.activities = activities;
-    }
 
     @Override
     public Integer getPrimaryId() {
@@ -112,6 +99,13 @@ public class ShipmentActivityGroup extends BaseModel<Integer> implements Seriali
     @JsonIgnore
     public void addActivity(ShipmentActivity shipmentActivity) {
         this.activities.add(shipmentActivity);
+    }
+
+    @JsonGetter
+    public String getTimeDescription() {
+        return TimeDescriptionBuilder.aTimeDescription()
+                .withEvaluationDate(dateModified)
+                .build();
     }
 
     @Override

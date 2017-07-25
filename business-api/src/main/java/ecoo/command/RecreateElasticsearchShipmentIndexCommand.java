@@ -40,10 +40,14 @@ public class RecreateElasticsearchShipmentIndexCommand {
         if (elasticsearchTemplate.indexExists(PackingList.class)) {
             elasticsearchTemplate.deleteIndex(PackingList.class);
         }
+        if (elasticsearchTemplate.indexExists(ShipmentActivityGroup.class)) {
+            elasticsearchTemplate.deleteIndex(ShipmentActivityGroup.class);
+        }
         return elasticsearchTemplate.createIndex(Shipment.class)
                 && elasticsearchTemplate.createIndex(ShipmentComment.class)
                 && elasticsearchTemplate.createIndex(CommercialInvoice.class)
                 && elasticsearchTemplate.createIndex(CertificateOfOrigin.class)
-                && elasticsearchTemplate.createIndex(PackingList.class);
+                && elasticsearchTemplate.createIndex(PackingList.class)
+                && elasticsearchTemplate.createIndex(ShipmentActivityGroup.class);
     }
 }

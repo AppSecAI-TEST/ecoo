@@ -64,6 +64,8 @@ public abstract class JdbcTemplateService<P, M> implements CrudService<P, M> {
         beforeSave(entity);
 
         dao.mergeThenSave(entity);
+        afterDelete(entity);
+
         return entity;
     }
 
@@ -99,15 +101,11 @@ public abstract class JdbcTemplateService<P, M> implements CrudService<P, M> {
         }
 
         dao.deleteAll(entities);
-        return entities;
-    }
 
-    /**
-     * Method called before save is called.
-     *
-     * @param entity The entity to save.
-     */
-    protected void beforeSave(M entity) {
+        for (M entity : entities) {
+            afterDelete(entity);
+        }
+        return entities;
     }
 
     /**
@@ -123,6 +121,8 @@ public abstract class JdbcTemplateService<P, M> implements CrudService<P, M> {
         beforeDelete(entity);
 
         dao.delete(entity);
+        afterDelete(entity);
+        
         return entity;
     }
 
@@ -131,6 +131,31 @@ public abstract class JdbcTemplateService<P, M> implements CrudService<P, M> {
      *
      * @param entity The entity to save.
      */
+    protected void beforeSave(M entity) {
+    }
+
+    /**
+     * Method called before save is called.
+     *
+     * @param entity The entity to save.
+     */
     protected void beforeDelete(M entity) {
+    }
+
+    /**
+     * Method called before after is called.
+     *
+     * @param entity The entity to after.
+     */
+
+    protected void afterSave(M entity) {
+    }
+
+    /**
+     * Method called before after is called.
+     *
+     * @param entity The entity to after.
+     */
+    protected void afterDelete(M entity) {
     }
 }

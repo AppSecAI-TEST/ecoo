@@ -38,7 +38,8 @@ public class ShipmentAllChangesBuilder {
         final List<ShipmentActivityGroup> activityGroups = new ArrayList<>();
         if (revisions.keySet().size() == 1) {
             final Revision firstRevision = revisions.keySet().iterator().next();
-            activityGroups.add(ShipmentActivityGroupBuilder.aShipmentActivityGroup(firstRevision, shipmentId)
+            activityGroups.add(ShipmentActivityGroupBuilder.aShipmentActivityGroup(firstRevision.getModifiedBy()
+                    , firstRevision.getDateModified(), shipmentId)
                     .withLine(ShipmentActivityBuilder.aShipmentActivity()
                             .withDescr("Shipment created.")
                             .build())
@@ -57,7 +58,8 @@ public class ShipmentAllChangesBuilder {
         if (activityGroup.size() == 0) {
             final Shipment currentShipment = revisions.get(currentRevision);
             activityGroup.add(ShipmentActivityGroupBuilder
-                    .aShipmentActivityGroup(currentRevision, currentShipment.getPrimaryId())
+                    .aShipmentActivityGroup(currentRevision.getModifiedBy(), currentRevision.getDateModified()
+                            , currentShipment.getPrimaryId())
                     .withLine(ShipmentActivityBuilder.aShipmentActivity()
                             .withDescr("Shipment created.")
                             .build())
@@ -75,7 +77,8 @@ public class ShipmentAllChangesBuilder {
                 final List<ShipmentActivity> activities = shipmentDifferenceDetector.execute(currentShipment, otherShipment);
 
                 activityGroup.add(ShipmentActivityGroupBuilder
-                        .aShipmentActivityGroup(otherRevision, otherShipment.getPrimaryId())
+                        .aShipmentActivityGroup(otherRevision.getModifiedBy(), otherRevision.getDateModified()
+                                , otherShipment.getPrimaryId())
                         .withLines(activities)
                         .build());
 

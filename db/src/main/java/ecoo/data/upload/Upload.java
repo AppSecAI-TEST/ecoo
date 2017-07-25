@@ -187,7 +187,7 @@ public abstract class Upload extends BaseModel<Integer> implements RequiredUploa
         if (this.startTime == null || this.endTime == null) return "";
         return TimeDescriptionBuilder.aTimeDescription()
                 .withStartTime(this.startTime)
-                .witEvaluationDate(this.endTime)
+                .withEvaluationDate(this.endTime)
                 .build();
     }
 

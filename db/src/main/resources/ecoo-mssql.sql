@@ -1636,7 +1636,7 @@ CREATE TABLE [ecoo].[dbo].[shipment_comment](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[shipment_id] [int] NOT NULL,
 	[user_id] [int] NOT NULL,
-	[text] [varchar](max) NOT NULL,
+	[text] [varchar](1024) NOT NULL,
 	[date_created] [datetime] NOT NULL,
 CONSTRAINT [pk_shipment_comment] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
@@ -1998,7 +1998,7 @@ GO
 CREATE TABLE [ecoo].[dbo].[shipment_activity](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[group_id] int NULL,
-	[descr] [varchar](512) NOT NULL,
+	[descr] [varchar](1024) NOT NULL,
 CONSTRAINT [pk_shipment_activity] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]) ON [PRIMARY]
 GO
 

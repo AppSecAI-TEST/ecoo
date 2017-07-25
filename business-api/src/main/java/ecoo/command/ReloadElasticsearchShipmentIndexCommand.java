@@ -25,22 +25,29 @@ public class ReloadElasticsearchShipmentIndexCommand {
 
     private PackingListElasticsearchIndexLoader packingListElasticsearchIndexLoader;
 
+    private ShipmentActivityGroupElasticsearchIndexLoader shipmentActivityGroupElasticsearchIndexLoader;
+
     @Autowired
-    public ReloadElasticsearchShipmentIndexCommand(ShipmentElasticsearchIndexLoader shipmentElasticsearchIndexLoader, ShipmentCommentElasticsearchIndexLoader shipmentCommentElasticsearchIndexLoader, CommercialInvoiceElasticsearchIndexLoader commercialInvoiceElasticsearchIndexLoader, CertificateOfOriginElasticsearchIndexLoader certificateOfOriginElasticsearchIndexLoader, PackingListElasticsearchIndexLoader packingListElasticsearchIndexLoader) {
+    public ReloadElasticsearchShipmentIndexCommand(ShipmentElasticsearchIndexLoader shipmentElasticsearchIndexLoader, ShipmentCommentElasticsearchIndexLoader shipmentCommentElasticsearchIndexLoader, CommercialInvoiceElasticsearchIndexLoader commercialInvoiceElasticsearchIndexLoader, CertificateOfOriginElasticsearchIndexLoader certificateOfOriginElasticsearchIndexLoader, PackingListElasticsearchIndexLoader packingListElasticsearchIndexLoader
+            , ShipmentActivityGroupElasticsearchIndexLoader shipmentActivityGroupElasticsearchIndexLoader) {
         this.shipmentElasticsearchIndexLoader = shipmentElasticsearchIndexLoader;
         this.shipmentCommentElasticsearchIndexLoader = shipmentCommentElasticsearchIndexLoader;
         this.commercialInvoiceElasticsearchIndexLoader = commercialInvoiceElasticsearchIndexLoader;
         this.certificateOfOriginElasticsearchIndexLoader = certificateOfOriginElasticsearchIndexLoader;
         this.packingListElasticsearchIndexLoader = packingListElasticsearchIndexLoader;
+        this.shipmentActivityGroupElasticsearchIndexLoader = shipmentActivityGroupElasticsearchIndexLoader;
     }
 
     public int execute() {
         LOG.info("--- execute ---");
+
         final int count = shipmentElasticsearchIndexLoader.loadAll().size();
-        shipmentCommentElasticsearchIndexLoader.loadAll();
-        commercialInvoiceElasticsearchIndexLoader.loadAll();
-        certificateOfOriginElasticsearchIndexLoader.loadAll();
-        packingListElasticsearchIndexLoader.loadAll();
+
+        this.shipmentCommentElasticsearchIndexLoader.loadAll();
+        this.commercialInvoiceElasticsearchIndexLoader.loadAll();
+        this.certificateOfOriginElasticsearchIndexLoader.loadAll();
+        this.packingListElasticsearchIndexLoader.loadAll();
+        this.shipmentActivityGroupElasticsearchIndexLoader.loadAll();
         return count;
     }
 }

@@ -6,11 +6,13 @@ import ecoo.data.Shipment;
 import ecoo.data.ShipmentComment;
 import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
+import ecoo.service.ShipmentActivityGroupService;
 import ecoo.service.ShipmentCommentService;
 import ecoo.service.ShipmentService;
 import ecoo.service.UserService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +36,14 @@ public class MarkShipmentAsNeedsWorkTask implements JavaDelegate {
 
     private UserService userService;
 
+    private ShipmentActivityGroupService shipmentActivityGroupService;
+
     @Autowired
-    public MarkShipmentAsNeedsWorkTask(ShipmentService shipmentService, ShipmentCommentService shipmentCommentService, UserService userService) {
+    public MarkShipmentAsNeedsWorkTask(ShipmentService shipmentService, ShipmentCommentService shipmentCommentService, UserService userService, ShipmentActivityGroupService shipmentActivityGroupService) {
         this.shipmentService = shipmentService;
         this.shipmentCommentService = shipmentCommentService;
         this.userService = userService;
+        this.shipmentActivityGroupService = shipmentActivityGroupService;
     }
 
     @Override
@@ -57,6 +62,7 @@ public class MarkShipmentAsNeedsWorkTask implements JavaDelegate {
 
         final String comment = (String) delegateExecution.getVariable("comment");
         addComment(shipment, actionedBy, comment);
+        addActivity(shipment, actionedBy, comment);
     }
 
     private void saveShipment(Shipment shipment) {
@@ -73,5 +79,10 @@ public class MarkShipmentAsNeedsWorkTask implements JavaDelegate {
         shipmentComment.setDateCreated(new Date());
         shipmentCommentService.save(shipmentComment);
         log.info("Saving comment... {}", shipment);
+    }
+
+    private void addActivity(Shipment shipment, User assignee, String comment) {
+        shipmentActivityGroupService.recordActivity(assignee, DateTime.now(), shipment
+                , "Comment added.", comment);
     }
 }

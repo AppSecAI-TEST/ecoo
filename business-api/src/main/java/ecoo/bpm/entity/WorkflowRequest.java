@@ -75,7 +75,7 @@ public abstract class WorkflowRequest implements Serializable {
     public final String getDateCreatedTimeDescription() {
         if (dateCreatedTimeDescription == null && this.dateCreated != null) {
             dateCreatedTimeDescription = TimeDescriptionBuilder.aTimeDescription()
-                    .witEvaluationDate(this.dateCreated)
+                    .withEvaluationDate(this.dateCreated)
                     .build();
         }
         return dateCreatedTimeDescription;

@@ -61,7 +61,7 @@ public class TaskListRowBuilder {
 
     private String time() {
         return TimeDescriptionBuilder.aTimeDescription()
-                .witEvaluationDate(dateCreated)
+                .withEvaluationDate(dateCreated)
                 .build();
     }
 }

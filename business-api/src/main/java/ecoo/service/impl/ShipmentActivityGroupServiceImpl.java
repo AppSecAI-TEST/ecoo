@@ -4,10 +4,7 @@ import ecoo.audit.ShipmentAllChangesBuilder;
 import ecoo.audit.ShipmentSingleChangeBuilder;
 import ecoo.dao.ShipmentActivityGroupDao;
 import ecoo.dao.impl.es.ShipmentActivityGroupElasticsearchRepository;
-import ecoo.data.Shipment;
-import ecoo.data.ShipmentActivityBuilder;
-import ecoo.data.ShipmentActivityGroup;
-import ecoo.data.User;
+import ecoo.data.*;
 import ecoo.service.ShipmentActivityGroupService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +24,6 @@ import java.util.List;
 public class ShipmentActivityGroupServiceImpl extends ElasticsearchTemplateService<Integer, ShipmentActivityGroup>
         implements ShipmentActivityGroupService {
 
-    private ShipmentActivityGroupDao shipmentActivityGroupDao;
-
     private ShipmentActivityGroupElasticsearchRepository shipmentActivityGroupElasticsearchRepository;
 
     private ShipmentAllChangesBuilder shipmentAllChangesBuilder;
@@ -42,7 +37,6 @@ public class ShipmentActivityGroupServiceImpl extends ElasticsearchTemplateServi
             , ShipmentAllChangesBuilder shipmentAllChangesBuilder
             , ShipmentSingleChangeBuilder shipmentSingleChangeBuilder) {
         super(shipmentActivityGroupDao, shipmentActivityGroupElasticsearchRepository, elasticsearchTemplate);
-        this.shipmentActivityGroupDao = shipmentActivityGroupDao;
         this.shipmentActivityGroupElasticsearchRepository = shipmentActivityGroupElasticsearchRepository;
         this.shipmentAllChangesBuilder = shipmentAllChangesBuilder;
         this.shipmentSingleChangeBuilder = shipmentSingleChangeBuilder;
@@ -60,15 +54,21 @@ public class ShipmentActivityGroupServiceImpl extends ElasticsearchTemplateServi
 
     @Transactional
     @Override
-    public ShipmentActivityGroup recordActivity(User modifiedBy, DateTime dateModified, Shipment shipment, String description) {
-        final ShipmentActivityGroup shipmentActivityGroup = new ShipmentActivityGroup(modifiedBy.getPrimaryId(),
-                modifiedBy.getDisplayName(), shipment.getPrimaryId(), dateModified.toDate());
+    public ShipmentActivityGroup recordActivity(User modifiedBy, DateTime dateModified, Shipment shipment, String... description) {
+        return recordActivity(modifiedBy, dateModified, shipment.getPrimaryId(), description);
+    }
 
-        shipmentActivityGroup.addActivity(ShipmentActivityBuilder.aShipmentActivity()
-                .withDescr(description)
-                .build());
-
-        return save(shipmentActivityGroup);
+    @Transactional
+    @Override
+    public ShipmentActivityGroup recordActivity(User modifiedBy, DateTime dateModified, Integer shipmentId, String... description) {
+        final ShipmentActivityGroupBuilder shipmentActivityGroupBuilder = ShipmentActivityGroupBuilder.aShipmentActivityGroup(modifiedBy
+                , dateModified, shipmentId);
+        for (String text : description) {
+            shipmentActivityGroupBuilder.withLine(ShipmentActivityBuilder.aShipmentActivity()
+                    .withDescr(text)
+                    .build());
+        }
+        return save(shipmentActivityGroupBuilder.build());
     }
 
     @Transactional
@@ -76,7 +76,10 @@ public class ShipmentActivityGroupServiceImpl extends ElasticsearchTemplateServi
     public List<ShipmentActivityGroup> buildHistoryWithStartOfShipment(Integer shipmentId) {
         Assert.notNull(shipmentId, "The variable shipmentId cannot be null.");
 
-        shipmentActivityGroupDao.deleteAllActivitiesByShipment(shipmentId);
+        final List<ShipmentActivityGroup> oldActivityGroups = findShipmentActivityGroupsByShipmentId(shipmentId);
+        for (ShipmentActivityGroup oldActivityGroup : oldActivityGroups) {
+            delete(oldActivityGroup);
+        }
 
         final List<ShipmentActivityGroup> activityGroups = shipmentAllChangesBuilder.execute(shipmentId);
         saveAll(activityGroups);

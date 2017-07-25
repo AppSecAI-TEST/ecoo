@@ -106,7 +106,7 @@ public class Metric extends BaseModel<Integer> implements Serializable {
         if (this.lastUpdated == null) return null;
         final DateTime date = new DateTime().withMillis(this.lastUpdated.getTime());
         return TimeDescriptionBuilder.aTimeDescription()
-                .witEvaluationDate(date)
+                .withEvaluationDate(date)
                 .build();
     }
 

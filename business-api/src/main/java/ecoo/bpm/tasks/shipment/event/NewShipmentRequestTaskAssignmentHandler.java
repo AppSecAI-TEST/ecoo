@@ -2,18 +2,21 @@ package ecoo.bpm.tasks.shipment.event;
 
 import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.entity.NewShipmentRequest;
-import ecoo.data.*;
+import ecoo.data.Chamber;
+import ecoo.data.ChamberGroupIdentityFactory;
+import ecoo.data.Shipment;
+import ecoo.data.User;
 import ecoo.service.ChamberService;
+import ecoo.service.ShipmentActivityGroupService;
 import ecoo.service.ShipmentCommentService;
 import ecoo.service.UserService;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * @author Justin Rundle
@@ -31,11 +34,15 @@ public class NewShipmentRequestTaskAssignmentHandler implements TaskListener {
 
     private ChamberService chamberService;
 
+    private ShipmentActivityGroupService shipmentActivityGroupService;
+
     @Autowired
-    public NewShipmentRequestTaskAssignmentHandler(ShipmentCommentService shipmentCommentService, UserService userService, ChamberService chamberService) {
+    public NewShipmentRequestTaskAssignmentHandler(ShipmentCommentService shipmentCommentService
+            , UserService userService, ChamberService chamberService, ShipmentActivityGroupService shipmentActivityGroupService) {
         this.shipmentCommentService = shipmentCommentService;
         this.userService = userService;
         this.chamberService = chamberService;
+        this.shipmentActivityGroupService = shipmentActivityGroupService;
     }
 
     @Override
@@ -56,16 +63,11 @@ public class NewShipmentRequestTaskAssignmentHandler implements TaskListener {
 
     private void addComment(Shipment shipment) {
         final User requestedBy = userService.findById(shipment.getRequestedBy());
-
         final Chamber chamber = chamberService.findById(shipment.getChamberId());
 
-        final ShipmentComment shipmentComment = new ShipmentComment();
-        shipmentComment.setShipmentId(shipment.getPrimaryId());
-        shipmentComment.setUser(requestedBy);
-        shipmentComment.setText("SUBMITTED FOR APPROVAL TO " + chamber.getName());
-        shipmentComment.setDateCreated(new Date());
+        final String comment = "SUBMITTED FOR APPROVAL TO " + chamber.getName();
 
-        shipmentCommentService.save(shipmentComment);
-        log.info("Saving comment... {}", shipment);
+        shipmentCommentService.addComment(shipment.getPrimaryId(), requestedBy, comment);
+        shipmentActivityGroupService.recordActivity(requestedBy, DateTime.now(), shipment, comment);
     }
 }

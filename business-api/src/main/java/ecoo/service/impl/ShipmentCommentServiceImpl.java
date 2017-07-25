@@ -2,7 +2,6 @@ package ecoo.service.impl;
 
 import ecoo.dao.ShipmentCommentDao;
 import ecoo.dao.impl.es.ShipmentCommentElasticsearchRepository;
-import ecoo.data.Shipment;
 import ecoo.data.ShipmentComment;
 import ecoo.data.User;
 import ecoo.service.ShipmentCommentService;
@@ -39,6 +38,7 @@ public class ShipmentCommentServiceImpl extends ElasticsearchAuditTemplate<Integ
         shipmentComment.setShipmentId(shipmentId);
         shipmentComment.setUser(user);
         shipmentComment.setText(text);
+        shipmentComment.setDateCreated(new Date());
         return save(shipmentComment);
     }
 

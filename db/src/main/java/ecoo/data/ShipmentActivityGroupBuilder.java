@@ -1,6 +1,5 @@
 package ecoo.data;
 
-import ecoo.data.audit.Revision;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -24,13 +23,12 @@ public final class ShipmentActivityGroupBuilder {
         this.shipmentId = shipmentId;
     }
 
-    public static ShipmentActivityGroupBuilder aShipmentActivityGroup(Revision revision, Integer shipmentId) {
-        return new ShipmentActivityGroupBuilder(revision.getModifiedBy(), revision.getDateModified(), shipmentId);
-    }
-
-
     public static ShipmentActivityGroupBuilder aShipmentActivityGroup(User modifiedBy, DateTime dateModified, Integer shipmentId) {
         return new ShipmentActivityGroupBuilder(modifiedBy, dateModified.toDate(), shipmentId);
+    }
+
+    public static ShipmentActivityGroupBuilder aShipmentActivityGroup(User modifiedBy, Date dateModified, Integer shipmentId) {
+        return new ShipmentActivityGroupBuilder(modifiedBy, dateModified, shipmentId);
     }
 
     public ShipmentActivityGroupBuilder withLine(ShipmentActivity activity) {
@@ -45,8 +43,11 @@ public final class ShipmentActivityGroupBuilder {
 
     public ShipmentActivityGroup build() {
         if (activities == null || activities.isEmpty()) return null;
-        final ShipmentActivityGroup shipmentActivityGroup = new ShipmentActivityGroup(modifiedBy.getPrimaryId(),
-                modifiedBy.getDisplayName(), shipmentId, dateModified);
+        final ShipmentActivityGroup shipmentActivityGroup = new ShipmentActivityGroup();
+        shipmentActivityGroup.setUserId(modifiedBy.getPrimaryId());
+        shipmentActivityGroup.setDisplayName(modifiedBy.getDisplayName());
+        shipmentActivityGroup.setShipmentId(shipmentId);
+        shipmentActivityGroup.setDateModified(dateModified);
         shipmentActivityGroup.setActivities(activities);
         return shipmentActivityGroup;
     }

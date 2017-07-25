@@ -108,7 +108,7 @@ public class SystemJob extends BaseModel<Integer> {
             return "";
         } else {
             return TimeDescriptionBuilder.aTimeDescription()
-                    .witEvaluationDate(this.endTime)
+                    .withEvaluationDate(this.endTime)
                     .build();
         }
     }

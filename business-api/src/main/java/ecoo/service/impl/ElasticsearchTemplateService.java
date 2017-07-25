@@ -149,15 +149,6 @@ public abstract class ElasticsearchTemplateService<P extends Serializable
     }
 
     /**
-     * Method called before after is called.
-     *
-     * @param entity The entity to after.
-     */
-
-    protected void afterSave(M entity) {
-    }
-
-    /**
      * Method to delete all the given entities.
      *
      * @param entities The entities to delete.
@@ -199,6 +190,15 @@ public abstract class ElasticsearchTemplateService<P extends Serializable
      * @param entity The entity to save.
      */
     protected void beforeDelete(M entity) {
+    }
+
+    /**
+     * Method called before after is called.
+     *
+     * @param entity The entity to after.
+     */
+
+    protected void afterSave(M entity) {
     }
 
     /**

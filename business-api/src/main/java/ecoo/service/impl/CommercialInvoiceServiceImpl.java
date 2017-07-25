@@ -1,7 +1,6 @@
 package ecoo.service.impl;
 
 import ecoo.dao.CommercialInvoiceDao;
-import ecoo.dao.CommercialInvoiceLineDao;
 import ecoo.dao.impl.es.CommercialInvoiceElasticsearchRepository;
 import ecoo.data.CommercialInvoice;
 import ecoo.service.CommercialInvoiceService;
@@ -21,15 +20,11 @@ public class CommercialInvoiceServiceImpl extends ElasticsearchAuditTemplate<Int
         , CommercialInvoiceDao
         , CommercialInvoiceElasticsearchRepository> implements CommercialInvoiceService {
 
-    private CommercialInvoiceLineDao commercialInvoiceLineDao;
-
     @Autowired
     public CommercialInvoiceServiceImpl(CommercialInvoiceDao dao
             , @Qualifier("commercialInvoiceElasticsearchRepository") CommercialInvoiceElasticsearchRepository repository
-            , ElasticsearchTemplate elasticsearchTemplate
-            , CommercialInvoiceLineDao commercialInvoiceLineDao) {
+            , ElasticsearchTemplate elasticsearchTemplate) {
         super(dao, repository, elasticsearchTemplate);
-        this.commercialInvoiceLineDao = commercialInvoiceLineDao;
     }
 
     /**
@@ -49,5 +44,14 @@ public class CommercialInvoiceServiceImpl extends ElasticsearchAuditTemplate<Int
         entity.setNotifyPartyPhoneNo(StringUtils.stripToNull(entity.getNotifyPartyPhoneNo()));
         entity.setNotifyPartyEmail(StringUtils.stripToNull(entity.getNotifyPartyEmail()));
         entity.setPaymentInstruction(StringUtils.stripToNull(entity.getPaymentInstruction()));
+
+        // DEVNOTE: In time implement the ability to show the differences changed on the commercial invoice.
+//        final UserAuthentication authentication = (UserAuthentication) SecurityContextHolder
+//                .getContext().getAuthentication();
+//        final User currentUser = (User) authentication.getDetails();
+//        Assert.notNull(currentUser, "System cannot complete request. No security principle set.");
+//
+//        shipmentActivityGroupService.recordActivity(currentUser, DateTime.now(), entity.getPrimaryId()
+//                , "Commercial invoice amended.");
     }
 }

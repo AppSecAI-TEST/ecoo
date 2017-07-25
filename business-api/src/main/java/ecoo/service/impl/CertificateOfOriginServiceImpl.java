@@ -71,5 +71,14 @@ public class CertificateOfOriginServiceImpl extends ElasticsearchAuditTemplate<I
     @Override
     protected void beforeSave(CertificateOfOrigin entity) {
         entity.setRemarks(StringUtils.stripToNull(entity.getRemarks()));
+
+        // DEVNOTE: In time implement the ability to show the differences changed on the COO.
+//        final UserAuthentication authentication = (UserAuthentication) SecurityContextHolder
+//                .getContext().getAuthentication();
+//        final User currentUser = (User) authentication.getDetails();
+//        Assert.notNull(currentUser, "System cannot complete request. No security principle set.");
+//
+//        shipmentActivityGroupService.recordActivity(currentUser, DateTime.now(), entity.getPrimaryId()
+//                , "Certificate of origin amended.");
     }
 }
