@@ -173,7 +173,7 @@ public abstract class ElasticsearchTemplateService<P extends Serializable
      */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public final M delete(M entity) {
+    public M delete(M entity) {
         Assert.notNull(entity);
         beforeDelete(entity);
 

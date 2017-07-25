@@ -1599,7 +1599,7 @@ CREATE TABLE [dbo].[shipment_log](
 	[consignee_street] [varchar](100) NULL,
 	[consignee_city] [varchar](100) NULL,
 	[consignee_postcode] [varchar](100) NULL,
-	[consignee_province] [varchar](10) NULL,
+	[consignee_province] [varchar](100) NULL,
 	[consignee_country] [varchar](100) NULL,	
 	[buyer_name] [varchar](200) NULL,	
 	[buyer_building] [varchar](100) NULL,
