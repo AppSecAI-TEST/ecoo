@@ -4,6 +4,7 @@ import ecoo.data.Shipment;
 import ecoo.service.NotificationService;
 import ecoo.service.ShipmentService;
 import ecoo.ws.common.rest.BaseResource;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,12 @@ public class NotificationResource extends BaseResource {
         this.shipmentService = shipmentService;
     }
 
-    @RequestMapping(value = "/send/shipment/{shipmentId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/send" +
+            "/s/{smtpServer}" +
+            "/u/{smtpUser}" +
+            "/p/{smtpPwd}" +
+            "/d/{smtpDebug}" +
+            "/port/{smtpPort}", method = RequestMethod.GET)
     public ResponseEntity<Boolean> sendTestEmail(@PathVariable Integer shipmentId
             , @PathVariable String smtpServer
             , @PathVariable String smtpUser
@@ -53,15 +59,15 @@ public class NotificationResource extends BaseResource {
         Shipment shipment = shipmentService.findById(shipmentId);
 
         final MimeMessage newUserConfirmationEmail = notificationService.createShipmentNotification(shipment, "TEST");
-        sendDirectly(newUserConfirmationEmail, smtpServer
-                , smtpUser
-                , smtpPwd
-                , smtpDebug
-                , smtpPort);
-        
+        sendDirectly(newUserConfirmationEmail
+                , clean(smtpServer)
+                , clean(smtpUser)
+                , clean(smtpPwd)
+                , clean(smtpDebug)
+                , clean(smtpPort));
+
         return ResponseEntity.ok(true);
     }
-
 
     @SuppressWarnings("Duplicates")
     private void sendDirectly(MimeMessage mimeMessage, String smtpServer
@@ -70,6 +76,7 @@ public class NotificationResource extends BaseResource {
             , String smtpDebug
             , String smtpPort) {
         Assert.notNull(mimeMessage);
+
 
         final Properties properties = new Properties();
         properties.setProperty("mail.transport.protocol", "smtp");
@@ -127,5 +134,10 @@ public class NotificationResource extends BaseResource {
         } catch (final Throwable t) {
             LOG.warn(t.getMessage(), t);
         }
+    }
+
+    private String clean(String str) {
+        if (StringUtils.isBlank(str) || str.equalsIgnoreCase("NULL")) return "";
+        return str;
     }
 }
