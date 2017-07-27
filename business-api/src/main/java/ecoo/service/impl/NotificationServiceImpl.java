@@ -340,18 +340,18 @@ public final class NotificationServiceImpl implements NotificationService {
         } else {
             LOG.info(String.format("SMTP server set to %s >> send email.", smtpServer.getValue()));
 
-            final Feature smtpUser = featureService.findByName(Feature.Type.SMTP_USERNAME);
-            Assert.notNull(smtpUser, "SMTP_USERNAME not found.");
-            Assert.hasText(smtpUser.getValue(), "SMTP_USERNAME not found.");
+            final Feature smtpUserFeature = featureService.findByName(Feature.Type.SMTP_USERNAME);
+            Assert.notNull(smtpUserFeature, "SMTP_USERNAME not found.");
+            final String smtpUser = StringUtils.isBlank(smtpUserFeature.getValue()) ? "" :smtpUserFeature.getValue();
 
-            final Feature smtpPwd = featureService.findByName(Feature.Type.SMTP_PWD);
-            Assert.notNull(smtpPwd, "SMTP_PWD not found.");
-            Assert.hasText(smtpPwd.getValue(), "SMTP_PWD not found.");
+            final Feature smtpPwdFeature = featureService.findByName(Feature.Type.SMTP_PWD);
+            Assert.notNull(smtpPwdFeature, "SMTP_PWD not found.");
+            final String smtpPwd = StringUtils.isBlank(smtpPwdFeature.getValue()) ? "" :smtpPwdFeature.getValue();
 
-            final Feature smtpDebug = featureService.findByName(Feature.Type.SMTP_DEBUG);
-            Assert.notNull(smtpDebug, "SMTP_DEBUG not found.");
-            Assert.hasText(smtpDebug.getValue(), "SMTP_DEBUG not found.");
-
+            final Feature smtpDebugFeature = featureService.findByName(Feature.Type.SMTP_DEBUG);
+            Assert.notNull(smtpDebugFeature, "SMTP_DEBUG not found.");
+            final String smtpDebug = StringUtils.isBlank(smtpDebugFeature.getValue()) ? "false" :smtpDebugFeature.getValue();
+           
             final Feature smtpPort = featureService.findByName(Feature.Type.SMTP_PORT);
             Assert.notNull(smtpPort, "SMTP_PORT not found.");
             Assert.hasText(smtpPort.getValue(), "SMTP_PORT not found.");
@@ -361,15 +361,15 @@ public final class NotificationServiceImpl implements NotificationService {
             properties.setProperty("mail.host", smtpServer.getValue());
             properties.put("mail.smtp.auth", "true");
             properties.put("mail.smtp.starttls.enable", "true");
-            properties.put("mail.debug", smtpDebug.getValue());
+            properties.put("mail.debug", smtpDebug);
             properties.put("mail.smtp.port", smtpPort.getValue());
 
-            LOG.info(String.format("Using... {username=%s, password=%s}", smtpUser.getValue(), smtpPwd.getValue()));
+            LOG.info(String.format("Using... {username=%s, password=%s}", smtpUser, smtpPwd));
 
             final Session session = Session.getInstance(properties,
                     new javax.mail.Authenticator() {
                         protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication(smtpUser.getValue(), smtpPwd.getValue());
+                            return new PasswordAuthentication(smtpUser, smtpPwd);
                         }
                     });
             try {
