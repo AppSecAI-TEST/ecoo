@@ -45,6 +45,7 @@ public class NotificationResource extends BaseResource {
     }
 
     @RequestMapping(value = "/send" +
+            "/shipmentId/{shipmentId}" +
             "/s/{smtpServer}" +
             "/u/{smtpUser}" +
             "/p/{smtpPwd}" +
