@@ -87,14 +87,7 @@ public class NotificationResource extends BaseResource {
         properties.put("mail.debug", smtpDebug);
         properties.put("mail.smtp.port", smtpPort);
 
-        LOG.info(String.format("Using... {username=%s, password=%s}", smtpUser, smtpPwd));
-
-        final Session session = Session.getInstance(properties,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(smtpUser, smtpPwd);
-                    }
-                });
+        final Session session = Session.getInstance(properties);
         try {
             final StringBuilder recipients = new StringBuilder();
             for (Address a : mimeMessage.getRecipients(Message.RecipientType.TO)) {
@@ -109,7 +102,7 @@ public class NotificationResource extends BaseResource {
             }
 
             final String outgoingDisplayName = "ECOO Test";
-            Address sender = new InternetAddress(smtpUser, outgoingDisplayName);
+            Address sender = new InternetAddress("test@ecoo.co.za", outgoingDisplayName);
             mimeMessage.setFrom(sender);
 
             String messageId = mimeMessage.getMessageID();
