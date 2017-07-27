@@ -108,7 +108,7 @@ public class NotificationResource extends BaseResource {
                 mimeMessage.setSentDate(new Date());
             }
 
-            final String outgoingDisplayName = InetAddress.getLocalHost().getHostName();
+            final String outgoingDisplayName = "ECOO Test";
             Address sender = new InternetAddress(smtpUser, outgoingDisplayName);
             mimeMessage.setFrom(sender);
 
