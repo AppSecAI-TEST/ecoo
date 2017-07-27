@@ -388,7 +388,7 @@ public final class NotificationServiceImpl implements NotificationService {
                 final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
 
                 //final String serverName = InetAddress.getLocalHost().getHostName();
-                Address sender = new InternetAddress(smtpUser.getValue(), outgoingDisplayName.getValue());
+                Address sender = new InternetAddress("smartadmin@ecoo.co.za", outgoingDisplayName.getValue());
                 mimeMessage.setFrom(sender);
 
                 String messageId = mimeMessage.getMessageID();
