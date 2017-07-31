@@ -27,8 +27,8 @@ public class WorkflowRequestDescriptionBuilder {
                 final RegisterCompanyAccountRequest registerCompanyAccountRequest = (RegisterCompanyAccountRequest) workflowRequest;
                 final Company newCompany = registerCompanyAccountRequest.getCompany();
                 if (newCompany.isInStatus(CompanyStatus.PendingDocumentation)) {
-                    return String.format("Proof of company documents are required for company %s."
-                            , registerCompanyAccountRequest.getCompany().getName());
+                    return String.format("Proof of company registration and formal undertaking documents " +
+                            "are required for company %s.", registerCompanyAccountRequest.getCompany().getName());
 
                 } else {
                     return String.format("User %s is requesting new company %s."
@@ -43,7 +43,7 @@ public class WorkflowRequestDescriptionBuilder {
                             , user.getDisplayName());
 
                 } else {
-                    return String.format("User %s from %s is requesting membership to %s."
+                    return String.format("User %s from %s is requesting access to %s."
                             , user.getDisplayName()
                             , registerUserAccountRequest.getCompany().getName()
                             , registerUserAccountRequest.getChamber().getName());

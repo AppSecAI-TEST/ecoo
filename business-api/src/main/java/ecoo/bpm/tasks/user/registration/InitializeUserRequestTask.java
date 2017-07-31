@@ -4,6 +4,7 @@ import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.constants.UserRegistrationVariables;
 import ecoo.bpm.entity.RegisterUserAccountRequest;
 import ecoo.data.User;
+import ecoo.data.UserStatus;
 import ecoo.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -57,6 +58,9 @@ public class InitializeUserRequestTask implements JavaDelegate {
         final String plainTextPassword = request.getPlainTextPassword();
         userService.setPassword(user, plainTextPassword, false);
         delegateExecution.setVariable(UserRegistrationVariables.PLAIN_TEXT_PASSWORD.id(), plainTextPassword);
+
+        // Default status "Pending Documentation".
+        user.setStatus(UserStatus.PendingDocumentation.id());
 
         log.info("Attempting to save user... {}", user.toString());
         userService.save(user);

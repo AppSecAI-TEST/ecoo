@@ -530,9 +530,10 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
 
             final WorkflowRequest workflowRequest = (WorkflowRequest) runtimeService.getVariable(request.getProcessInstanceId()
                     , TaskVariables.REQUEST.variableName());
-            if (!Objects.equals(workflowRequest.getRequestingUser(), requestingUser)) {
-                throw new IllegalArgumentException("System cannot cancel task as the requesting user is not the owner of the task.");
-            }
+            // DEVNOTE: Not sure if this is needed.
+//            if(!requestingUser.hasRole(Role.ROLE_SYSADMIN) && !Objects.equals(workflowRequest.getRequestingUser(), requestingUser)) {
+//                throw new IllegalArgumentException("System cannot cancel task as the requesting user is not the owner of the task.");
+//            }
 
             final String message = String.format("Process %s requested to be cancelled by %s.", request.getProcessInstanceId()
                     , requestingUser.getDisplayName());
@@ -543,7 +544,7 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
     }
 
     @Transactional
-    private void cancelTaskAndUpdate(String processInstanceId, WorkflowRequest workflowRequest, String message) {
+    public void cancelTaskAndUpdate(String processInstanceId, WorkflowRequest workflowRequest, String message) {
         switch (workflowRequest.getType()) {
             case UserRegistration:
                 final RegisterUserAccountRequest registerUserAccountRequest = (RegisterUserAccountRequest) workflowRequest;

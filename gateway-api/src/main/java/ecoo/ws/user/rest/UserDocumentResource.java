@@ -39,6 +39,7 @@ public class UserDocumentResource extends BaseResource {
         this.userDocumentService = userDocumentService;
     }
 
+    @SuppressWarnings("Duplicates")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseEntity<UserDocument> create(@RequestBody CreateUserDocumentRequest createUserDocumentRequest) throws IOException {
         UserDocument userDocument = userDocumentService.findById(createUserDocumentRequest.getPrimaryId());

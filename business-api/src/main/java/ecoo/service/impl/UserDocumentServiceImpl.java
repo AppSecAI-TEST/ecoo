@@ -3,9 +3,12 @@ package ecoo.service.impl;
 import ecoo.dao.UserDocumentDao;
 import ecoo.data.UserDocument;
 import ecoo.service.UserDocumentService;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,5 +48,18 @@ public class UserDocumentServiceImpl extends AuditTemplate<Integer, UserDocument
     @Override
     public List<UserDocument> findByUser(Integer userId) {
         return userDocumentDao.findByUser(userId);
+    }
+
+    /**
+     * Method called before save is called.
+     *
+     * @param entity The entity to save.
+     */
+    @Override
+    protected void beforeSave(UserDocument entity) {
+        if(entity.isNew()) {
+            entity.setStartDate(new Date());
+            entity.setEndDate(DateTime.parse("99991231", DateTimeFormat.forPattern("yyyyMMdd")).toDate());
+        }
     }
 }
