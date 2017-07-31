@@ -5,7 +5,7 @@ package ecoo.data;
  * @since June 2017
  */
 public enum DocumentTypes {
-    CompanyLogo("L"), ProofOfCompanyRegistration("PCR");
+    CompanyLogo("L"), ProofOfCompanyRegistration("PCR"), FormalUndertaking("FU"), LetterOfAuthority("LOA");
 
     private String primaryId;
 

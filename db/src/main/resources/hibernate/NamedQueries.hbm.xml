@@ -3,6 +3,23 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
+    <sql-query name="FIND_DOCUMENT_BY_USER_AND_TYPE">
+        <return class="ecoo.data.UserDocument"/>
+        <![CDATA[
+            select distinct cd.* from dbo.user_doc cd with(nolock)
+            where cd.user_id = :userId
+            and cd.doc_type = :documentType
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_DOCUMENTS_BY_USER">
+        <return class="ecoo.data.UserDocument"/>
+        <![CDATA[
+            select distinct cd.* from dbo.user_doc cd with(nolock)
+            where cd.user_id = :userId
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_CI_LINES_BY_SHIPMENT">
         <return class="ecoo.data.CommercialInvoiceLine"/>
         <![CDATA[
