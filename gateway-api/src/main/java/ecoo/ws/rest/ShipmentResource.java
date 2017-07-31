@@ -96,34 +96,45 @@ public class ShipmentResource extends BaseResource {
     public ResponseEntity<Shipment> cancel(@RequestBody Shipment shipment) {
         Assert.notNull(shipment, "The variable shipment cannot be null.");
 
-        final ShipmentStatus shipmentStatus = ShipmentStatus.valueOfById(shipment.getStatus());
-        switch (shipmentStatus) {
-            case NewAndPendingSubmission:
-                shipment.setStatus(ShipmentStatus.Cancelled.id());
-                return save(shipment);
+        if (StringUtils.isBlank(shipment.getProcessInstanceId())) {
+            final ShipmentStatus shipmentStatus = ShipmentStatus.valueOfById(shipment.getStatus());
+            assert shipmentStatus != null;
 
-            case SubmittedAndPendingChamberApproval:
-                final String processInstanceId = shipment.getProcessInstanceId();
-                if (StringUtils.isBlank(processInstanceId)) {
+            switch (shipmentStatus) {
+                case NewAndPendingSubmission:
                     shipment.setStatus(ShipmentStatus.Cancelled.id());
-                    return ResponseEntity.ok(shipmentService.save(shipment));
+                    return save(shipment);
 
-                } else {
-                    final CancelTaskRequest cancelTaskRequest = new CancelTaskRequest();
-                    cancelTaskRequest.setProcessInstanceId(processInstanceId);
-                    cancelTaskRequest.setRequestingUserId(currentUser().getPrimaryId());
-
-                    final CancelTaskResponse cancelTaskResponse = workflowService.cancelTask(cancelTaskRequest);
-                    if (cancelTaskResponse == null) {
+                case SubmittedAndPendingChamberApproval:
+                    final String processInstanceId = shipment.getProcessInstanceId();
+                    if (StringUtils.isBlank(processInstanceId)) {
                         shipment.setStatus(ShipmentStatus.Cancelled.id());
                         return ResponseEntity.ok(shipmentService.save(shipment));
+
                     } else {
-                        return ResponseEntity.ok(shipmentService.findById(shipment.getPrimaryId()));
+                        final CancelTaskRequest cancelTaskRequest = new CancelTaskRequest();
+                        cancelTaskRequest.setProcessInstanceId(processInstanceId);
+                        cancelTaskRequest.setRequestingUserId(currentUser().getPrimaryId());
+
+                        final CancelTaskResponse cancelTaskResponse = workflowService.cancelTask(cancelTaskRequest);
+                        if (cancelTaskResponse == null) {
+                            shipment.setStatus(ShipmentStatus.Cancelled.id());
+                            return ResponseEntity.ok(shipmentService.save(shipment));
+                        } else {
+                            return ResponseEntity.ok(shipmentService.findById(shipment.getPrimaryId()));
+                        }
                     }
-                }
-            default:
-                throw new BusinessRuleViolationException(String.format("System cannot cancel shipment %s. " +
-                        "Shipment is in status %s and cannot be cancelled.", shipment.getPrimaryId(), shipmentStatus.name()));
+                default:
+                    throw new BusinessRuleViolationException(String.format("System cannot cancel shipment %s. " +
+                            "Shipment is in status %s and cannot be cancelled.", shipment.getPrimaryId(), shipmentStatus.name()));
+            }
+        } else {
+            final CancelTaskRequest cancelTaskRequest = new CancelTaskRequest();
+            cancelTaskRequest.setProcessInstanceId(shipment.getProcessInstanceId());
+            cancelTaskRequest.setRequestingUserId(currentUser().getPrimaryId());
+            workflowService.cancelTask(cancelTaskRequest);
+
+            return ResponseEntity.ok(shipmentService.findById(shipment.getPrimaryId()));
         }
     }
 
