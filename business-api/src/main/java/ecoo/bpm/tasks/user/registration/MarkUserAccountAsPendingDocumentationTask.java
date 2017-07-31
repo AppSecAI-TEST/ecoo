@@ -14,18 +14,18 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Justin Rundle
- * @since April 2017
+ * @since July 2017
  */
 @SuppressWarnings("unused")
 @Component
-public class MarkUserAccountAsPendingApprovalTask implements JavaDelegate {
+public class MarkUserAccountAsPendingDocumentationTask implements JavaDelegate {
 
-    private final Logger log = LoggerFactory.getLogger(MarkUserAccountAsPendingApprovalTask.class);
+    private final Logger log = LoggerFactory.getLogger(MarkUserAccountAsPendingDocumentationTask.class);
 
     private UserService userService;
 
     @Autowired
-    public MarkUserAccountAsPendingApprovalTask(UserService userService) {
+    public MarkUserAccountAsPendingDocumentationTask(UserService userService) {
         this.userService = userService;
     }
 
@@ -38,7 +38,7 @@ public class MarkUserAccountAsPendingApprovalTask implements JavaDelegate {
         request.setProcessInstanceId(delegateExecution.getProcessInstanceId());
 
         final User user = request.getUser();
-        user.setStatus(UserStatus.PendingApproval.id());
+        user.setStatus(UserStatus.PendingDocumentation.id());
 
         log.info("Attempting to save user... {}", user.toString());
         userService.save(user);

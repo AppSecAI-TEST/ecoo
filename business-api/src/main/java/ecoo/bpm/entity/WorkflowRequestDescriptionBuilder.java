@@ -1,8 +1,6 @@
 package ecoo.bpm.entity;
 
-import ecoo.data.Company;
-import ecoo.data.CompanyStatus;
-import ecoo.data.ShipmentStatus;
+import ecoo.data.*;
 
 /**
  * @author Justin Rundle
@@ -39,10 +37,17 @@ public class WorkflowRequestDescriptionBuilder {
                 }
             case UserRegistration:
                 final RegisterUserAccountRequest registerUserAccountRequest = (RegisterUserAccountRequest) workflowRequest;
-                return String.format("User %s from %s is requesting membership to %s."
-                        , registerUserAccountRequest.getUser().getDisplayName()
-                        , registerUserAccountRequest.getCompany().getName()
-                        , registerUserAccountRequest.getChamber().getName());
+                final User user = registerUserAccountRequest.getUser();
+                if (user.isInStatus(UserStatus.PendingDocumentation)) {
+                    return String.format("Letter of authority document required for user %s."
+                            , user.getDisplayName());
+
+                } else {
+                    return String.format("User %s from %s is requesting membership to %s."
+                            , user.getDisplayName()
+                            , registerUserAccountRequest.getCompany().getName()
+                            , registerUserAccountRequest.getChamber().getName());
+                }
             case NewShipmentRequest:
                 final NewShipmentRequest newShipmentRequest = (NewShipmentRequest) workflowRequest;
                 if (newShipmentRequest.getShipment().isInStatus(ShipmentStatus.SubmittedAndPendingChamberApproval)) {

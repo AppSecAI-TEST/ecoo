@@ -5,7 +5,7 @@ package ecoo.data;
  * @since April 2017
  */
 public enum UserStatus {
-    PendingApproval("PA"), Approved("A"), Declined("D");
+    PendingDocumentation("PD"), PendingApproval("PA"), Approved("A"), Declined("D");
 
     private String id;
 

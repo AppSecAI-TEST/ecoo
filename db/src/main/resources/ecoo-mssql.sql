@@ -1197,6 +1197,7 @@ ALTER TABLE [dbo].[user_acc] NOCHECK CONSTRAINT [fk_user_title]
 GO
 
 INSERT INTO "user_status" ("id", "descr") VALUES
+('PD', 'Pending Document'),
 ('PA', 'Pending Chamber Approval'),
 ('A', 'Approved'),
 ('D', 'Declined');

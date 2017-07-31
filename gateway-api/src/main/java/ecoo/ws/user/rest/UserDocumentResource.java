@@ -9,13 +9,19 @@ import ecoo.data.audit.Revision;
 import ecoo.service.UserDocumentService;
 import ecoo.ws.common.command.DownloadUserDocument;
 import ecoo.ws.common.rest.BaseResource;
+import ecoo.ws.user.rest.json.CreateUserDocumentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +37,44 @@ public class UserDocumentResource extends BaseResource {
     @Autowired
     public UserDocumentResource(UserDocumentService userDocumentService) {
         this.userDocumentService = userDocumentService;
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseEntity<UserDocument> create(@RequestBody CreateUserDocumentRequest createUserDocumentRequest) throws IOException {
+        UserDocument userDocument = userDocumentService.findById(createUserDocumentRequest.getPrimaryId());
+        if (userDocument == null) {
+            userDocument = userDocumentService.findByUserAndType(createUserDocumentRequest.getUserId()
+                    , createUserDocumentRequest.getDocumentType());
+            if (userDocument == null) {
+                userDocument = new UserDocument();
+                userDocument.setStartDate(new Date());
+            }
+        }
+        userDocument.setUserId(createUserDocumentRequest.getUserId());
+        userDocument.setDocumentType(createUserDocumentRequest.getDocumentType());
+
+        final File srcFile = new File(createUserDocumentRequest.getFileName());
+        userDocument.setFileName(srcFile.getName());
+
+        FileInputStream fis = null;
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            fis = new FileInputStream(srcFile);
+
+            byte[] buffer = new byte[102400];
+            int n;
+            while (-1 != (n = fis.read(buffer))) {
+                out.write(buffer, 0, n);
+            }
+            userDocument.setEncodedImage(Base64.getEncoder().encodeToString(out.toByteArray()));
+        } finally {
+            out.close();
+            if (fis != null) fis.close();
+        }
+        userDocument.setMimeType(createUserDocumentRequest.getMimeType());
+        userDocument.setSizeInKb(createUserDocumentRequest.getSizeInKb());
+
+        return ResponseEntity.ok(userDocumentService.save(userDocument));
     }
 
     @SuppressWarnings("unused")
