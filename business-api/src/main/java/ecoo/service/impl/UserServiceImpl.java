@@ -1,6 +1,7 @@
 package ecoo.service.impl;
 
 import ecoo.dao.ChamberAdminDao;
+import ecoo.dao.ChamberDao;
 import ecoo.dao.UserDao;
 import ecoo.dao.impl.es.UserElasticsearchRepository;
 import ecoo.data.*;
@@ -11,6 +12,8 @@ import ecoo.service.UserService;
 import ecoo.util.HashGenerator;
 import ecoo.validator.UserValidator;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,16 +54,20 @@ public class UserServiceImpl extends ElasticsearchAuditTemplate<Integer
 
     private ChamberAdminDao chamberAdminDao;
 
+    private ChamberDao chamberDao;
+
     @Autowired
     public UserServiceImpl(UserDao userDao, @Qualifier("userElasticsearchRepository") UserElasticsearchRepository userElasticsearchRepository
             , UserValidator userValidator
             , ElasticsearchTemplate elasticsearchTemplate
-            , ChamberAdminDao chamberAdminDao) {
+            , ChamberAdminDao chamberAdminDao
+            , ChamberDao chamberDao) {
         super(userDao, userElasticsearchRepository, elasticsearchTemplate);
         this.userDao = userDao;
         this.userValidator = userValidator;
         this.userElasticsearchRepository = userElasticsearchRepository;
         this.chamberAdminDao = chamberAdminDao;
+        this.chamberDao = chamberDao;
     }
 
     /**
@@ -334,6 +341,20 @@ public class UserServiceImpl extends ElasticsearchAuditTemplate<Integer
         }
 
         if (role.equals(Role.ROLE_SYSADMIN)) {
+            for (Chamber chamber : chamberDao.findAll()) {
+                ChamberAdmin chamberAdmin = chamberAdminDao.findByUserAndChamber(user.getPrimaryId(), chamber.getPrimaryId());
+                if (chamberAdmin == null) {
+                    chamberAdmin = new ChamberAdmin();
+                    chamberAdmin.setChamber(chamber);
+                    chamberAdmin.setUserId(user.getPrimaryId());
+                    chamberAdmin.setStartDate(new Date());
+                    chamberAdmin.setEndDate(DateTime.parse("99991231", DateTimeFormat.forPattern("yyyyMMdd")).toDate());
+                } else {
+                    chamberAdmin.setEndDate(DateTime.parse("99991231", DateTimeFormat.forPattern("yyyyMMdd")).toDate());
+                }
+                chamberAdminDao.save(chamberAdmin);
+            }
+
             final Collection<String> revokedRoles = new ArrayList<>();
             for (final UserRole userRole : new HashSet<>(user.getUserRoles())) {
                 revokedRoles.add(userRole.getRole());
@@ -349,6 +370,7 @@ public class UserServiceImpl extends ElasticsearchAuditTemplate<Integer
                 return new GrantRoleConfirmation(user, role, String.format("Role %s successfully granted to user %s and " +
                         "removed unnecessary roles %s.", role.name(), user.getDisplayName(), revokedRoles));
             }
+
 
         } else {
             user.getUserRoles().add(new UserRole(user.getPrimaryId(), role.name()));
@@ -388,6 +410,15 @@ public class UserServiceImpl extends ElasticsearchAuditTemplate<Integer
             if (userRole.getRole().equals(role.name())) {
                 user.getUserRoles().remove(userRole);
                 break;
+            }
+        }
+
+        if (role.equals(Role.ROLE_SYSADMIN)) {
+            for (Chamber chamber : chamberDao.findAll()) {
+                ChamberAdmin chamberAdmin = chamberAdminDao.findByUserAndChamber(user.getPrimaryId(), chamber.getPrimaryId());
+                if (chamberAdmin != null) {
+                    chamberAdminDao.delete(chamberAdmin);
+                }
             }
         }
         return save(user);

@@ -28,6 +28,20 @@ public class ChamberAdminDaoImpl extends BaseAuditLogDaoImpl<Integer, ChamberAdm
     public List<ChamberAdmin> findByUser(Integer userId) {
         Assert.notNull(userId, "The variable userId cannot be null.");
         return (List<ChamberAdmin>) getHibernateTemplate().findByNamedQueryAndNamedParam(
-                "FIND_CHAMBER_ADMIN_BY_USER","userId",userId);
+                "FIND_CHAMBER_ADMIN_BY_USER", "userId", userId);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ChamberAdmin findByUserAndChamber(Integer userId, Integer chamberId) {
+        Assert.notNull(userId, "The variable userId cannot be null.");
+        Assert.notNull(chamberId, "The variable chamberId cannot be null.");
+
+        final List<ChamberAdmin> data = (List<ChamberAdmin>) getHibernateTemplate().findByNamedQueryAndNamedParam(
+                "FIND_CHAMBER_ADMIN_BY_USER_AND_CHAMBER"
+                , new String[]{"userId", "chamberId"}
+                , new Object[]{userId, chamberId});
+        if (data.isEmpty()) return null;
+        return data.iterator().next();
     }
 }

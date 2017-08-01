@@ -11,4 +11,6 @@ import java.util.List;
 public interface ChamberAdminDao extends AuditLogDao<Integer, ChamberAdmin> {
 
     List<ChamberAdmin> findByUser(Integer userId);
+
+    ChamberAdmin findByUserAndChamber(Integer userId, Integer chamberId);
 }
