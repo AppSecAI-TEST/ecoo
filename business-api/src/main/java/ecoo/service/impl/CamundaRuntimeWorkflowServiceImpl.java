@@ -6,10 +6,7 @@ import ecoo.bpm.common.TaskDefinition;
 import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.constants.UserRegistrationVariables;
 import ecoo.bpm.entity.*;
-import ecoo.data.Feature;
-import ecoo.data.Shipment;
-import ecoo.data.ShipmentStatus;
-import ecoo.data.User;
+import ecoo.data.*;
 import ecoo.security.UserAuthentication;
 import ecoo.service.FeatureService;
 import ecoo.service.ShipmentService;
@@ -473,6 +470,8 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
     }
 
     private void assertTaskAssignment(String processInstanceId, Task task, User requestingUser) {
+        if(requestingUser.isInRole(Role.ROLE_SYSADMIN)) return;
+        
         final String taskAssignee = task.getAssignee();
         final String requestingUsername = requestingUser.getUsername();
         if (taskAssignee != null) {
@@ -496,7 +495,6 @@ public class CamundaRuntimeWorkflowServiceImpl implements WorkflowService {
                 if (StringUtils.isNotBlank(groupId)) {
                     groupIds.add(groupId);
                 }
-
             }
 
             LOG.info("Task groups <{}>, requesting user <{}>.", groupIds, requestingUser.getGroupIdentities());

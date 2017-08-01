@@ -1,6 +1,7 @@
 package ecoo.service;
 
 import ecoo.data.Chamber;
+import ecoo.data.Company;
 import ecoo.data.Shipment;
 import ecoo.data.User;
 import org.camunda.bpm.engine.delegate.DelegateTask;
@@ -14,7 +15,7 @@ import java.io.UnsupportedEncodingException;
  * @since July 2017
  */
 public interface NotificationService {
-    
+
     /**
      * Method used to send an email to notify user(s) of the shipment.
      *
@@ -46,9 +47,10 @@ public interface NotificationService {
      *
      * @param newUser The newly imported user.
      * @param chamber The chamber the application is sent to.
+     * @param company The company associated to the new user.
      * @return The message.
      */
-    MimeMessage createNewUserConfirmationEmail(User newUser, Chamber chamber) throws UnsupportedEncodingException, AddressException;
+    MimeMessage createNewUserConfirmationEmail(User newUser, Chamber chamber, Company company) throws UnsupportedEncodingException, AddressException;
 
     void send(MimeMessage mimeMessage);
 

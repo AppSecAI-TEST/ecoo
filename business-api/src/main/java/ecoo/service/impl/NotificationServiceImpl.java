@@ -47,13 +47,16 @@ public final class NotificationServiceImpl implements NotificationService {
 
     private ChamberService chamberService;
 
+    private ChamberDocumentService chamberDocumentService;
+
     @Autowired
-    public NotificationServiceImpl(VelocityEngine velocityEngine, FeatureService featureService, UserService userService, ShipmentCommentService shipmentCommentService, ChamberService chamberService) {
+    public NotificationServiceImpl(VelocityEngine velocityEngine, FeatureService featureService, UserService userService, ShipmentCommentService shipmentCommentService, ChamberService chamberService, ChamberDocumentService chamberDocumentService) {
         this.velocityEngine = velocityEngine;
         this.featureService = featureService;
         this.userService = userService;
         this.shipmentCommentService = shipmentCommentService;
         this.chamberService = chamberService;
+        this.chamberDocumentService = chamberDocumentService;
     }
 
     /**
@@ -228,20 +231,46 @@ public final class NotificationServiceImpl implements NotificationService {
      *
      * @param newUser The newly imported user.
      * @param chamber The chamber the application is sent to.
+     * @param company The company associated to the new user.
      * @return The message.
      * @throws IllegalArgumentException If newUser is null.
      */
     @Override
-    public MimeMessage createNewUserConfirmationEmail(User newUser, Chamber chamber) throws
+    public MimeMessage createNewUserConfirmationEmail(User newUser, Chamber chamber, Company company) throws
             UnsupportedEncodingException, AddressException {
         Assert.notNull(newUser, "The variable newUser cannot be null.");
         Assert.notNull(chamber, "The variable chamber cannot be null.");
+        Assert.notNull(company, "The variable chamber cannot be null.");
 
         final Set<User> suggestedRecipients = new HashSet<>();
         suggestedRecipients.add(newUser);
 
         final Feature nonProductionEmail = featureService.findByName(Feature.Type.NON_PRODUCTION_EMAIL);
         final Collection<InternetAddress> intendedRecipients = determineRecipient(suggestedRecipients, nonProductionEmail);
+
+        final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
+
+        final ChamberDocument letterOfAuthority = chamberDocumentService.findByChamberAndType(chamber.getPrimaryId()
+                , DocumentTypes.LetterOfAuthority.getPrimaryId());
+        Assert.notNull(letterOfAuthority, String.format("System cannot complete request. No letter of authority " +
+                "template found for chamber <%s>.", chamber.getName()));
+
+        final Feature gatewayUrl = featureService.findByName(Feature.Type.GATEWAY_URL);
+
+        // http://localhost:3331
+        final String letterOfAuthorityUrl = gatewayUrl.getValue() + "/api/chambers/docs/chamber/" + chamber.getPrimaryId()
+                + "/documentType/LOA/download";
+
+        final String formalUndertakingUrl;
+        if (StringUtils.isBlank(company.getStatus()) || company.isInStatus(CompanyStatus.PendingDocumentation)) {
+            formalUndertakingUrl = gatewayUrl.getValue() + "/api/chambers/docs/chamber/" + chamber.getPrimaryId()
+                    + "/documentType/FU/download";
+        } else {
+            formalUndertakingUrl = "";
+        }
+
+        final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
+        final String applicationLoginUrl = applicationRootUrl.getValue() + "#/login";
 
         return createMimeMessage0((MimeMessage mimeMessage) -> {
             final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
@@ -250,17 +279,14 @@ public final class NotificationServiceImpl implements NotificationService {
             final String subject = "Confirmation E-Mail";
             message.setSubject(subject);
 
-            final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
-            final Feature applicationRootUrl = featureService.findByName(Feature.Type.APPLICATION_ROOT_URL);
-
-            final String applicationLoginUrl = applicationRootUrl.getValue() + "#/login";
-
             final Map<String, Object> model = new HashMap<>();
             model.put("outgoingDisplayName", outgoingDisplayName.getValue().toUpperCase());
             model.put("applicationLoginUrl", applicationLoginUrl);
             model.put("displayName", newUser.getDisplayName());
             model.put("chamberName", chamber.getName());
             model.put("chamberEmail", chamber.getEmail());
+            model.put("letterOfAuthorityUrl", letterOfAuthorityUrl);
+            model.put("formalUndertakingUrl", formalUndertakingUrl);
 
             final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
                     "velocity/NewUserNotificationTemplate.vm", DEFAULT_ENCODING, model);
@@ -342,16 +368,16 @@ public final class NotificationServiceImpl implements NotificationService {
 
             final Feature smtpUserFeature = featureService.findByName(Feature.Type.SMTP_USERNAME);
             Assert.notNull(smtpUserFeature, "SMTP_USERNAME not found.");
-            final String smtpUser = StringUtils.isBlank(smtpUserFeature.getValue()) ? "" :smtpUserFeature.getValue();
+            final String smtpUser = StringUtils.isBlank(smtpUserFeature.getValue()) ? "" : smtpUserFeature.getValue();
 
             final Feature smtpPwdFeature = featureService.findByName(Feature.Type.SMTP_PWD);
             Assert.notNull(smtpPwdFeature, "SMTP_PWD not found.");
-            final String smtpPwd = StringUtils.isBlank(smtpPwdFeature.getValue()) ? "" :smtpPwdFeature.getValue();
+            final String smtpPwd = StringUtils.isBlank(smtpPwdFeature.getValue()) ? "" : smtpPwdFeature.getValue();
 
             final Feature smtpDebugFeature = featureService.findByName(Feature.Type.SMTP_DEBUG);
             Assert.notNull(smtpDebugFeature, "SMTP_DEBUG not found.");
-            final String smtpDebug = StringUtils.isBlank(smtpDebugFeature.getValue()) ? "false" :smtpDebugFeature.getValue();
-           
+            final String smtpDebug = StringUtils.isBlank(smtpDebugFeature.getValue()) ? "false" : smtpDebugFeature.getValue();
+
             final Feature smtpPort = featureService.findByName(Feature.Type.SMTP_PORT);
             Assert.notNull(smtpPort, "SMTP_PORT not found.");
             Assert.hasText(smtpPort.getValue(), "SMTP_PORT not found.");
@@ -386,9 +412,9 @@ public final class NotificationServiceImpl implements NotificationService {
                 }
 
                 final Feature outgoingDisplayName = featureService.findByName(Feature.Type.OUTGOING_DISPLAY_NAME);
+                final Feature outgoingEmail = featureService.findByName(Feature.Type.OUTGOING_EMAIL);
 
-                //final String serverName = InetAddress.getLocalHost().getHostName();
-                Address sender = new InternetAddress("smartadmin@ecoo.co.za", outgoingDisplayName.getValue());
+                Address sender = new InternetAddress(outgoingEmail.getValue(), outgoingDisplayName.getValue());
                 mimeMessage.setFrom(sender);
 
                 String messageId = mimeMessage.getMessageID();

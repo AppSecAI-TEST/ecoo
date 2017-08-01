@@ -115,7 +115,7 @@ public class QueryShipmentCommand {
                 break;
             // TODO: Need to define other columns.
             default:
-                property = "primaryId";
+                property = "";
                 break;
         }
 

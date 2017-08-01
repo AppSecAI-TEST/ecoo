@@ -3,6 +3,23 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
+    <sql-query name="FIND_DOCUMENT_BY_CHAMBER_AND_TYPE">
+        <return class="ecoo.data.ChamberDocument"/>
+        <![CDATA[
+            select distinct cd.* from dbo.chamber_doc cd with(nolock)
+            where cd.chamber_id = :chamberId
+            and cd.doc_type = :documentType
+	  	]]>
+    </sql-query>
+
+    <sql-query name="FIND_DOCUMENTS_BY_CHAMBER">
+        <return class="ecoo.data.ChamberDocument"/>
+        <![CDATA[
+            select distinct cd.* from dbo.chamber_doc cd with(nolock)
+            where cd.chamber_id = :chamberId
+	  	]]>
+    </sql-query>
+
     <sql-query name="FIND_DOCUMENT_BY_USER_AND_TYPE">
         <return class="ecoo.data.UserDocument"/>
         <![CDATA[

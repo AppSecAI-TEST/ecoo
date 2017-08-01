@@ -39,9 +39,10 @@ public class SendWelcomeEmailTask implements JavaDelegate {
             final User newUser = request.getUser();
             log.info(String.format("Attempting to send confirmation email to: %s", newUser.getPrimaryEmailAddress()));
 
-            final MimeMessage newUserConfirmationEmail = notificationService.createNewUserConfirmationEmail(newUser, request.getChamber());
+            final MimeMessage newUserConfirmationEmail = notificationService
+                    .createNewUserConfirmationEmail(newUser, request.getChamber(), request.getCompany());
             notificationService.send(newUserConfirmationEmail, false);
-            
+
         } catch (final Exception e) {
             log.error(e.getMessage(), e);
         }
