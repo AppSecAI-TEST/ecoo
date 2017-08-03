@@ -109,7 +109,7 @@ public class NotificationResource extends BaseResource {
             }
 
             final String outgoingDisplayName = "ECOO Test E-Mail";
-            Address sender = new InternetAddress(smtpUser, outgoingDisplayName);
+            Address sender = new InternetAddress(smtpServer, outgoingDisplayName);
             mimeMessage.setFrom(sender);
 
             String messageId = mimeMessage.getMessageID();
