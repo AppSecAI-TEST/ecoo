@@ -25,6 +25,7 @@ public final class CommercialInvoiceUploadDataRowMapper extends UploadDataRowMap
         data.setMarks(rs.getString("marks"));
         data.setProductCode(rs.getString("product_code"));
         data.setDescription(rs.getString("descr"));
+        data.setOrigin(rs.getString("origin"));
         data.setQuantity(rs.getString("qty"));
         data.setPrice(rs.getString("price"));
         data.setAmount(rs.getString("amount"));

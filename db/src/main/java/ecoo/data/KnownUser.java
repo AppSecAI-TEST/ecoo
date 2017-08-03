@@ -5,7 +5,7 @@ package ecoo.data;
  * @since April 2017
  */
 public enum KnownUser {
-    Anonymous(-99), SystemAccount(-98), BatchProcessorAccount(-97);
+    Anonymous(-99), SystemAccount(-98);
 
     private Integer primaryId;
 

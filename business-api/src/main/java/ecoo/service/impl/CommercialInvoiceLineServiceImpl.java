@@ -4,6 +4,7 @@ package ecoo.service.impl;
 import ecoo.dao.CommercialInvoiceLineDao;
 import ecoo.data.CommercialInvoiceLine;
 import ecoo.service.CommercialInvoiceLineService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,15 @@ public final class CommercialInvoiceLineServiceImpl extends AuditTemplate<Intege
     @Override
     public List<CommercialInvoiceLine> findByShipment(Integer shipmentId) {
         return commercialInvoiceLineDao.findByShipment(shipmentId);
+    }
+
+    /**
+     * Method called before save is called.
+     *
+     * @param entity The entity to save.
+     */
+    @Override
+    protected void beforeSave(CommercialInvoiceLine entity) {
+        entity.setOrigin(StringUtils.stripToNull(entity.getOrigin()));
     }
 }

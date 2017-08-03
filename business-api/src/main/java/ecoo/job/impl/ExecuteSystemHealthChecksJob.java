@@ -3,7 +3,6 @@ package ecoo.job.impl;
 import ecoo.command.ExecuteEndpointHealthCommand;
 import ecoo.job.BaseScheduledTask;
 import ecoo.service.SystemJobService;
-import ecoo.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,8 @@ public class ExecuteSystemHealthChecksJob extends BaseScheduledTask {
     private ExecuteEndpointHealthCommand executeEndpointHealthCommand;
 
     @Autowired
-    public ExecuteSystemHealthChecksJob(UserService userService, SystemJobService systemJobService, ExecuteEndpointHealthCommand executeEndpointHealthCommand) {
-        super(userService, systemJobService);
+    public ExecuteSystemHealthChecksJob(SystemJobService systemJobService, ExecuteEndpointHealthCommand executeEndpointHealthCommand) {
+        super(systemJobService);
         this.executeEndpointHealthCommand = executeEndpointHealthCommand;
     }
 

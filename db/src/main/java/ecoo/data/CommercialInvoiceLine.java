@@ -39,6 +39,10 @@ public class CommercialInvoiceLine extends BaseModel<Integer> implements Seriali
     @Audited
     private String descr;
 
+    @Column(name = "origin")
+    @Audited
+    private String origin;
+
     @Column(name = "qty")
     @Audited
     private BigDecimal qty;
@@ -103,6 +107,14 @@ public class CommercialInvoiceLine extends BaseModel<Integer> implements Seriali
         this.descr = descr;
     }
 
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
     public BigDecimal getQty() {
         return qty;
     }
@@ -135,6 +147,7 @@ public class CommercialInvoiceLine extends BaseModel<Integer> implements Seriali
                 ", marks='" + marks + '\'' +
                 ", productCode='" + productCode + '\'' +
                 ", descr='" + descr + '\'' +
+                ", origin='" + origin + '\'' +
                 ", qty=" + qty +
                 ", price=" + price +
                 ", amount=" + amount +

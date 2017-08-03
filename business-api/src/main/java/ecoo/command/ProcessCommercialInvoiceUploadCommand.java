@@ -48,6 +48,7 @@ public class ProcessCommercialInvoiceUploadCommand {
         commercialInvoiceLine.setMarks(clean(data.getMarks()));
         commercialInvoiceLine.setProductCode(clean(data.getProductCode()));
         commercialInvoiceLine.setDescr(clean(data.getDescription()));
+        commercialInvoiceLine.setOrigin(clean(data.getOrigin()));
         commercialInvoiceLine.setQty(new BigDecimal(data.getQuantity()));
         commercialInvoiceLine.setPrice(new BigDecimal(data.getPrice()));
         commercialInvoiceLine.setAmount(new BigDecimal(data.getAmount()));

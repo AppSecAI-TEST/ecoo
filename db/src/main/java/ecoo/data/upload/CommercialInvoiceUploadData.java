@@ -29,16 +29,20 @@ public final class CommercialInvoiceUploadData extends UploadData {
     @UploadField(fieldId = 4)
     private String description;
 
-    @Column(name = "qty")
+    @Column(name = "origin")
     @UploadField(fieldId = 5)
+    private String origin;
+
+    @Column(name = "qty")
+    @UploadField(fieldId = 6)
     private String quantity;
 
     @Column(name = "price")
-    @UploadField(fieldId = 6)
+    @UploadField(fieldId = 7)
     private String price;
 
     @Column(name = "amount")
-    @UploadField(fieldId = 7)
+    @UploadField(fieldId = 8)
     private String amount;
 
     /**
@@ -71,6 +75,14 @@ public final class CommercialInvoiceUploadData extends UploadData {
         this.description = description;
     }
 
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
     public String getQuantity() {
         return quantity;
     }
@@ -101,6 +113,7 @@ public final class CommercialInvoiceUploadData extends UploadData {
                 "marks='" + marks + '\'' +
                 ", productCode='" + productCode + '\'' +
                 ", description='" + description + '\'' +
+                ", origin='" + origin + '\'' +
                 ", quantity='" + quantity + '\'' +
                 ", price='" + price + '\'' +
                 ", amount='" + amount + '\'' +

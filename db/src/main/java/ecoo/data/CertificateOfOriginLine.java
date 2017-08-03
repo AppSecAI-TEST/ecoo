@@ -47,6 +47,14 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
     @Audited
     private BigDecimal price;
 
+    @Column(name = "amount")
+    @Audited
+    private BigDecimal amount;
+
+    @Column(name = "price_stated")
+    @Audited
+    private boolean priceStated;
+
     /**
      * Returns the unique identifier of the object.
      *
@@ -115,6 +123,22 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
         this.price = price;
     }
 
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public boolean isPriceStated() {
+        return priceStated;
+    }
+
+    public void setPriceStated(boolean priceStated) {
+        this.priceStated = priceStated;
+    }
+
     @Override
     public String toString() {
         return "CertificateOfOriginLine{" +
@@ -125,6 +149,8 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
                 ", origin='" + origin + '\'' +
                 ", qty=" + qty +
                 ", price=" + price +
+                ", amount=" + amount +
+                ", priceStated=" + priceStated +
                 '}';
     }
 }
