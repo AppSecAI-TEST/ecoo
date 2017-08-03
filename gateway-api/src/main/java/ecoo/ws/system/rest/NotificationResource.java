@@ -81,7 +81,7 @@ public class NotificationResource extends BaseResource {
 
         final Properties properties = new Properties();
         properties.setProperty("mail.transport.protocol", "smtp");
-        properties.setProperty("mail.host", smtpUser);
+        properties.setProperty("mail.host", smtpServer);
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.debug", smtpDebug);
