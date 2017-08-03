@@ -28,6 +28,7 @@ public final class CommercialInvoiceLineCloneBuilder {
         commercialInvoiceLine.setMarks(this.commercialInvoiceLine.getMarks());
         commercialInvoiceLine.setProductCode(this.commercialInvoiceLine.getProductCode());
         commercialInvoiceLine.setDescr(this.commercialInvoiceLine.getDescr());
+        commercialInvoiceLine.setOrigin(this.commercialInvoiceLine.getOrigin());
         commercialInvoiceLine.setQty(this.commercialInvoiceLine.getQty());
         commercialInvoiceLine.setPrice(this.commercialInvoiceLine.getPrice());
         commercialInvoiceLine.setAmount(this.commercialInvoiceLine.getAmount());

@@ -8,7 +8,6 @@ import ecoo.data.Shipment;
 import ecoo.data.User;
 import ecoo.service.ChamberService;
 import ecoo.service.ShipmentActivityGroupService;
-import ecoo.service.ShipmentCommentService;
 import ecoo.service.UserService;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
@@ -28,8 +27,6 @@ public class NewShipmentRequestTaskAssignmentHandler implements TaskListener {
 
     private final Logger log = LoggerFactory.getLogger(NewShipmentRequestTaskAssignmentHandler.class);
 
-    private ShipmentCommentService shipmentCommentService;
-
     private UserService userService;
 
     private ChamberService chamberService;
@@ -37,9 +34,7 @@ public class NewShipmentRequestTaskAssignmentHandler implements TaskListener {
     private ShipmentActivityGroupService shipmentActivityGroupService;
 
     @Autowired
-    public NewShipmentRequestTaskAssignmentHandler(ShipmentCommentService shipmentCommentService
-            , UserService userService, ChamberService chamberService, ShipmentActivityGroupService shipmentActivityGroupService) {
-        this.shipmentCommentService = shipmentCommentService;
+    public NewShipmentRequestTaskAssignmentHandler(UserService userService, ChamberService chamberService, ShipmentActivityGroupService shipmentActivityGroupService) {
         this.userService = userService;
         this.chamberService = chamberService;
         this.shipmentActivityGroupService = shipmentActivityGroupService;
@@ -58,16 +53,14 @@ public class NewShipmentRequestTaskAssignmentHandler implements TaskListener {
         log.info("Task to approve shipment {} assigned to candidate group associated to chambers {} <{}>."
                 , shipment.getPrimaryId(), shipment.getChamberId(), chamberGroupIdentity);
 
-        addComment(shipment);
+        recordActivity(shipment);
     }
 
-    private void addComment(Shipment shipment) {
+    private void recordActivity(Shipment shipment) {
         final User requestedBy = userService.findById(shipment.getRequestedBy());
         final Chamber chamber = chamberService.findById(shipment.getChamberId());
 
-        final String comment = "SUBMITTED FOR APPROVAL TO " + chamber.getName();
-
-        shipmentCommentService.addComment(shipment.getPrimaryId(), requestedBy, comment);
+        final String comment = "Submitted for approval to " + chamber.getName() + ".";
         shipmentActivityGroupService.recordActivity(requestedBy, DateTime.now(), shipment, comment);
     }
 }

@@ -2,6 +2,7 @@ package ecoo.command;
 
 import ecoo.data.*;
 import ecoo.service.*;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,17 +27,20 @@ public class CloneShipmentCommand {
 
     private CertificateOfOriginService certificateOfOriginService;
 
-    private ShipmentCommentService shipmentCommentService;
+    private ShipmentActivityGroupService shipmentActivityGroupService;
 
     @Autowired
-    public CloneShipmentCommand(ShipmentService shipmentService, CommercialInvoiceService commercialInvoiceService, CommercialInvoiceLineService commercialInvoiceLineService, CommercialInvoiceAmountService commercialInvoiceAmountService, ShipmentDocumentService shipmentDocumentService, CertificateOfOriginService certificateOfOriginService, ShipmentCommentService shipmentCommentService) {
+    public CloneShipmentCommand(ShipmentService shipmentService, CommercialInvoiceService commercialInvoiceService
+            , CommercialInvoiceLineService commercialInvoiceLineService, CommercialInvoiceAmountService commercialInvoiceAmountService
+            , ShipmentDocumentService shipmentDocumentService, CertificateOfOriginService certificateOfOriginService
+            , ShipmentActivityGroupService shipmentActivityGroupService) {
         this.shipmentService = shipmentService;
         this.commercialInvoiceService = commercialInvoiceService;
         this.commercialInvoiceLineService = commercialInvoiceLineService;
         this.commercialInvoiceAmountService = commercialInvoiceAmountService;
         this.shipmentDocumentService = shipmentDocumentService;
         this.certificateOfOriginService = certificateOfOriginService;
-        this.shipmentCommentService = shipmentCommentService;
+        this.shipmentActivityGroupService = shipmentActivityGroupService;
     }
 
     @Transactional
@@ -54,14 +58,14 @@ public class CloneShipmentCommand {
 
         cloneCommercialInvoice(shipmentId, shipmentCloneId);
         cloneCertificateOfOrigin(shipmentId, shipmentCloneId);
-        addComment(shipmentId, shipmentCloneId, requestedBy);
+        recordActivity(shipmentId, shipmentCloneId, requestedBy);
 
         return shipmentClone;
     }
 
-    private void addComment(Integer shipmentId, Integer shipmentCloneId, User requestedBy) {
-        shipmentCommentService.addComment(shipmentCloneId, requestedBy
-                , String.format("SHIPMENT CLONED FROM SHIPMENT #%s BY %s.", shipmentId, requestedBy.getDisplayName()));
+    private void recordActivity(Integer shipmentId, Integer shipmentCloneId, User requestedBy) {
+        final String message = String.format("Shipment cloned from shipment #%s.", shipmentId);
+        shipmentActivityGroupService.recordActivity(requestedBy, DateTime.now(), shipmentCloneId, message);
     }
 
     private Shipment cloneShipment(Shipment shipment, String newExporterReference, User requestedBy) {

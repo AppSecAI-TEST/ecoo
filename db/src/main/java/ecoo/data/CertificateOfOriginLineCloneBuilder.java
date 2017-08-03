@@ -29,6 +29,8 @@ public final class CertificateOfOriginLineCloneBuilder {
         certificateOfOriginLine.setOrigin(this.certificateOfOriginLine.getOrigin());
         certificateOfOriginLine.setQty(this.certificateOfOriginLine.getQty());
         certificateOfOriginLine.setPrice(this.certificateOfOriginLine.getPrice());
+        certificateOfOriginLine.setAmount(this.certificateOfOriginLine.getAmount());
+        certificateOfOriginLine.setPriceStated(this.certificateOfOriginLine.isPriceStated());
         return certificateOfOriginLine;
     }
 }

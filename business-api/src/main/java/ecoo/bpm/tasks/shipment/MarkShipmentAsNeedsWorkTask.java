@@ -3,7 +3,6 @@ package ecoo.bpm.tasks.shipment;
 import ecoo.bpm.constants.TaskVariables;
 import ecoo.bpm.entity.NewShipmentRequest;
 import ecoo.data.Shipment;
-import ecoo.data.ShipmentComment;
 import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
 import ecoo.service.ShipmentActivityGroupService;
@@ -17,8 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * @author Justin Rundle
@@ -62,7 +59,6 @@ public class MarkShipmentAsNeedsWorkTask implements JavaDelegate {
 
         final String comment = (String) delegateExecution.getVariable("comment");
         addComment(shipment, actionedBy, comment);
-        addActivity(shipment, actionedBy, comment);
     }
 
     private void saveShipment(Shipment shipment) {
@@ -72,16 +68,8 @@ public class MarkShipmentAsNeedsWorkTask implements JavaDelegate {
     }
 
     private void addComment(Shipment shipment, User assignee, String comment) {
-        final ShipmentComment shipmentComment = new ShipmentComment();
-        shipmentComment.setShipmentId(shipment.getPrimaryId());
-        shipmentComment.setUser(assignee);
-        shipmentComment.setText(comment);
-        shipmentComment.setDateCreated(new Date());
-        shipmentCommentService.save(shipmentComment);
-        log.info("Saving comment... {}", shipment);
-    }
+        shipmentCommentService.addComment(shipment.getPrimaryId(), assignee, comment);
 
-    private void addActivity(Shipment shipment, User assignee, String comment) {
         shipmentActivityGroupService.recordActivity(assignee, DateTime.now(), shipment
                 , "Comment added.", comment);
     }

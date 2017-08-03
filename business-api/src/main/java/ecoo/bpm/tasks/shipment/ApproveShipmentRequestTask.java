@@ -5,11 +5,12 @@ import ecoo.bpm.entity.NewShipmentRequest;
 import ecoo.data.Shipment;
 import ecoo.data.ShipmentStatus;
 import ecoo.data.User;
-import ecoo.service.ShipmentCommentService;
+import ecoo.service.ShipmentActivityGroupService;
 import ecoo.service.ShipmentService;
 import ecoo.service.UserService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,15 @@ public class ApproveShipmentRequestTask implements JavaDelegate {
 
     private ShipmentService shipmentService;
 
-    private ShipmentCommentService shipmentCommentService;
+    private ShipmentActivityGroupService shipmentActivityGroupService;
 
     private UserService userService;
 
     @Autowired
-    public ApproveShipmentRequestTask(ShipmentService shipmentService, ShipmentCommentService shipmentCommentService, UserService userService) {
+    public ApproveShipmentRequestTask(ShipmentService shipmentService, ShipmentActivityGroupService shipmentActivityGroupService
+            , UserService userService) {
         this.shipmentService = shipmentService;
-        this.shipmentCommentService = shipmentCommentService;
+        this.shipmentActivityGroupService = shipmentActivityGroupService;
         this.userService = userService;
     }
 
@@ -58,11 +60,12 @@ public class ApproveShipmentRequestTask implements JavaDelegate {
         shipmentService.save(shipment);
         log.info("Saving shipment... {}", shipment);
 
-        addComment(approvedBy, shipment);
+        recordActivity(approvedBy, shipment);
     }
 
-    private void addComment(Integer approvedBy, Shipment shipment) {
+    private void recordActivity(Integer approvedBy, Shipment shipment) {
         final User user = userService.findById(approvedBy);
-        shipmentCommentService.addComment(shipment.getPrimaryId(), user, "SHIPMENT APPROVED");
+        shipmentActivityGroupService.recordActivity(user, DateTime.now(), shipment.getPrimaryId()
+                , "Shipment approved.");
     }
 }

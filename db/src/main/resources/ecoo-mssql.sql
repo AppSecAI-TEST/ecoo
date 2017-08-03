@@ -2664,7 +2664,7 @@ INSERT INTO dbo.signature VALUES('66666','BRUCE','WAYNE','BATMAN','iVBORw0KGgoAA
 -- TEST
 UPDATE feature SET value='http://testmyspivadmin.dedicated.co.za/ecoo-ui/' WHERE name='APPLICATION_ROOT_URL'
 UPDATE feature SET value='http://testmyspivadmin.dedicated.co.za/camunda-cockpit/app/cockpit/default/#/dashboard' WHERE name='CAMUNDA_ADMIN_URL'
-UPDATE feature SET value='' WHERE name='SMTP_SERVER'
+UPDATE feature SET value='testmyspivadmin.dedicated.co.za' WHERE name='SMTP_SERVER'
 UPDATE feature SET value='' WHERE name='SMTP_USERNAME'
 UPDATE feature SET value='' WHERE name='SMTP_PWD'
 UPDATE feature SET value='false' WHERE name='SMTP_DEBUG'
@@ -2677,7 +2677,7 @@ UPDATE feature SET value='http://testmyspivadmin.dedicated.co.za/ecoo' WHERE nam
 -- LIVE
 UPDATE feature SET value='http://ecoo.co.za/ecoo-ui/' WHERE name='APPLICATION_ROOT_URL'
 UPDATE feature SET value='http://ecoo.co.za/camunda-cockpit/app/cockpit/default/#/dashboard' WHERE name='CAMUNDA_ADMIN_URL'
-UPDATE feature SET value='' WHERE name='SMTP_SERVER'
+UPDATE feature SET value='myspivadmin.dedicated.co.za' WHERE name='SMTP_SERVER'
 UPDATE feature SET value='' WHERE name='SMTP_USERNAME'
 UPDATE feature SET value='' WHERE name='SMTP_PWD'
 UPDATE feature SET value='false' WHERE name='SMTP_DEBUG'
