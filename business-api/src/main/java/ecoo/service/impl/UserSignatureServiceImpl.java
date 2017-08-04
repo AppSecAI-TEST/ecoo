@@ -33,6 +33,24 @@ public class UserSignatureServiceImpl extends AuditTemplate<Integer, UserSignatu
         this.signatureService = signatureService;
     }
 
+    @Override
+    public UserSignature findLatestSignatureByUser(Integer userId, DateTime effectiveDate) {
+        Assert.notNull(userId, "The variable userId cannot be null.");
+        Assert.notNull(effectiveDate, "The variable effectiveDate cannot be null.");
+
+        for (UserSignature userSignature : findByUser(userId)) {
+            final DateTime effectiveFrom = DateTime.now()
+                    .withMillis(userSignature.getEffectiveFrom().getTime());
+            final DateTime effectiveTo = DateTime.now()
+                    .withMillis(userSignature.getEffectiveTo().getTime());
+            
+            if (effectiveDate.isAfter(effectiveFrom) && effectiveDate.isBefore(effectiveTo)) {
+                return userSignature;
+            }
+        }
+        return null;
+    }
+
     @Transactional
     @Override
     public UserSignature assign(Integer userId, Signature signature) {

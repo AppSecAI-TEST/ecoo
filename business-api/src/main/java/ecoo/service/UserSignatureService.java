@@ -2,6 +2,7 @@ package ecoo.service;
 
 import ecoo.data.Signature;
 import ecoo.data.UserSignature;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -10,6 +11,8 @@ import java.util.List;
  * @since April 2017
  */
 public interface UserSignatureService extends CrudService<Integer, UserSignature>, AuditedModelAware<Integer, UserSignature> {
+
+    UserSignature findLatestSignatureByUser(Integer userId, DateTime effectiveDate);
 
     UserSignature assign(Integer userId, Signature signature);
 

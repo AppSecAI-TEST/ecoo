@@ -5,6 +5,7 @@ import ecoo.data.UserSignature;
 import ecoo.data.audit.Revision;
 import ecoo.service.UserSignatureService;
 import ecoo.ws.common.rest.BaseResource;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,11 @@ public class UserSignatureResource extends BaseResource {
     @Autowired
     public UserSignatureResource(UserSignatureService userSignatureService) {
         this.userSignatureService = userSignatureService;
+    }
+
+    @RequestMapping(value = "/user/{userId}/latest", method = RequestMethod.GET)
+    public ResponseEntity<UserSignature> findLatestSignatureByUser(@PathVariable Integer userId) {
+        return ResponseEntity.ok(userSignatureService.findLatestSignatureByUser(userId, DateTime.now()));
     }
 
     @RequestMapping(value = "/user/{userId}/assign", method = RequestMethod.POST)
