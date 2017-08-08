@@ -51,7 +51,7 @@ public class GenerateCommercialInvoiceTask implements JavaDelegate {
 
         final Shipment shipment = request.getShipment();
 
-        final File pdf = generateCommercialInvoicePdfCommand.execute(shipment);
+        final File pdf = generateCommercialInvoicePdfCommand.execute(shipment.getPrimaryId());
         log.info("Commercial invoice pdf created @ {}", pdf.getAbsolutePath());
 
         final ShipmentDocument shipmentDocument = new ShipmentDocument();

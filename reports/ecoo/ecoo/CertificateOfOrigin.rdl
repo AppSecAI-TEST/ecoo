@@ -691,7 +691,7 @@
                             </TextRun>
                           </TextRuns>
                           <Style>
-                            <TextAlign>Left</TextAlign>
+                            <TextAlign>Right</TextAlign>
                           </Style>
                         </Paragraph>
                       </Paragraphs>
@@ -1371,9 +1371,25 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Image Name="chamber_stamp">
+            <Source>Database</Source>
+            <Value>=First(Fields!stamp_src.Value, "chamber_stamp")</Value>
+            <MIMEType>image/png</MIMEType>
+            <Sizing>Fit</Sizing>
+            <Top>0.76512cm</Top>
+            <Left>4.83834cm</Left>
+            <Height>2.15936cm</Height>
+            <Width>4.53173cm</Width>
+            <ZIndex>8</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Image>
         </ReportItems>
         <KeepTogether>true</KeepTogether>
-        <Top>10.34436cm</Top>
+        <Top>11.29686cm</Top>
         <Left>0.05407cm</Left>
         <Height>3.64415cm</Height>
         <Width>15.59313cm</Width>
@@ -1977,8 +1993,70 @@
           </Border>
         </Style>
       </Rectangle>
+      <Textbox Name="id10">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="Total (" &amp; First(Fields!currency.Value, "shipment") &amp; "):"</Value>
+                <Style>
+                  <FontFamily>Calibri</FontFamily>
+                  <FontSize>6pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>id</rd:DefaultName>
+        <Top>4.0587in</Top>
+        <Left>3.57044in</Left>
+        <Height>0.15542in</Height>
+        <Width>1.50106in</Width>
+        <ZIndex>16</ZIndex>
+        <Style />
+      </Textbox>
+      <Textbox Name="id11">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=System.Math.ROUND(Sum(Fields!price.Value, "lines"), 2)</Value>
+                <Style>
+                  <FontFamily>Calibri</FontFamily>
+                  <FontSize>6pt</FontSize>
+                  <FontWeight>Normal</FontWeight>
+                  <Format>#,0.00</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>id</rd:DefaultName>
+        <Top>4.0587in</Top>
+        <Left>5.07148in</Left>
+        <Height>0.15542in</Height>
+        <Width>1.08883in</Width>
+        <ZIndex>17</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingRight>2pt</PaddingRight>
+        </Style>
+      </Textbox>
     </ReportItems>
-    <Height>14.24774cm</Height>
+    <Height>15.17378cm</Height>
     <Style />
   </Body>
   <Width>15.89925cm</Width>
@@ -2190,6 +2268,28 @@ where s.id = @shipmentId
         </Field>
         <Field Name="logo_src">
           <DataField>logo_src</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="chamber_stamp">
+      <Query>
+        <DataSourceName>ecoo</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@shipmentId">
+            <Value>=Parameters!shipmentId.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>select d.encoded_image stamp_src
+from shipment s with(nolock)
+inner join chamber_doc d with(nolock)
+	on d.chamber_id = s.chamber_id
+	and d.doc_type = 'CAS'
+where s.id = @shipmentId</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="stamp_src">
+          <DataField>stamp_src</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

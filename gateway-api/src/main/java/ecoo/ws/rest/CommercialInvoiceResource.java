@@ -1,18 +1,12 @@
 package ecoo.ws.rest;
 
-import ecoo.command.GenerateCooPdfCommand;
 import ecoo.data.CommercialInvoice;
-import ecoo.data.Shipment;
 import ecoo.data.audit.Revision;
 import ecoo.service.CommercialInvoiceService;
-import ecoo.service.ShipmentService;
 import ecoo.ws.common.rest.BaseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author Justin Rundle
@@ -24,22 +18,9 @@ public class CommercialInvoiceResource extends BaseResource {
 
     private CommercialInvoiceService commercialInvoiceService;
 
-    private ShipmentService shipmentService;
-
-    private GenerateCooPdfCommand generateCooPdfCommand;
-
     @Autowired
-    public CommercialInvoiceResource(CommercialInvoiceService commercialInvoiceService, ShipmentService shipmentService, GenerateCooPdfCommand generateCooPdfCommand) {
+    public CommercialInvoiceResource(CommercialInvoiceService commercialInvoiceService) {
         this.commercialInvoiceService = commercialInvoiceService;
-        this.shipmentService = shipmentService;
-        this.generateCooPdfCommand = generateCooPdfCommand;
-    }
-
-    @RequestMapping(value = "/shipment/{shipmentId}/generate", method = RequestMethod.GET)
-    public ResponseEntity<String> generateCooPdf(@PathVariable Integer shipmentId) throws IOException {
-        final Shipment shipment = shipmentService.findById(shipmentId);
-        final File pdf = generateCooPdfCommand.execute(shipment);
-        return ResponseEntity.ok(pdf.getAbsolutePath());
     }
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)

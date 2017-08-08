@@ -1,6 +1,5 @@
 package ecoo.command;
 
-import ecoo.data.Shipment;
 import ecoo.service.FeatureService;
 import ecoo.service.ReportService;
 import ecoo.util.FileUtils;
@@ -35,9 +34,10 @@ public class GenerateCooPdfCommand {
         this.featureService = featureService;
     }
 
-    public File execute(Shipment shipment) throws IOException {
+    @SuppressWarnings("Duplicates")
+    public File execute(Integer shipmentId) throws IOException {
         final Map<String, String> reportParameters = new HashMap<>();
-        reportParameters.put("shipmentId", shipment.getPrimaryId().toString());
+        reportParameters.put("shipmentId", shipmentId.toString());
 
         final byte[] content = reportService.execute("/ECOO/CertificateOfOrigin"
                 , reportParameters);
@@ -49,7 +49,7 @@ public class GenerateCooPdfCommand {
             LOG.info(String.format("Directory %s created.", targetDir.getAbsolutePath()));
         }
 
-        final String fileName = "CertificateOfOrigin-" + shipment.getPrimaryId() + ".pdf";
+        final String fileName = "CertificateOfOrigin-" + shipmentId + ".pdf";
         final File pdf = new File(targetDir.getAbsolutePath(), fileName);
 
         BufferedOutputStream stream = null;

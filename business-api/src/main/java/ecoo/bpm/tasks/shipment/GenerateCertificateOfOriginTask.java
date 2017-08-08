@@ -51,7 +51,7 @@ public class GenerateCertificateOfOriginTask implements JavaDelegate {
 
         final Shipment shipment = request.getShipment();
 
-        final File invoicePdf = generateCooPdfCommand.execute(shipment);
+        final File invoicePdf = generateCooPdfCommand.execute(shipment.getPrimaryId());
         log.info("Certificate Of Origin pdf created @ {}", invoicePdf.getAbsolutePath());
 
         final ShipmentDocument shipmentDocument = new ShipmentDocument();

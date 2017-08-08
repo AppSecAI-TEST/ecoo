@@ -3,6 +3,7 @@
 package ecoo.ws.rest;
 
 import ecoo.command.CompressFileSetCommand;
+import ecoo.command.ReGenerateShipmentPdfCommand;
 import ecoo.data.ShipmentDocument;
 import ecoo.data.audit.Revision;
 import ecoo.service.ShipmentDocumentService;
@@ -38,10 +39,19 @@ public class ShipmentDocumentResource extends BaseResource {
 
     private CompressFileSetCommand compressFileSetCommand;
 
+    private ReGenerateShipmentPdfCommand reGenerateShipmentPdfCommand;
+
     @Autowired
-    public ShipmentDocumentResource(ShipmentDocumentService shipmentDocumentService, CompressFileSetCommand compressFileSetCommand) {
+    public ShipmentDocumentResource(ShipmentDocumentService shipmentDocumentService, CompressFileSetCommand compressFileSetCommand, ReGenerateShipmentPdfCommand reGenerateShipmentPdfCommand) {
         this.shipmentDocumentService = shipmentDocumentService;
         this.compressFileSetCommand = compressFileSetCommand;
+        this.reGenerateShipmentPdfCommand = reGenerateShipmentPdfCommand;
+    }
+
+    @RequestMapping(value = "/shipment/{shipmentId}/regenerate", method = RequestMethod.POST)
+    public ResponseEntity<Integer> reGenerateShipmentPdfCommand(@PathVariable Integer shipmentId) throws IOException {
+        reGenerateShipmentPdfCommand.execute(shipmentId);
+        return ResponseEntity.ok(shipmentId);
     }
 
     @SuppressWarnings("unused")
