@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -38,25 +39,25 @@ public class SignatureResource extends BaseResource {
     @ProfileExecution
     @RequestMapping(value = "/bulk", method = RequestMethod.POST)
     public ResponseEntity<Signature[]> createBulk(@RequestBody Signature[] signatures) {
-        LOG.info(signatures.toString());
-        for (Signature signature : signatures) {
-              signature = signatureService.findByPersonalReference(signature.getPersonalRefValue());
-            if (signature == null) {
+        LOG.info(Arrays.toString(signatures));
+        for (final Signature signature : signatures) {
+               Signature otherSignature = signatureService.findByPersonalReference(signature.getPersonalRefValue());
+            if (otherSignature == null) {
                 LOG.info("No signature found for personalRef <{}> >> creating new entry.", signature.getPersonalRefValue());
-                signature = new Signature();
+                otherSignature = new Signature();
 
             } else {
                 LOG.info("Found signature for personalRef <{}> >> updating new entry {}.", signature.getPersonalRefValue()
                         , signature.getPrimaryId());
             }
 
-            signature.setPersonalRefValue(signature.getPersonalRefValue());
-            signature.setFirstName(signature.getFirstName());
-            signature.setLastName(signature.getLastName());
-            signature.setCompanyName(signature.getCompanyName());
-            signature.setEncodedImage(signature.getEncodedImage());
+            otherSignature.setPersonalRefValue(signature.getPersonalRefValue());
+            otherSignature.setFirstName(signature.getFirstName());
+            otherSignature.setLastName(signature.getLastName());
+            otherSignature.setCompanyName(signature.getCompanyName());
+            otherSignature.setEncodedImage(signature.getEncodedImage());
 
-            signatureService.save(signature);
+            signatureService.save(otherSignature);
         }
         return ResponseEntity.ok(signatures);
     }
