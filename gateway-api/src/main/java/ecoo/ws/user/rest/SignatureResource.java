@@ -37,7 +37,7 @@ public class SignatureResource extends BaseResource {
 
     @ProfileExecution
     @RequestMapping(value = "/bulk", method = RequestMethod.POST)
-    public ResponseEntity<Collection<Signature>> createBulk(@RequestBody Collection<Signature> signatures) {
+    public ResponseEntity<Signature[]> createBulk(@RequestBody Signature[] signatures) {
         LOG.info(signatures.toString());
         for (Signature signature : signatures) {
               signature = signatureService.findByPersonalReference(signature.getPersonalRefValue());
