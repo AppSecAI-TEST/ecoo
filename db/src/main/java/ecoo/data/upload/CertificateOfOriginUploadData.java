@@ -1,0 +1,122 @@
+package ecoo.data.upload;
+
+
+import ecoo.data.upload.annotation.UploadField;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * @author Justin Rundle
+ * @since August 2017
+ */
+@Entity
+@Table(name = "upload_coo_data")
+public final class CertificateOfOriginUploadData extends UploadData {
+
+    private static final long serialVersionUID = -3540534799082789005L;
+
+    @Column(name = "marks")
+    @UploadField(fieldId = 2)
+    private String marks;
+
+    @Column(name = "product_code")
+    @UploadField(fieldId = 3)
+    private String productCode;
+
+    @Column(name = "descr")
+    @UploadField(fieldId = 4)
+    private String description;
+
+    @Column(name = "origin")
+    @UploadField(fieldId = 5)
+    private String origin;
+
+    @Column(name = "qty")
+    @UploadField(fieldId = 6)
+    private String quantity;
+
+    @Column(name = "price")
+    @UploadField(fieldId = 7)
+    private String price;
+
+    @Column(name = "amount")
+    @UploadField(fieldId = 8)
+    private String amount;
+
+    /**
+     * Constructs a new {@link CertificateOfOriginUploadData} model object.
+     */
+    public CertificateOfOriginUploadData() {
+    }
+
+    public String getMarks() {
+        return marks;
+    }
+
+    public void setMarks(String marks) {
+        this.marks = marks;
+    }
+
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return "CertificateOfOriginUploadData{" +
+                "marks='" + marks + '\'' +
+                ", productCode='" + productCode + '\'' +
+                ", description='" + description + '\'' +
+                ", origin='" + origin + '\'' +
+                ", quantity='" + quantity + '\'' +
+                ", price='" + price + '\'' +
+                ", amount='" + amount + '\'' +
+                '}';
+    }
+}

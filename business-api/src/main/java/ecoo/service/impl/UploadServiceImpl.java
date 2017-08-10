@@ -1,6 +1,7 @@
 package ecoo.service.impl;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import ecoo.command.ProcessCertificateOfOriginUploadCommand;
 import ecoo.command.ProcessCommercialInvoiceUploadCommand;
 import ecoo.dao.*;
 import ecoo.data.User;
@@ -52,6 +53,8 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
 
     private ProcessCommercialInvoiceUploadCommand processCommercialInvoiceUploadCommand;
 
+    private ProcessCertificateOfOriginUploadCommand processCertificateOfOriginUploadCommand;
+
     @Autowired
     public UploadServiceImpl(UploadDao uploadDao
             , RequiredFieldMappingDao requiredFieldMappingDao
@@ -60,7 +63,8 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
             , UploadStatusDao uploadStatusDao
             , UploadTypeDao uploadTypeDao
             , FeatureService featureService
-            , ProcessCommercialInvoiceUploadCommand processCommercialInvoiceUploadCommand) {
+            , ProcessCommercialInvoiceUploadCommand processCommercialInvoiceUploadCommand
+            , ProcessCertificateOfOriginUploadCommand processCertificateOfOriginUploadCommand) {
         super(uploadDao);
         this.uploadDao = uploadDao;
         this.requiredFieldMappingDao = requiredFieldMappingDao;
@@ -70,6 +74,7 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
         this.uploadTypeDao = uploadTypeDao;
         this.featureService = featureService;
         this.processCommercialInvoiceUploadCommand = processCommercialInvoiceUploadCommand;
+        this.processCertificateOfOriginUploadCommand = processCertificateOfOriginUploadCommand;
     }
 
     /**
@@ -120,6 +125,9 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
                 case COMMERCIAL_INVOICE:
                     processCommercialInvoiceUpload(anUpload);
                     break;
+                case CERTIFICATE_OF_ORIGIN:
+                    processCertificateOfOriginUpload(anUpload);
+                    break;
                 default:
                     throw new IllegalArgumentException(String.format("Upload type %s not supported.", anUpload.getUploadType()));
             }
@@ -130,7 +138,7 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
         }
     }
 
-
+    @SuppressWarnings("Duplicates")
     private void processCommercialInvoiceUpload(final Upload anUpload) {
         final Collection<UploadData> data = uploadDataDao.findUploadDataByStatus(anUpload
                 , UploadStatus.Status.ParsingSuccessful
@@ -190,6 +198,41 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
             markUploadAsCompleted(anUpload);
 
         } catch (InterruptedException e) {
+            anUpload.setComment(e.getMessage());
+            updateStatus(anUpload, UploadStatus.Status.UploadFailed);
+        }
+    }
+
+    @SuppressWarnings("Duplicates")
+    private void processCertificateOfOriginUpload(final Upload anUpload) {
+        final Collection<UploadData> data = uploadDataDao.findUploadDataByStatus(anUpload
+                , UploadStatus.Status.ParsingSuccessful
+                , UploadStatus.Status.ParsingFailed
+                , UploadStatus.Status.UploadFailed
+                , UploadStatus.Status.UploadSuccessful
+                , UploadStatus.Status.UploadPartial);
+
+        final int totalSize = data.size();
+
+        Collection<CertificateOfOriginUploadData> certificateOfOriginUploadData = new ArrayList<>();
+        for (UploadData d : data) {
+            certificateOfOriginUploadData.add((CertificateOfOriginUploadData) d);
+        }
+        processCertificateOfOriginUploadCommand.execute(anUpload, certificateOfOriginUploadData);
+
+        final double percentage = Math.floor((totalSize / (double) totalSize) * 100d);
+        final String message = String.format("Processed %s of %s coo lines (%s%%)"
+                , totalSize, totalSize, percentage);
+
+        anUpload.setComment(message);
+        update(anUpload);
+
+        LOG.info(message);
+
+        try {
+            markUploadAsCompleted(anUpload);
+
+        } catch (Exception e) {
             anUpload.setComment(e.getMessage());
             updateStatus(anUpload, UploadStatus.Status.UploadFailed);
         }
@@ -330,8 +373,8 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
             LOG.debug(String.format("\tAbout to export a total of %s records.", dataToExport.size()));
 
             // Get the required fields for the column headings and ordering.
-            final Collection<RequiredField> requiredFieldData = new TreeSet<>((o1, o2) ->
-                    Integer.valueOf(o1.getExportOrder()).compareTo(o2.getExportOrder()));
+            final Collection<RequiredField> requiredFieldData = new TreeSet<>(Comparator
+                    .comparingInt(RequiredField::getExportOrder));
             requiredFieldData.addAll(anUpload.getRequiredFields());
 
             final List<List<String>> rowData = new ArrayList<>();
@@ -517,7 +560,7 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    private void updateStatus(Upload upload, UploadStatus.Status status) {
+    void updateStatus(Upload upload, UploadStatus.Status status) {
         upload.setStatus(status.getPrimaryId());
         uploadDao.save(upload);
     }
@@ -534,7 +577,7 @@ public class UploadServiceImpl extends JdbcTemplateService<Integer, Upload> impl
         csvFile.setMapping(anUpload.getMapping());
 
         final Map<RequiredField, CsvFile.CsvColumn> columnExportMap = new TreeMap<>(
-                (o1, o2) -> Integer.valueOf(o1.getExportOrder()).compareTo(o2.getExportOrder()));
+                Comparator.comparingInt(RequiredField::getExportOrder));
 
         // Find all the CSVColumn that needs to be export and also the order of required export.
         for (final RequiredFieldMappingItem item : anUpload.getMapping().getMappingItems()) {

@@ -48,6 +48,8 @@ public class NewUploadRequestToImportConverter implements Converter<NewUploadReq
         switch (uploadType) {
             case COMMERCIAL_INVOICE:
                 return new CommercialInvoiceUpload();
+            case CERTIFICATE_OF_ORIGIN:
+                return new CertificateOfOriginUpload();
             default:
                 throw new DataIntegrityViolationException(String.format("No upload class "
                         + "defined for upload type \"%s\".", uploadType.name()));

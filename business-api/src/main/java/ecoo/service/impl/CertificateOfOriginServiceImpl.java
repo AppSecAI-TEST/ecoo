@@ -37,10 +37,10 @@ public class CertificateOfOriginServiceImpl extends ElasticsearchAuditTemplate<I
 
     @Transactional
     @Override
-    public CertificateOfOrigin delete(CertificateOfOriginLine line) {
+    public CertificateOfOrigin delete(CertificateOfOrigin certificateOfOrigin, CertificateOfOriginLine line) {
+        Assert.notNull(certificateOfOrigin, "The variable certificateOfOrigin cannot be null.");
         Assert.notNull(line, "The variable line cannot be null.");
 
-        final CertificateOfOrigin certificateOfOrigin = findById(line.getParentId());
         certificateOfOrigin.getLines().remove(line);
 
         return save(certificateOfOrigin);

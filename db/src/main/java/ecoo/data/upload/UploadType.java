@@ -9,12 +9,14 @@ import java.util.Date;
  * @author Justin Rundle
  * @since April 2017
  */
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "upload_type")
 public class UploadType extends BaseModel<String> {
 
     private static final long serialVersionUID = 1809987591875854813L;
 
+    @SuppressWarnings("unused")
     public enum Type {
         COMMERCIAL_INVOICE("CI"
                 , "commercial_invoice.xml"
@@ -25,7 +27,19 @@ public class UploadType extends BaseModel<String> {
                 , CommercialInvoiceUploadData.class
                 , "commercial_invoice.csv"
                 , "d.product_code, d.marks"
-                , "Commercial Invoice");
+                , "Commercial Invoice"),
+
+
+        CERTIFICATE_OF_ORIGIN("COO"
+                , "coo.xml"
+                , "dbo.upload_csv_coo"
+                , "dbo.upload_parse_coo"
+                , "dbo.upload_coo_data"
+                , new CertificateOfOriginUploadDataRowMapper()
+                , CertificateOfOriginUploadData.class
+                , "coo.csv"
+                , "d.product_code, d.marks"
+                , "Certificate Of Origin");
 
         private String primaryId;
         private String xmlFormatFileName;

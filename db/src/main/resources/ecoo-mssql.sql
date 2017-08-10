@@ -1833,7 +1833,7 @@ CREATE TABLE [ecoo].[dbo].[doc_comm_inv_ln](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[parent_id] [int] NULL,
 	[marks] [varchar](50) NOT NULL,
-	[product_code] [varchar](50) NOT NULL,
+	[product_code] [varchar](100) NOT NULL,
 	[descr] [varchar](100) NOT NULL,
 	[origin] [varchar](200) NULL,
 	[qty] [decimal](19,4)  NOT NULL,
@@ -1851,7 +1851,7 @@ CREATE TABLE [dbo].[doc_comm_inv_ln_log](
 	[id] [int] NOT NULL,
 	[parent_id] [int] NULL,
 	[marks] [varchar](50) NULL,
-	[product_code] [varchar](50) NULL,
+	[product_code] [varchar](100) NULL,
 	[descr] [varchar](100) NULL,
 	[origin] [varchar](200) NULL,
 	[qty] [decimal](19,4) NULL,
@@ -1995,6 +1995,7 @@ CREATE TABLE [ecoo].[dbo].[doc_coo_ln](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[parent_id] [int] NULL,
 	[marks] [varchar](50) NOT NULL,
+	[product_code] [varchar](100) NULL,
 	[descr] [varchar](100) NOT NULL,
 	[origin] [varchar](200) NOT NULL,
 	[qty] [decimal](19,4)  NOT NULL,
@@ -2014,6 +2015,7 @@ CREATE TABLE [dbo].[doc_coo_ln_log](
 	[id] [int] NOT NULL,
 	[parent_id] [int] NULL,
 	[marks] [varchar](50) NULL,
+	[product_code] [varchar](100) NULL,
 	[descr] [varchar](100) NULL,
 	[origin] [varchar](200) NULL,
 	[qty] [decimal](19,4) NULL,
@@ -2037,7 +2039,7 @@ GO
 CREATE TABLE [ecoo].[dbo].[doc_pack_list](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[shipment_id] [int] NOT NULL,
-	[product_code] [varchar](50) NULL,
+	[product_code] [varchar](100) NULL,
 	[descr] [varchar](100) NULL,
 	[qty] [tinyint] NOT NULL,
 	[net_weight] [decimal](19,4) NOT NULL,
@@ -2054,7 +2056,7 @@ CREATE TABLE [dbo].[doc_pack_list_log](
 	[revType] tinyint NOT NULL,
 	[id] [int] NOT NULL,
 	[shipment_id] [int] NULL,
-	[product_code] [varchar](50) NULL,
+	[product_code] [varchar](100) NULL,
 	[descr] [varchar](100) NULL,
 	[qty] [tinyint] NULL,
 	[net_weight] [decimal](19,4) NULL,
@@ -2115,9 +2117,15 @@ CREATE TABLE [dbo].[upload_type](
 	[Name] ASC
 )WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 85) ON [PRIMARY]
 ) ON [PRIMARY]
-
 GO
 
+INSERT INTO [ecoo].[dbo].[upload_type]
+           ([id]
+           ,[name]
+           ,[last_upload_date])
+VALUES('CI','COMMERCIAL INVOICE',NULL),
+('COO','CERTIFICATE OF ORIGIN',NULL)
+GO
 
 CREATE TABLE [dbo].[upload_status](
 	[id] [tinyint] NOT NULL,
@@ -2170,7 +2178,7 @@ ALTER TABLE [dbo].[upload_map_detail] CHECK CONSTRAINT [fk_upload_map_detail_upl
 GO
 
 
-INSERT INTO upload_map VALUES('CI','DEFAULT',1)
+INSERT INTO upload_map VALUES('CI','DEFAULT_CI',1)
 GO
 
 INSERT INTO upload_map_detail VALUES(1,0,'marks'),
@@ -2180,6 +2188,18 @@ INSERT INTO upload_map_detail VALUES(1,0,'marks'),
 (1,4,'qty'),
 (1,5,'price'),
 (1,6,'amount')
+GO
+
+INSERT INTO upload_map VALUES('COO','DEFAULT_COO',1)
+GO
+
+INSERT INTO upload_map_detail VALUES(2,0,'marks'),
+(2,1,'product_code'),
+(2,2,'descr'),
+(2,3,'origin'),
+(2,4,'qty'),
+(2,5,'price'),
+(2,6,'amount')
 GO
 
 CREATE TABLE [dbo].[upload](
@@ -2213,14 +2233,6 @@ ALTER TABLE [dbo].[upload]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_shipment] FO
 ALTER TABLE [dbo].[upload] CHECK CONSTRAINT [fk_upload_shipment]
 GO
 
-INSERT INTO [ecoo].[dbo].[upload_type]
-           ([id]
-           ,[name]
-           ,[last_upload_date])
-VALUES('CI','COMMERCIAL INVOICE',NULL),
-('COO','CERTIFICATE OF ORIGIN',NULL)
-GO
-
 INSERT INTO [ecoo].[dbo].[upload_status]
            ([id]
            ,[descr])
@@ -2243,6 +2255,9 @@ VALUES (1,'Running'),
 (17,'Queued')
 GO
 
+-- =====================================================================================
+-- UPLOAD: COMMERCIAL INVOICE
+-- =====================================================================================
 CREATE TABLE [dbo].[upload_commercial_invoice_data](
 	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[upload_id] [bigint] NOT NULL,
@@ -2257,7 +2272,6 @@ CREATE TABLE [dbo].[upload_commercial_invoice_data](
 	[comments] [varchar](500) NULL
  CONSTRAINT [pk_upload_commercial_invoice_data] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 40) ON [PRIMARY]
 ) ON [PRIMARY]
-
 GO
 
 SET ANSI_PADDING OFF
@@ -2371,9 +2385,9 @@ BEGIN
 	AND status = 8
 	
 	UPDATE dbo.upload_commercial_invoice_data SET 
-		 comments = 'Product Code too long, expected <50> was: <'+ CONVERT(VARCHAR,LEN(product_code)) +'>.'
+		 comments = 'Product Code too long, expected <100> was: <'+ CONVERT(VARCHAR,LEN(product_code)) +'>.'
 		,status = 7
-	WHERE LEN(LTRIM(RTRIM(product_code))) > 50
+	WHERE LEN(LTRIM(RTRIM(product_code))) > 100
 	AND upload_id = @uploadId
 	AND status = 8
 
@@ -2541,6 +2555,314 @@ BEGIN
 END
 GO
 
+
+-- =====================================================================================
+-- UPLOAD: CERTIFICATE OF ORIGIN
+-- =====================================================================================
+CREATE TABLE [dbo].[upload_coo_data](
+	[id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[upload_id] [bigint] NOT NULL,
+	[marks] [varchar](100) NULL,
+	[product_code] [varchar](100) NULL,
+	[descr] [varchar](100) NULL,
+	[origin] [varchar](200) NULL,
+	[qty] [varchar](100) NULL,
+	[price] [varchar](100) NULL,
+	[amount] [varchar](100) NULL,
+	[status] [tinyint] NULL,
+	[comments] [varchar](500) NULL
+ CONSTRAINT [pk_upload_coo_data] PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX  = ON, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 40) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[upload_coo_data]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_coo_data_upload] FOREIGN KEY([upload_id])
+REFERENCES [dbo].[upload] ([id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[upload_coo_data] CHECK CONSTRAINT [fk_upload_coo_data_upload]
+GO
+
+ALTER TABLE [dbo].[upload_coo_data]  WITH NOCHECK ADD  CONSTRAINT [fk_upload_coo_data_uploadstatus] FOREIGN KEY([status])
+REFERENCES [dbo].[upload_status] ([id])
+GO
+
+ALTER TABLE [dbo].[upload_coo_data] CHECK CONSTRAINT [fk_upload_coo_data_uploadstatus]
+GO
+
+
+CREATE PROCEDURE [dbo].[upload_csv_coo]
+	@bulkFile VARCHAR(MAX), -- CSV file with data
+	@parseFile VARCHAR(MAX),-- File used to parse the csv file
+	@uploadId BIGINT -- UploadId who this upload is for.
+
+AS
+	SET NOCOUNT ON
+
+	DECLARE 
+		@bulkStatement VARCHAR(MAX)
+
+BEGIN
+	-- Truncate the upload data table to reset refrence if table is empty
+	IF(SELECT COUNT(*) FROM dbo.upload_coo_data) = 0
+	BEGIN
+		TRUNCATE TABLE dbo.upload_coo_data
+	END
+	
+	SET @bulkStatement = 'INSERT INTO dbo.upload_coo_data(upload_id
+		,marks
+		,product_code
+		,descr
+		,origin
+		,qty
+		,price
+		,amount
+		,status)
+	SELECT ' + CONVERT(VARCHAR, @uploadId) + ',
+		SUBSTRING(ISNULL(marks,''''),0,100),
+		SUBSTRING(ISNULL(product_code,''''),0,100),
+		SUBSTRING(ISNULL(descr,''''),0,100),
+		SUBSTRING(ISNULL(origin,''''),0,100),
+		SUBSTRING(ISNULL(qty,''''),0,100),
+		SUBSTRING(ISNULL(price,''''),0,100),
+		SUBSTRING(ISNULL(amount,''''),0,100),
+		status
+	FROM  OPENROWSET(BULK ''' + @bulkFile + ''',
+		FORMATFILE = ''' + @parseFile + '''
+	) as import'
+	EXEC (@bulkStatement)
+END
+GO
+
+CREATE PROCEDURE [dbo].[upload_parse_coo]
+	@uploadId BIGINT -- UploadId who this upload is for.
+AS
+	SET NOCOUNT ON
+
+	DECLARE 
+		@countParsingFailed INT,
+		@countOther INT,
+		@countUploaded INT,
+		@countParsed INT
+BEGIN
+	-- Set status from "Parsing Failed" to "Ready"
+	UPDATE dbo.upload_coo_data SET status = 8
+		,comments = NULL 
+	WHERE upload_id = @uploadId
+	AND status IN(
+		 5 -- Parsing Successful
+		,6 -- Parsing Partial
+		,7 -- Parsing Failed
+	)
+
+	----------------------------------------------------------------
+	-- Validate marks
+	----------------------------------------------------------------
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Marks is required.'
+		,status = 7
+		WHERE (marks IS NULL OR LEN(LTRIM(RTRIM(marks))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Marks too long, expected <50> was: <'+ CONVERT(VARCHAR,LEN(marks)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(marks))) > 50
+	AND upload_id = @uploadId
+	AND status = 8
+
+	----------------------------------------------------------------
+	-- Validate product_code
+	----------------------------------------------------------------	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Product Code is required.'
+		,status = 7
+		WHERE (product_code IS NULL OR LEN(LTRIM(RTRIM(product_code))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Product Code too long, expected <100> was: <'+ CONVERT(VARCHAR,LEN(product_code)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(product_code))) > 100
+	AND upload_id = @uploadId
+	AND status = 8
+
+	----------------------------------------------------------------
+	-- Validate descr
+	----------------------------------------------------------------
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Description is required.'
+		,status = 7
+		WHERE (descr IS NULL OR LEN(LTRIM(RTRIM(descr))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Description too long, expected <100> was: <'+ CONVERT(VARCHAR,LEN(descr)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(descr))) > 100
+	AND upload_id = @uploadId
+	AND status = 8
+
+	----------------------------------------------------------------
+	-- Validate origin
+	----------------------------------------------------------------	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Origin too long, expected <200> was: <'+ CONVERT(VARCHAR,LEN(origin)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(origin))) > 200
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	----------------------------------------------------------------
+	-- Validate qty
+	----------------------------------------------------------------
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Quantity is required.'
+		,status = 7
+		WHERE (qty IS NULL OR LEN(LTRIM(RTRIM(qty))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Quantity too long, expected <3> was: <'+ CONVERT(VARCHAR,LEN(qty)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(qty))) > 3
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Quantity must be a number.'
+		,status = 7
+	WHERE ISNUMERIC(qty) = 0 -- 0 = not numeric
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Quantity must be greater than zero.'
+		,status = 7
+	WHERE CONVERT(FLOAT,qty) <= .0 
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	----------------------------------------------------------------
+	-- Validate Price
+	----------------------------------------------------------------
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Price is required.'
+		,status = 7
+		WHERE (price IS NULL OR LEN(LTRIM(RTRIM(price))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Price too long, expected <10> was: <'+ CONVERT(VARCHAR,LEN(price)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(price))) > 10
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Price must be a number.'
+		,status = 7
+	WHERE ISNUMERIC(price) = 0 -- 0 = not numeric
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Price must be greater than zero.'
+		,status = 7
+	WHERE CONVERT(FLOAT,price) <= .0 
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	----------------------------------------------------------------
+	-- Validate Amount
+	----------------------------------------------------------------
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Amount is required.'
+		,status = 7
+		WHERE (amount IS NULL OR LEN(LTRIM(RTRIM(amount))) = 0)
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Amount too long, expected <10> was: <'+ CONVERT(VARCHAR,LEN(amount)) +'>.'
+		,status = 7
+	WHERE LEN(LTRIM(RTRIM(amount))) > 10
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Amount must be a number.'
+		,status = 7
+	WHERE ISNUMERIC(amount) = 0 -- 0 = not numeric
+	AND upload_id = @uploadId
+	AND status = 8
+	
+	UPDATE dbo.upload_coo_data SET 
+		 comments = 'Amount must be greater than zero.'
+		,status = 7
+	WHERE CONVERT(FLOAT,amount) <= .0 
+	AND upload_id = @uploadId
+	AND status = 8
+	
+		
+	-- BEGIN: Update status.
+		UPDATE dbo.upload_coo_data SET Status = 5 -- "Parsing Successful"
+			WHERE 
+				upload_id = @uploadId
+			AND 
+				Status = 8 -- "Ready"
+
+		SET @countParsingFailed = (SELECT COUNT(*) FROM dbo.upload_coo_data
+				WHERE upload_id = @uploadId AND Status = 7)
+
+		SET @countOther = (SELECT COUNT(*) FROM dbo.upload_coo_data
+				WHERE upload_id = @uploadId AND Status in (9,10,11))
+
+		SET @countUploaded = (SELECT COUNT(*) FROM dbo.upload_coo_data
+				WHERE upload_id = @uploadId AND Status = 3)
+		
+		SET @countParsed = (SELECT COUNT(*) FROM dbo.upload_coo_data
+				WHERE upload_id = @uploadId AND Status = 5)
+
+
+		IF (@countParsingFailed = 0 AND @countOther = 0 AND @countUploaded = 0 AND @countParsed <> 0)
+	   		-- Update status to "Parsing Successful".
+	   		UPDATE dbo.Upload SET Status = 5 WHERE ID = @uploadId	
+		
+		ELSE IF (@countParsingFailed = 0 and @countOther <> 0 and @countParsed <> 0)
+			-- Update status to "Parsing Partial" if no record in error AND 
+			-- one or more exported records AND there are other successfully parsed records.
+	   		UPDATE dbo.Upload SET Status = 6 WHERE ID = @uploadId	
+
+		ELSE IF (@countParsingFailed = 0 AND @countUploaded <> 0 AND @countParsed = 0 AND @countOther = 0)
+			-- Update status to "Upload Successful".
+	   		UPDATE dbo.Upload SET Status = 3 WHERE ID = @uploadId
+
+		ELSE IF (@countParsingFailed = 0 AND @countUploaded <> 0 AND @countParsed = 0 AND @countOther <> 0)
+			-- Update status to "Upload Partial"
+			UPDATE dbo.Upload SET Status = 4 WHERE ID = @uploadId	
+		ELSE 
+			-- Update status to "Parsing Failed"
+			UPDATE dbo.Upload SET Status = 7 WHERE ID = @uploadId
+	-- BEGIN: Update status.
+END
+GO
+
+
+
+
+
+-- =====================================================================================
+-- SQL FUNCTIONS
+-- =====================================================================================
 CREATE FUNCTION [dbo].[SqueezeAddress](@name [varchar](200),	
 	@building [varchar](100),
 	@street [varchar](100),
@@ -2600,7 +2922,6 @@ BEGIN
 		
 	RETURN @word
 END
-
 GO
 
 

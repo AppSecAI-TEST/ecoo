@@ -10,7 +10,7 @@ import ecoo.data.CertificateOfOriginLine;
 public interface CertificateOfOriginService extends CrudService<Integer, CertificateOfOrigin>
         , AuditedModelAware<Integer, CertificateOfOrigin> {
 
-    CertificateOfOrigin delete(CertificateOfOriginLine line);
+    CertificateOfOrigin delete(CertificateOfOrigin certificateOfOrigin, CertificateOfOriginLine line);
 
     CertificateOfOriginLine findLineById(Integer id);
 

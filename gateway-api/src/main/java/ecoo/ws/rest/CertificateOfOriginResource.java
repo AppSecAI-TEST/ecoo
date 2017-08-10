@@ -53,7 +53,10 @@ public class CertificateOfOriginResource extends BaseResource {
     @RequestMapping(value = "/line/id/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<CertificateOfOrigin> permanentlyDeleteLine(@PathVariable Integer id) {
         final CertificateOfOriginLine certificateOfOriginLine = certificateOfOriginService.findLineById(id);
-        return ResponseEntity.ok(certificateOfOriginService.delete(certificateOfOriginLine));
+        final CertificateOfOrigin certificateOfOrigin = certificateOfOriginService
+                .findById(certificateOfOriginLine.getParentId());
+
+        return ResponseEntity.ok(certificateOfOriginService.delete(certificateOfOrigin, certificateOfOriginLine));
     }
 
     @RequestMapping(value = "/createdBy/id/{id}", method = RequestMethod.GET)

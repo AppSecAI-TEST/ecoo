@@ -31,6 +31,10 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
     @Audited
     private String marks;
 
+    @Column(name = "product_code")
+    @Audited
+    private String productCode;
+
     @Column(name = "descr")
     @Audited
     private String descr;
@@ -91,6 +95,14 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
         this.marks = marks;
     }
 
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+
     public String getDescr() {
         return descr;
     }
@@ -145,6 +157,7 @@ public class CertificateOfOriginLine extends BaseModel<Integer> implements Seria
                 "primaryId=" + primaryId +
                 ", parentId=" + parentId +
                 ", marks='" + marks + '\'' +
+                ", productCode='" + productCode + '\'' +
                 ", descr='" + descr + '\'' +
                 ", origin='" + origin + '\'' +
                 ", qty=" + qty +

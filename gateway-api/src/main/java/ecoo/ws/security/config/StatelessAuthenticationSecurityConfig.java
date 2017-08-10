@@ -63,6 +63,7 @@ public class StatelessAuthenticationSecurityConfig extends WebSecurityConfigurer
                 //allow anonymous GETs to health
                 .antMatchers(HttpMethod.GET, "/health/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/metrics/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/profile-info").permitAll()
 
                 //allow anonymous GETs to API
                 .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()

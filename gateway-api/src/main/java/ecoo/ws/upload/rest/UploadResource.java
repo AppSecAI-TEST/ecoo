@@ -77,12 +77,8 @@ public class UploadResource extends BaseResource {
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
     public ResponseEntity<ProcessUploadsResponse> process(@RequestBody Collection<Integer> uploadIds) throws IOException {
-        final Collection<Upload> queuedUploads = new ArrayList<>();
-        final Collection<Upload> scheduledUploads = new ArrayList<>();
-
         for (final Integer uploadId : uploadIds) {
             final Upload aUpload = importService.findByPrimaryId(uploadId);
-            queuedUploads.add(aUpload);
             importService.submitToUploadQueue(aUpload, currentUser());
         }
         return ResponseEntity.ok(new ProcessUploadsResponse(uploadIds));
@@ -191,6 +187,8 @@ public class UploadResource extends BaseResource {
         switch (uploadType) {
             case COMMERCIAL_INVOICE:
                 return ResponseEntity.ok(new CommercialInvoiceUpload().getRequiredFields());
+            case CERTIFICATE_OF_ORIGIN:
+                return ResponseEntity.ok(new CertificateOfOriginUpload().getRequiredFields());
             default:
                 throw new DataIntegrityViolationException(String.format("No upload class "
                         + "defined for upload type \"%s\".", uploadType.name()));
