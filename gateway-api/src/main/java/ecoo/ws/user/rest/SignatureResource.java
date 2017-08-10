@@ -36,6 +36,32 @@ public class SignatureResource extends BaseResource {
     }
 
     @ProfileExecution
+    @RequestMapping(value = "/bulk", method = RequestMethod.POST)
+    public ResponseEntity<Collection<Signature>> createBulk(@RequestBody Collection<Signature> signatures) {
+        LOG.info(signatures.toString());
+        for (Signature signature : signatures) {
+              signature = signatureService.findByPersonalReference(signature.getPersonalRefValue());
+            if (signature == null) {
+                LOG.info("No signature found for personalRef <{}> >> creating new entry.", signature.getPersonalRefValue());
+                signature = new Signature();
+
+            } else {
+                LOG.info("Found signature for personalRef <{}> >> updating new entry {}.", signature.getPersonalRefValue()
+                        , signature.getPrimaryId());
+            }
+
+            signature.setPersonalRefValue(signature.getPersonalRefValue());
+            signature.setFirstName(signature.getFirstName());
+            signature.setLastName(signature.getLastName());
+            signature.setCompanyName(signature.getCompanyName());
+            signature.setEncodedImage(signature.getEncodedImage());
+
+            signatureService.save(signature);
+        }
+        return ResponseEntity.ok(signatures);
+    }
+
+    @ProfileExecution
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<CreateSignatureResponse> create(@RequestBody CreateSignatureRequest request) {
         Assert.notNull(request, "The variable request cannot be null.");
