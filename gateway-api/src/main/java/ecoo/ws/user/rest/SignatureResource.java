@@ -5,6 +5,7 @@ import ecoo.data.audit.Revision;
 import ecoo.log.aspect.ProfileExecution;
 import ecoo.service.SignatureService;
 import ecoo.ws.common.rest.BaseResource;
+import ecoo.ws.user.rest.json.CreateSignatureBulkRequest;
 import ecoo.ws.user.rest.json.CreateSignatureRequest;
 import ecoo.ws.user.rest.json.CreateSignatureResponse;
 import ecoo.ws.user.rest.json.CreateSignatureResponseBuilder;
@@ -38,9 +39,9 @@ public class SignatureResource extends BaseResource {
 
     @ProfileExecution
     @RequestMapping(value = "/bulk", method = RequestMethod.POST)
-    public ResponseEntity<Signature[]> createBulk(@RequestBody Signature[] signatures) {
-        LOG.info(Arrays.toString(signatures));
-        for (final Signature signature : signatures) {
+    public ResponseEntity<Collection<Signature>> createBulk(@RequestBody CreateSignatureBulkRequest createSignatureBulkRequest) {
+        LOG.info(createSignatureBulkRequest.toString());
+        for (final Signature signature : createSignatureBulkRequest.getSignatures()) {
                Signature otherSignature = signatureService.findByPersonalReference(signature.getPersonalRefValue());
             if (otherSignature == null) {
                 LOG.info("No signature found for personalRef <{}> >> creating new entry.", signature.getPersonalRefValue());
@@ -59,7 +60,7 @@ public class SignatureResource extends BaseResource {
 
             signatureService.save(otherSignature);
         }
-        return ResponseEntity.ok(signatures);
+        return ResponseEntity.ok(createSignatureBulkRequest.getSignatures());
     }
 
     @ProfileExecution
