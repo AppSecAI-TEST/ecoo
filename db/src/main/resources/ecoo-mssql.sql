@@ -30,6 +30,7 @@ END
 GO
 CREATE DATABASE [ecoo]   
 GO
+
 EXEC dbo.sp_dbcmptlevel @dbname=N'ecoo', @new_cmptlevel=100
 GO
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
