@@ -2122,11 +2122,13 @@ FROM shipment s WITH(NOLOCK)
 		
 	LEFT OUTER JOIN user_signature r with(nolock)
 		ON r.user_id = s.requested_by
+		AND (GETDATE() BETWEEN r.eff_from_date AND r.eff_to_date)
 		
 	LEFT OUTER JOIN user_signature approvedBy with(nolock)
 		ON approvedBy.user_id = s.approved_by
+		AND (GETDATE() BETWEEN approvedBy.eff_from_date AND approvedBy.eff_to_date)
 	
-WHERE s.id = @shipmentId </CommandText>
+WHERE s.id = @shipmentId  </CommandText>
       </Query>
       <Fields>
         <Field Name="certificate_number">
